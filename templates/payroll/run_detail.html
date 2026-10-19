@@ -1,0 +1,44 @@
+{% extends "base.html" %}{% load i18n humanize %}
+{% block title %}{% trans "Payroll" %}{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <h1 style="margin:0">{% trans "Payroll" %} {{ run.period_start|date:"d M" }} – {{ run.period_end|date:"d M Y" }}</h1>
+  <span class="badge {% if run.is_draft %}warn{% else %}ok{% endif %}">{{ run.get_status_display }}</span>
+</div>
+<div class="toolbar no-print">
+  <a class="btn" href="{% url 'payroll:run_export' run.pk %}">{% trans "Download spreadsheet" %}</a>
+  {% if run.is_draft and perms.payroll.change_payrollrun %}
+  <form method="post" action="{% url 'payroll:run_action' run.pk %}">{% csrf_token %}
+    <button class="btn" name="action" value="recalculate">{% trans "Recalculate" %}</button>
+    <button class="btn btn-primary" name="action" value="finalize"
+            onclick="return confirm('{% trans "Finalize? Payslips will be locked and advances recovered." %}')">{% trans "Finalize" %}</button>
+    {% if perms.payroll.delete_payrollrun %}
+    <button class="btn btn-danger" name="action" value="delete" onclick="return confirm('{% trans "Delete this draft?" %}')">{% trans "Delete" %}</button>
+    {% endif %}
+  </form>
+  {% endif %}
+</div>
+<div class="stats">
+  <div class="stat"><div class="num">{{ slips|length }}</div><div class="label">{% trans "Employees" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.gross|default:0|intcomma }}</div><div class="label">{% trans "Gross" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.net|default:0|intcomma }}</div><div class="label">{% trans "Net to pay" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.employer|default:0|intcomma }}</div><div class="label">{% trans "Employer contributions" %}</div></div>
+</div>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Employee" %}</th><th class="num">{% trans "Paid days" %}</th><th class="num">{% trans "OT hrs" %}</th>
+    <th class="num">{% trans "Gross" %}</th><th class="num">{% trans "Deductions" %}</th><th class="num">{% trans "Advance" %}</th><th class="num">{% trans "Net" %}</th></tr></thead>
+  <tbody>
+  {% for s in slips %}
+    <tr>
+      <td data-label="{% trans 'Employee' %}"><a href="{% url 'payroll:payslip' s.pk %}">{{ s.employee.name }}</a></td>
+      <td data-label="{% trans 'Paid days' %}" class="num">{{ s.paid_days|floatformat:"-1" }}</td>
+      <td data-label="{% trans 'OT hrs' %}" class="num">{{ s.overtime_hours|floatformat:"-2" }}</td>
+      <td data-label="{% trans 'Gross' %}" class="num">{{ s.gross_pay|intcomma }}</td>
+      <td data-label="{% trans 'Deductions' %}" class="num">{{ s.total_deductions|intcomma }}</td>
+      <td data-label="{% trans 'Advance' %}" class="num">{{ s.advance_recovery|intcomma }}</td>
+      <td data-label="{% trans 'Net' %}" class="num"><b>{{ s.net_pay|intcomma }}</b></td>
+    </tr>
+  {% empty %}<tr><td colspan="7" class="muted">{% trans "No employees matched this payroll." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

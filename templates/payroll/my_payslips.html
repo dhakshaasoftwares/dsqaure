@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% load i18n humanize %}
+{% block title %}{% trans "My payslips" %}{% endblock %}
+{% block content %}
+<h1>{% trans "My payslips" %}</h1>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Period" %}</th><th class="num">{% trans "Net pay" %}</th></tr></thead>
+  <tbody>
+  {% for s in slips %}
+    <tr><td data-label="{% trans 'Period' %}"><a href="{% url 'payroll:payslip' s.pk %}">{{ s.run.period_start|date:"d M" }} – {{ s.run.period_end|date:"d M Y" }}</a></td>
+        <td data-label="{% trans 'Net pay' %}" class="num">{{ company.currency_symbol }}{{ s.net_pay|intcomma }}</td></tr>
+  {% empty %}<tr><td colspan="2" class="muted">{% trans "No payslips yet." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

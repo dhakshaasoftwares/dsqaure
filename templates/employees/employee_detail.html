@@ -1,0 +1,41 @@
+{% extends "base.html" %}{% load i18n humanize %}
+{% block title %}{{ object.name }}{% endblock %}
+{% block content %}
+<div class="toolbar">
+  {% if object.photo %}<img src="{{ object.photo.url }}" alt="" style="width:64px;height:64px;border-radius:50%;object-fit:cover">{% endif %}
+  <div><h1 style="margin:0">{{ object.name }}</h1><span class="muted">{{ object.code }} · {{ object.designation|default:"" }}</span></div>
+  <span class="spacer"></span>
+  {% if perms.employees.change_employee %}<a class="btn" href="{% url 'employees:update' object.pk %}">{% trans "Edit" %}</a>{% endif %}
+</div>
+<div class="card"><div class="form-grid">
+  <p><b>{% trans "Phone" %}:</b> {{ object.phone|default:"—" }}</p>
+  <p><b>{% trans "Site" %}:</b> {{ object.default_project.name|default:"—" }}</p>
+  <p><b>{% trans "Wage" %}:</b> {{ company.currency_symbol }}{{ object.wage_rate|intcomma }} ({{ object.get_wage_type_display }})</p>
+  <p><b>{% trans "Joined" %}:</b> {{ object.date_joined|default:"—" }}</p>
+  <p><b>{% trans "Login account" %}:</b> {{ object.user.username|default:"—" }}</p>
+  <p><b>{% trans "Status" %}:</b> {% if object.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}</p>
+</div></div>
+
+<h2>{% trans "Recent attendance" %}</h2>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Status" %}</th><th>{% trans "Site" %}</th><th class="num">{% trans "OT hrs" %}</th></tr></thead>
+  <tbody>
+  {% for a in recent_attendance %}
+    <tr><td data-label="{% trans 'Date' %}">{{ a.date }}</td><td data-label="{% trans 'Status' %}">{{ a.get_status_display }}</td>
+        <td data-label="{% trans 'Site' %}">{{ a.project.name|default:"—" }}</td><td data-label="{% trans 'OT hrs' %}" class="num">{{ a.overtime_hours }}</td></tr>
+  {% empty %}<tr><td colspan="4" class="muted">{% trans "No attendance yet." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+
+{% if perms.payroll.view_salaryadvance %}
+<h2>{% trans "Advances" %}</h2>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Date" %}</th><th class="num">{% trans "Amount" %}</th><th class="num">{% trans "Balance" %}</th></tr></thead>
+  <tbody>
+  {% for a in advances %}
+    <tr><td data-label="{% trans 'Date' %}">{{ a.date }}</td><td data-label="{% trans 'Amount' %}" class="num">{{ a.amount|intcomma }}</td><td data-label="{% trans 'Balance' %}" class="num">{{ a.balance|intcomma }}</td></tr>
+  {% empty %}<tr><td colspan="3" class="muted">{% trans "No advances." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endif %}
+{% endblock %}

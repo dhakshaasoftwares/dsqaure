@@ -1,0 +1,46 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Home" %}{% endblock %}
+{% block content %}
+<h1>{% blocktrans with name=user.first_name|default:user.username %}Hello, {{ name }}{% endblocktrans %}</h1>
+<p class="muted">{{ today|date:"l, d M Y" }}</p>
+
+{% if user.employee %}
+<div class="card">
+  {% if my_attendance and my_attendance.check_in_at %}
+    <p>{% trans "Checked in at" %} <b>{{ my_attendance.check_in_at|time:"H:i" }}</b>
+    {% if my_attendance.check_out_at %} · {% trans "Checked out at" %} <b>{{ my_attendance.check_out_at|time:"H:i" }}</b>{% endif %}</p>
+    {% if not my_attendance.check_out_at %}<a class="btn btn-big" href="{% url 'attendance:me' %}">{% trans "Check out" %}</a>{% endif %}
+  {% elif my_attendance %}
+    <p>{% trans "Today:" %} <b>{{ my_attendance.get_status_display }}</b></p>
+  {% else %}
+    <a class="btn btn-primary btn-big" href="{% url 'attendance:me' %}">{% trans "Check in now" %}</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if today_counts %}
+<div class="stats">
+  <div class="stat"><div class="num">{{ today_counts.present }}</div><div class="label">{% trans "Present today" %}</div></div>
+  <div class="stat"><div class="num">{{ today_counts.absent }}</div><div class="label">{% trans "Absent" %}</div></div>
+  <div class="stat"><div class="num">{{ today_counts.leave }}</div><div class="label">{% trans "On leave" %}</div></div>
+  <div class="stat"><div class="num">{{ active_employees }}</div><div class="label">{% trans "Active employees" %}</div></div>
+</div>
+
+<h2>{% trans "Active sites today" %}</h2>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Site" %}</th><th>{% trans "Client" %}</th><th class="num">{% trans "On site" %}</th><th></th></tr></thead>
+  <tbody>
+  {% for s in sites %}
+    <tr>
+      <td data-label="{% trans 'Site' %}">{{ s.name }}</td>
+      <td data-label="{% trans 'Client' %}">{{ s.client_name|default:"—" }}</td>
+      <td data-label="{% trans 'On site' %}" class="num">{{ s.on_site }}</td>
+      <td class="right">{% if perms.attendance.add_attendance %}<a href="{% url 'attendance:mark' %}?project={{ s.pk }}">{% trans "Mark attendance" %}</a>{% endif %}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4" class="muted">{% trans "No active sites yet." %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% load i18n %}
+{% block content %}
+<h1>{% trans "Not allowed" %}</h1>
+<p>{% trans "Your role does not have access to this page. Ask the owner or admin if you need it." %}</p>
+<a class="btn" href="{% url 'core:dashboard' %}">{% trans "Home" %}</a>
+{% endblock %}

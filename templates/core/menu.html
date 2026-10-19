@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Menu" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Menu" %}</h1>
+<nav class="card sidebar" style="display:block;width:auto;border-radius:10px">
+  {% include "_nav_links.html" %}
+</nav>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% load i18n humanize %}
+{% block title %}{% trans "Payslip" %}{% endblock %}
+{% block content %}
+<div class="card payslip">
+  <div class="toolbar">
+    <div><h1 style="margin:0">{{ company.name }}</h1><span class="muted">{{ company.address|linebreaksbr }}</span></div>
+    <span class="spacer"></span>
+    <button class="btn no-print" onclick="window.print()">{% trans "Print / Save PDF" %}</button>
+  </div>
+  <h2>{% trans "Payslip" %}: {{ slip.run.period_start|date:"d M Y" }} – {{ slip.run.period_end|date:"d M Y" }}</h2>
+  <p><b>{{ slip.employee.name }}</b> ({{ slip.employee.code }}) · {{ slip.employee.designation }}<br>
+     {% if slip.wage_type == 'daily' %}{% trans "Daily wage" %}{% else %}{% trans "Monthly salary" %}{% endif %}:
+     {{ company.currency_symbol }}{{ slip.wage_rate|intcomma }}</p>
+  <table>
+    <tr><td>{% trans "Days worked" %}</td><td>{{ slip.days_worked|floatformat:"-1" }}</td></tr>
+    <tr><td>{% trans "Paid days" %}</td><td>{{ slip.paid_days|floatformat:"-1" }}</td></tr>
+    <tr><td>{% trans "Overtime hours" %}</td><td>{{ slip.overtime_hours|floatformat:"-2" }}</td></tr>
+  </table>
+  <h2>{% trans "Earnings" %}</h2>
+  <table>
+    <tr><td>{% trans "Wage for paid days" %}</td><td>{{ slip.basic_pay|intcomma }}</td></tr>
+    {% if slip.overtime_pay %}<tr><td>{% trans "Overtime" %}</td><td>{{ slip.overtime_pay|intcomma }}</td></tr>{% endif %}
+    {% for l in slip.earning_lines %}<tr><td>{{ l.name }}</td><td>{{ l.amount }}</td></tr>{% endfor %}
+    <tr><th>{% trans "Gross pay" %}</th><th class="num">{{ slip.gross_pay|intcomma }}</th></tr>
+  </table>
+  <h2>{% trans "Deductions" %}</h2>
+  <table>
+    {% for l in slip.deduction_lines %}<tr><td>{{ l.name }}</td><td>{{ l.amount }}</td></tr>{% endfor %}
+    {% if slip.advance_recovery %}<tr><td>{% trans "Advance recovery" %}</td><td>{{ slip.advance_recovery|intcomma }}</td></tr>{% endif %}
+    <tr><th>{% trans "Total deductions" %}</th><th class="num">{{ slip.all_deductions|intcomma }}</th></tr>
+  </table>
+  <h2 style="text-align:right">{% trans "Net pay" %}: {{ company.currency_symbol }}{{ slip.net_pay|intcomma }}</h2>
+  {% if slip.employer_lines %}
+  <p class="muted">{% trans "Employer contributions (not deducted)" %}:
+    {% for l in slip.employer_lines %}{{ l.name }} {{ l.amount }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  {% endif %}
+</div>
+{% endblock %}

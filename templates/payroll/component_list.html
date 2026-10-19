@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Pay rules" %}{% endblock %}
+{% block content %}
+<div class="toolbar"><h1 style="margin:0">{% trans "Pay rules" %}</h1><span class="spacer"></span>
+  {% if perms.payroll.add_paycomponent %}<a class="btn btn-primary" href="{% url 'payroll:component_create' %}">+ {% trans "New rule" %}</a>{% endif %}
+</div>
+<p class="muted">{% trans "Allowances, deductions and statutory contributions (PF, ESI, social security, tax …). Add only what applies to your company." %}</p>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Type" %}</th><th>{% trans "Calculation" %}</th><th>{% trans "Value" %}</th><th>{% trans "Applies to" %}</th><th>{% trans "Status" %}</th></tr></thead>
+  <tbody>
+  {% for c in object_list %}
+    <tr>
+      <td data-label="{% trans 'Name' %}">{% if perms.payroll.change_paycomponent %}<a href="{% url 'payroll:component_update' c.pk %}">{{ c.name }}</a>{% else %}{{ c.name }}{% endif %}</td>
+      <td data-label="{% trans 'Type' %}">{{ c.get_kind_display }}</td>
+      <td data-label="{% trans 'Calculation' %}">{{ c.get_method_display }}</td>
+      <td data-label="{% trans 'Value' %}">{{ c.value }}{% if c.method == 'pct_basic' or c.method == 'pct_gross' %}%{% endif %}</td>
+      <td data-label="{% trans 'Applies to' %}">{{ c.get_applies_to_display }}{% if c.apply_to_everyone %} · {% trans "everyone" %}{% else %} · {% trans "selected staff" %}{% endif %}</td>
+      <td data-label="{% trans 'Status' %}">{% if c.is_active %}<span class="badge ok">{% trans "On" %}</span>{% else %}<span class="badge">{% trans "Off" %}</span>{% endif %}</td>
+    </tr>
+  {% empty %}<tr><td colspan="6" class="muted">{% trans "No pay rules. Wages are paid as attendance × rate." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

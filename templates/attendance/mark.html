@@ -1,0 +1,57 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Mark site attendance" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Mark site attendance" %}</h1>
+<form method="get" class="toolbar">
+  <input type="date" name="date" value="{{ day|date:'Y-m-d' }}" style="max-width:170px">
+  <select name="project" style="max-width:240px">
+    {% for p in projects %}<option value="{{ p.pk }}" {% if p == project %}selected{% endif %}>{{ p.name }}</option>{% endfor %}
+  </select>
+  <button class="btn" type="submit">{% trans "Show" %}</button>
+</form>
+
+{% if not project %}
+  <p class="muted">{% trans "Create an active project / site first." %}</p>
+{% else %}
+<form method="post">{% csrf_token %}
+  <input type="hidden" name="date" value="{{ day|date:'Y-m-d' }}">
+  <input type="hidden" name="project" value="{{ project.pk }}">
+  <div class="toolbar">
+    <button type="button" class="btn" onclick="setAll('present')">{% trans "All present" %}</button>
+    <button type="button" class="btn" onclick="setAll('absent')">{% trans "All absent" %}</button>
+  </div>
+  <div class="table-wrap"><table class="stack">
+    <thead><tr><th>{% trans "Employee" %}</th><th>{% trans "Status" %}</th><th>{% trans "OT hrs" %}</th><th>{% trans "Note" %}</th></tr></thead>
+    <tbody>
+    {% for row in rows %}
+      {% with e=row.employee r=row.record %}
+      <tr class="mark-row">
+        <td data-label="{% trans 'Employee' %}"><span><b>{{ e.name }}</b> <span class="muted">{{ e.designation }}</span>
+          {% if r.source == 'self' %}<span class="badge ok">{% trans "self" %} {{ r.check_in_at|time:"H:i" }}</span>{% endif %}</span></td>
+        <td data-label="{% trans 'Status' %}">
+          <select name="status_{{ e.pk }}" class="status-select">
+            <option value="">—</option>
+            {% for val, label in statuses %}<option value="{{ val }}" {% if r.status == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            {% if r %}<option value="clear">{% trans "Clear" %}</option>{% endif %}
+          </select>
+        </td>
+        <td data-label="{% trans 'OT hrs' %}"><input type="number" name="ot_{{ e.pk }}" step="0.5" min="0" max="16" value="{{ r.overtime_hours|default:0 }}" style="max-width:90px"></td>
+        <td data-label="{% trans 'Note' %}"><input type="text" name="note_{{ e.pk }}" value="{{ r.notes|default:'' }}"></td>
+      </tr>
+      {% endwith %}
+    {% empty %}
+      <tr><td colspan="4" class="muted">{% trans "No employees are assigned to this site. Set the 'assigned site' on employees." %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <div class="form-actions" style="margin-top:1rem"><button class="btn btn-primary btn-big" type="submit">{% trans "Save attendance" %}</button></div>
+</form>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+  function setAll(v) {
+    document.querySelectorAll(".status-select").forEach(function (s) { s.value = v; });
+  }
+</script>
+{% endblock %}

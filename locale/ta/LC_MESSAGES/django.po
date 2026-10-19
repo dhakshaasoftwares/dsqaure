@@ -1,0 +1,1503 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-19 11:34+0530\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ta\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/accounts/forms.py:13
+msgid "password"
+msgstr "கடவுச்சொல்"
+
+#: apps/accounts/forms.py:14
+msgid "Leave blank to keep the current password"
+msgstr "தற்போதைய கடவுச்சொல்லை வைத்திருக்க காலியாக விடவும்"
+
+#: apps/accounts/forms.py:17
+msgid "roles"
+msgstr "பொறுப்புகள்"
+
+#: apps/accounts/forms.py:54
+msgid "role name"
+msgstr "பொறுப்பு பெயர்"
+
+#: apps/accounts/models.py:9 apps/core/models.py:26
+#: apps/employees/models.py:15
+msgid "phone"
+msgstr "தொலைபேசி"
+
+#: apps/accounts/models.py:11
+msgid "preferred language"
+msgstr "விருப்ப மொழி"
+
+#: apps/accounts/models.py:23
+msgid "Owner"
+msgstr "உரிமையாளர்"
+
+#: apps/accounts/urls.py:13 templates/_nav_links.html:30
+msgid "Change password"
+msgstr "கடவுச்சொல் மாற்று"
+
+#: apps/accounts/views.py:30 templates/accounts/user_list.html:5
+msgid "New user"
+msgstr "புதிய பயனர்"
+
+#: apps/accounts/views.py:39
+msgid "Edit user"
+msgstr "பயனரைத் திருத்து"
+
+#: apps/accounts/views.py:60 templates/accounts/role_list.html:5
+msgid "New role"
+msgstr "புதிய பொறுப்பு"
+
+#: apps/accounts/views.py:69
+msgid "Edit role"
+msgstr "பொறுப்பைத் திருத்து"
+
+#: apps/accounts/views.py:79
+msgid "Language updated"
+msgstr "மொழி மாற்றப்பட்டது"
+
+#: apps/attendance/models.py:12 templates/attendance/register.html:14
+msgid "Present"
+msgstr "வருகை"
+
+#: apps/attendance/models.py:13 templates/attendance/register.html:14
+msgid "Half day"
+msgstr "அரை நாள்"
+
+#: apps/attendance/models.py:14 templates/attendance/register.html:14
+#: templates/core/dashboard.html:24
+msgid "Absent"
+msgstr "வரவில்லை"
+
+#: apps/attendance/models.py:15 templates/attendance/register.html:14
+msgid "Leave"
+msgstr "விடுப்பு"
+
+#: apps/attendance/models.py:16 templates/attendance/register.html:14
+msgid "Weekly off"
+msgstr "வார விடுமுறை"
+
+#: apps/attendance/models.py:17 templates/attendance/register.html:14
+msgid "Holiday"
+msgstr "விடுமுறை நாள்"
+
+#: apps/attendance/models.py:20
+msgid "Self check-in"
+msgstr "சுய வருகைப் பதிவு"
+
+#: apps/attendance/models.py:21
+msgid "Marked by supervisor"
+msgstr "மேற்பார்வையாளர் பதிவு"
+
+#: apps/attendance/models.py:30 apps/employees/models.py:59
+#: apps/payroll/models.py:70
+msgid "employee"
+msgstr "ஊழியர்"
+
+#: apps/attendance/models.py:32 apps/payroll/models.py:72
+msgid "date"
+msgstr "தேதி"
+
+#: apps/attendance/models.py:35 apps/payroll/models.py:108
+msgid "site"
+msgstr "தளம்"
+
+#: apps/attendance/models.py:37 apps/core/models.py:111
+#: apps/payroll/models.py:110
+msgid "status"
+msgstr "நிலை"
+
+#: apps/attendance/models.py:38
+msgid "overtime hours"
+msgstr "கூடுதல் நேரம் (மணி)"
+
+#: apps/attendance/models.py:40
+msgid "check-in time"
+msgstr "வருகை நேரம்"
+
+#: apps/attendance/models.py:41
+msgid "check-out time"
+msgstr "வெளியேறும் நேரம்"
+
+#: apps/attendance/models.py:44
+msgid "distance from site (m)"
+msgstr "தளத்திலிருந்து தூரம் (மீ)"
+
+#: apps/attendance/models.py:45
+msgid "check-in photo"
+msgstr "வருகை புகைப்படம்"
+
+#: apps/attendance/models.py:47
+msgid "source"
+msgstr "மூலம்"
+
+#: apps/attendance/models.py:51 apps/employees/models.py:55
+msgid "notes"
+msgstr "குறிப்புகள்"
+
+#: apps/attendance/models.py:59 apps/attendance/models.py:60
+msgid "attendance"
+msgstr "வருகைப் பதிவு"
+
+#: apps/attendance/services.py:29
+msgid "You have already checked in today."
+msgstr "இன்று ஏற்கனவே வருகை பதிவு செய்துவிட்டீர்கள்."
+
+#: apps/attendance/services.py:31
+msgid "Please take a photo to check in."
+msgstr "வருகை பதிவு செய்ய புகைப்படம் எடுக்கவும்."
+
+#: apps/attendance/services.py:38
+msgid "Location is required. Please allow location access and try again."
+msgstr "இருப்பிடம் தேவை. இருப்பிட அனுமதி வழங்கி மீண்டும் முயற்சிக்கவும்."
+
+#: apps/attendance/services.py:41
+#, python-format
+msgid ""
+"You are %(d)s m away from the site. Check-in is allowed within %(r)s m."
+msgstr ""
+"நீங்கள் தளத்திலிருந்து %(d)s மீ தொலைவில் உள்ளீர்கள். %(r)s மீ-க்குள் மட்டுமே"
+" வருகை பதிவு செய்யலாம்."
+
+#: apps/attendance/services.py:69
+msgid "You have not checked in today."
+msgstr "இன்று நீங்கள் வருகை பதிவு செய்யவில்லை."
+
+#: apps/attendance/services.py:71
+msgid "You have already checked out today."
+msgstr "இன்று ஏற்கனவே வெளியேறிவிட்டீர்கள்."
+
+#: apps/attendance/views.py:25
+msgid ""
+"Your login is not linked to an employee record. Ask the admin to link it."
+msgstr ""
+"உங்கள் கணக்கு ஊழியர் பதிவுடன் இணைக்கப்படவில்லை. நிர்வாகியிடம் இணைக்கச் "
+"சொல்லவும்."
+
+#: apps/attendance/views.py:32
+msgid "Checked out. Have a good evening!"
+msgstr "வெளியேறினீர்கள். இனிய மாலை வணக்கம்!"
+
+#: apps/attendance/views.py:40
+msgid "Checked in successfully."
+msgstr "வருகை வெற்றிகரமாக பதிவு செய்யப்பட்டது."
+
+#: apps/attendance/views.py:91
+#, python-format
+msgid "Attendance saved for %(n)s people."
+msgstr "%(n)s பேருக்கு வருகை சேமிக்கப்பட்டது."
+
+#: apps/core/models.py:15
+msgid "Monday"
+msgstr "திங்கள்"
+
+#: apps/core/models.py:16
+msgid "Tuesday"
+msgstr "செவ்வாய்"
+
+#: apps/core/models.py:17
+msgid "Wednesday"
+msgstr "புதன்"
+
+#: apps/core/models.py:18
+msgid "Thursday"
+msgstr "வியாழன்"
+
+#: apps/core/models.py:19
+msgid "Friday"
+msgstr "வெள்ளி"
+
+#: apps/core/models.py:20
+msgid "Saturday"
+msgstr "சனி"
+
+#: apps/core/models.py:21
+msgid "Sunday"
+msgstr "ஞாயிறு"
+
+#: apps/core/models.py:24
+msgid "company name"
+msgstr "நிறுவனப் பெயர்"
+
+#: apps/core/models.py:25 apps/employees/models.py:20
+msgid "address"
+msgstr "முகவரி"
+
+#: apps/core/models.py:27
+msgid "email"
+msgstr "மின்னஞ்சல்"
+
+#: apps/core/models.py:28
+msgid "logo"
+msgstr "சின்னம்"
+
+#: apps/core/models.py:30
+msgid "currency code"
+msgstr "நாணயக் குறியீடு"
+
+#: apps/core/models.py:31
+msgid "currency symbol"
+msgstr "நாணயச் சின்னம்"
+
+#: apps/core/models.py:33
+msgid "charge tax on quotations / POs"
+msgstr "விலைப்புள்ளி / கொள்முதல் ஆணைகளில் வரி விதி"
+
+#: apps/core/models.py:35
+msgid "tax name"
+msgstr "வரியின் பெயர்"
+
+#: apps/core/models.py:35
+msgid "e.g. GST, VAT, Sales Tax"
+msgstr "எ.கா. GST, VAT, விற்பனை வரி"
+
+#: apps/core/models.py:37
+msgid "tax registration number"
+msgstr "வரிப் பதிவு எண்"
+
+#: apps/core/models.py:39
+msgid "default tax rate %"
+msgstr "இயல்பு வரி விகிதம் %"
+
+#: apps/core/models.py:43
+msgid "working hours per day"
+msgstr "ஒரு நாள் வேலை நேரம்"
+
+#: apps/core/models.py:46
+msgid "overtime pay multiplier"
+msgstr "கூடுதல் நேர ஊதியப் பெருக்கி"
+
+#: apps/core/models.py:50
+msgid "1.00 = normal hourly rate, 1.50 = time and a half, 2.00 = double"
+msgstr "1.00 = சாதாரண மணி விகிதம், 1.50 = ஒன்றரை மடங்கு, 2.00 = இரட்டிப்பு"
+
+#: apps/core/models.py:52
+msgid "weekly off day"
+msgstr "வார விடுமுறை நாள்"
+
+#: apps/core/models.py:54
+msgid "monthly salary per-day basis"
+msgstr "மாத சம்பளம் – நாள் கணக்கு முறை"
+
+#: apps/core/models.py:57
+msgid "Calendar days in month"
+msgstr "மாதத்தின் மொத்த நாட்கள்"
+
+#: apps/core/models.py:58
+msgid "Working days (excluding weekly off)"
+msgstr "வேலை நாட்கள் (வார விடுமுறை தவிர)"
+
+#: apps/core/models.py:59
+msgid "Fixed 30 days"
+msgstr "நிலையான 30 நாட்கள்"
+
+#: apps/core/models.py:64
+msgid "monthly staff are paid for weekly off days"
+msgstr "மாத ஊழியர்களுக்கு வார விடுமுறைக்கு ஊதியம் உண்டு"
+
+#: apps/core/models.py:67
+msgid "approved leave is paid for monthly staff"
+msgstr "மாத ஊழியர்களுக்கு அனுமதி விடுப்புக்கு ஊதியம் உண்டு"
+
+#: apps/core/models.py:71
+msgid "self check-in must be inside the site radius"
+msgstr "சுய வருகை தள எல்லைக்குள் இருக்க வேண்டும்"
+
+#: apps/core/models.py:73
+msgid "self check-in needs a photo"
+msgstr "சுய வருகைக்கு புகைப்படம் தேவை"
+
+#: apps/core/models.py:76 apps/core/models.py:77
+msgid "company settings"
+msgstr "நிறுவன அமைப்புகள்"
+
+#: apps/core/models.py:96
+msgid "Planned"
+msgstr "திட்டமிடப்பட்டது"
+
+#: apps/core/models.py:97 templates/accounts/user_list.html:15
+#: templates/employees/employee_detail.html:16
+msgid "Active"
+msgstr "செயலில்"
+
+#: apps/core/models.py:98
+msgid "On hold"
+msgstr "நிறுத்தி வைக்கப்பட்டது"
+
+#: apps/core/models.py:99
+msgid "Completed"
+msgstr "முடிந்தது"
+
+#: apps/core/models.py:101
+msgid "project name"
+msgstr "திட்டப் பெயர்"
+
+#: apps/core/models.py:102
+msgid "code"
+msgstr "குறியீடு"
+
+#: apps/core/models.py:103
+msgid "client name"
+msgstr "வாடிக்கையாளர் பெயர்"
+
+#: apps/core/models.py:104
+msgid "client phone"
+msgstr "வாடிக்கையாளர் தொலைபேசி"
+
+#: apps/core/models.py:105
+msgid "site address"
+msgstr "தள முகவரி"
+
+#: apps/core/models.py:106
+msgid "latitude"
+msgstr "அட்சரேகை"
+
+#: apps/core/models.py:107
+msgid "longitude"
+msgstr "தீர்க்கரேகை"
+
+#: apps/core/models.py:109
+msgid "check-in radius (metres)"
+msgstr "வருகை எல்லை (மீட்டர்)"
+
+#: apps/core/models.py:112
+msgid "start date"
+msgstr "தொடக்க தேதி"
+
+#: apps/core/models.py:113
+msgid "expected end date"
+msgstr "எதிர்பார்க்கும் முடிவு தேதி"
+
+#: apps/core/models.py:114
+msgid "contract value"
+msgstr "ஒப்பந்த மதிப்பு"
+
+#: apps/core/models.py:119
+msgid "project / site"
+msgstr "திட்டம் / தளம்"
+
+#: apps/core/models.py:120
+msgid "projects / sites"
+msgstr "திட்டங்கள் / தளங்கள்"
+
+#: apps/core/permissions.py:13 templates/accounts/role_form.html:8
+msgid "View"
+msgstr "பார்"
+
+#: apps/core/permissions.py:14 templates/accounts/role_form.html:8
+msgid "Add"
+msgstr "சேர்"
+
+#: apps/core/permissions.py:15 templates/accounts/role_form.html:8
+#: templates/accounts/user_list.html:16 templates/core/project_list.html:17
+#: templates/employees/employee_detail.html:8
+msgid "Edit"
+msgstr "திருத்து"
+
+#: apps/core/permissions.py:16 templates/accounts/role_form.html:8
+#: templates/payroll/run_detail.html:16
+msgid "Delete"
+msgstr "நீக்கு"
+
+#: apps/core/permissions.py:21 templates/_nav_links.html:15
+#: templates/core/project_list.html:2 templates/core/project_list.html:4
+msgid "Projects / sites"
+msgstr "திட்டங்கள் / தளங்கள்"
+
+#: apps/core/permissions.py:22 templates/_nav_links.html:14
+#: templates/employees/employee_list.html:2
+#: templates/employees/employee_list.html:4
+#: templates/payroll/run_detail.html:22
+msgid "Employees"
+msgstr "ஊழியர்கள்"
+
+#: apps/core/permissions.py:23
+msgid "Attendance (all staff)"
+msgstr "வருகை (அனைத்து ஊழியர்கள்)"
+
+#: apps/core/permissions.py:24
+msgid "Payroll runs & payslips"
+msgstr "சம்பளப் பட்டியல் & சம்பளச் சீட்டு"
+
+#: apps/core/permissions.py:25 templates/payroll/advance_list.html:4
+msgid "Salary advances"
+msgstr "சம்பள முன்பணம்"
+
+#: apps/core/permissions.py:26
+msgid "Pay rules (allowances, PF, tax ...)"
+msgstr "ஊதிய விதிகள் (படிகள், PF, வரி ...)"
+
+#: apps/core/permissions.py:27 apps/core/views.py:77
+#: templates/_nav_links.html:27
+msgid "Company settings"
+msgstr "நிறுவன அமைப்புகள்"
+
+#: apps/core/permissions.py:28
+msgid "Users & roles"
+msgstr "பயனர்கள் & பொறுப்புகள்"
+
+#: apps/core/views.py:60
+msgid "New project / site"
+msgstr "புதிய திட்டம் / தளம்"
+
+#: apps/core/views.py:69
+msgid "Edit project / site"
+msgstr "திட்டம் / தளம் திருத்து"
+
+#: apps/core/views.py:83
+msgid "Settings saved"
+msgstr "அமைப்புகள் சேமிக்கப்பட்டன"
+
+#: apps/employees/models.py:10 apps/payroll/models.py:104
+#: templates/payroll/payslip.html:12
+msgid "Daily wage"
+msgstr "தினக்கூலி"
+
+#: apps/employees/models.py:11 apps/payroll/models.py:104
+#: templates/payroll/payslip.html:12
+msgid "Monthly salary"
+msgstr "மாத சம்பளம்"
+
+#: apps/employees/models.py:13
+msgid "employee code"
+msgstr "ஊழியர் குறியீடு"
+
+#: apps/employees/models.py:14 apps/payroll/models.py:33
+msgid "name"
+msgstr "பெயர்"
+
+#: apps/employees/models.py:16
+msgid "photo"
+msgstr "புகைப்படம்"
+
+#: apps/employees/models.py:17
+msgid "designation / trade"
+msgstr "பதவி / தொழில்"
+
+#: apps/employees/models.py:18
+msgid "e.g. Mason, Helper, Carpenter, Site Engineer"
+msgstr "எ.கா. கொத்தனார், சித்தாள், தச்சர், தள பொறியாளர்"
+
+#: apps/employees/models.py:19
+msgid "date of birth"
+msgstr "பிறந்த தேதி"
+
+#: apps/employees/models.py:21
+msgid "ID proof type"
+msgstr "அடையாளச் சான்று வகை"
+
+#: apps/employees/models.py:22
+msgid "ID proof number"
+msgstr "அடையாளச் சான்று எண்"
+
+#: apps/employees/models.py:23
+msgid "ID proof file"
+msgstr "அடையாளச் சான்று கோப்பு"
+
+#: apps/employees/models.py:24
+msgid "emergency contact"
+msgstr "அவசர தொடர்பு"
+
+#: apps/employees/models.py:26
+msgid "wage type"
+msgstr "ஊதிய வகை"
+
+#: apps/employees/models.py:28
+msgid "wage rate"
+msgstr "ஊதிய விகிதம்"
+
+#: apps/employees/models.py:29
+msgid "Per day for daily wage, per month for monthly salary"
+msgstr "தினக்கூலிக்கு நாளுக்கு, மாத சம்பளத்துக்கு மாதத்துக்கு"
+
+#: apps/employees/models.py:32
+msgid "overtime hourly rate"
+msgstr "கூடுதல் நேர மணி விகிதம்"
+
+#: apps/employees/models.py:33
+msgid "Leave blank to calculate from wage and company overtime settings"
+msgstr "ஊதியம் மற்றும் நிறுவன அமைப்பிலிருந்து கணக்கிட காலியாக விடவும்"
+
+#: apps/employees/models.py:36
+msgid "allowances / deductions"
+msgstr "படிகள் / பிடித்தங்கள்"
+
+#: apps/employees/models.py:37
+msgid ""
+"Extra pay rules applied to this employee in addition to the ones marked "
+"'apply to everyone'"
+msgstr ""
+"'அனைவருக்கும் பொருந்தும்' விதிகளுடன் இந்த ஊழியருக்கு கூடுதல் ஊதிய விதிகள்"
+
+#: apps/employees/models.py:40
+msgid "account holder name"
+msgstr "கணக்கு வைத்திருப்பவர் பெயர்"
+
+#: apps/employees/models.py:41
+msgid "account number"
+msgstr "கணக்கு எண்"
+
+#: apps/employees/models.py:42
+msgid "bank / branch code"
+msgstr "வங்கி / கிளைக் குறியீடு (IFSC)"
+
+#: apps/employees/models.py:43
+msgid "UPI / mobile wallet"
+msgstr "UPI / மொபைல் வாலட்"
+
+#: apps/employees/models.py:47
+msgid "assigned site"
+msgstr "ஒதுக்கப்பட்ட தளம்"
+
+#: apps/employees/models.py:51
+msgid "login account"
+msgstr "உள்நுழைவுக் கணக்கு"
+
+#: apps/employees/models.py:53
+msgid "date joined"
+msgstr "சேர்ந்த தேதி"
+
+#: apps/employees/models.py:54 apps/payroll/models.py:56
+msgid "active"
+msgstr "செயலில்"
+
+#: apps/employees/models.py:60
+msgid "employees"
+msgstr "ஊழியர்கள்"
+
+#: apps/employees/views.py:46 templates/employees/employee_list.html:5
+msgid "New employee"
+msgstr "புதிய ஊழியர்"
+
+#: apps/employees/views.py:57
+msgid "Edit employee"
+msgstr "ஊழியரைத் திருத்து"
+
+#: apps/payroll/forms.py:20
+msgid "'To' date must be after 'From' date."
+msgstr "'வரை' தேதி 'முதல்' தேதிக்குப் பின் இருக்க வேண்டும்."
+
+#: apps/payroll/forms.py:22
+msgid "A payroll period can be at most one month."
+msgstr "சம்பளக் காலம் அதிகபட்சம் ஒரு மாதம்."
+
+#: apps/payroll/models.py:18
+msgid "Earning / allowance"
+msgstr "வருமானம் / படி"
+
+#: apps/payroll/models.py:19
+msgid "Deduction from employee"
+msgstr "ஊழியரிடம் பிடித்தம்"
+
+#: apps/payroll/models.py:20
+msgid "Employer contribution (not deducted)"
+msgstr "முதலாளி பங்களிப்பு (பிடிக்கப்படாது)"
+
+#: apps/payroll/models.py:23
+msgid "Fixed amount per payroll"
+msgstr "ஒவ்வொரு சம்பளத்துக்கும் நிலையான தொகை"
+
+#: apps/payroll/models.py:24
+msgid "Amount per day worked"
+msgstr "வேலை செய்த நாளுக்கு தொகை"
+
+#: apps/payroll/models.py:25
+msgid "Percentage of earned wage"
+msgstr "ஈட்டிய ஊதியத்தின் சதவீதம்"
+
+#: apps/payroll/models.py:26
+msgid "Percentage of gross pay"
+msgstr "மொத்த ஊதியத்தின் சதவீதம்"
+
+#: apps/payroll/models.py:29
+msgid "Daily and monthly staff"
+msgstr "தினக்கூலி மற்றும் மாத ஊழியர்கள்"
+
+#: apps/payroll/models.py:30
+msgid "Daily wage staff only"
+msgstr "தினக்கூலி ஊழியர்கள் மட்டும்"
+
+#: apps/payroll/models.py:31
+msgid "Monthly staff only"
+msgstr "மாத ஊழியர்கள் மட்டும்"
+
+#: apps/payroll/models.py:34
+msgid "short code"
+msgstr "சுருக்கக் குறியீடு"
+
+#: apps/payroll/models.py:35
+msgid "type"
+msgstr "வகை"
+
+#: apps/payroll/models.py:36
+msgid "calculation"
+msgstr "கணக்கீடு"
+
+#: apps/payroll/models.py:38
+msgid "amount or percentage"
+msgstr "தொகை அல்லது சதவீதம்"
+
+#: apps/payroll/models.py:39
+msgid "An amount for fixed / per day, or a percentage such as 12 for 12%"
+msgstr "நிலையான / நாள் முறைக்கு தொகை, அல்லது சதவீதம் (12% க்கு 12)"
+
+#: apps/payroll/models.py:42
+msgid "calculate on at most"
+msgstr "அதிகபட்சம் இதன் மீது கணக்கிடு"
+
+#: apps/payroll/models.py:43
+msgid ""
+"Percentage is applied to the smaller of the wage and this amount (e.g. a PF "
+"wage ceiling)"
+msgstr ""
+"ஊதியம் மற்றும் இந்தத் தொகையில் குறைவானதன் மீது சதவீதம் (எ.கா. PF உச்சவரம்பு)"
+
+#: apps/payroll/models.py:46
+msgid "only if gross pay is at most"
+msgstr "மொத்த ஊதியம் இதற்குள் இருந்தால் மட்டும்"
+
+#: apps/payroll/models.py:47
+msgid "Skip this rule when gross pay is above this amount (e.g. an ESI limit)"
+msgstr ""
+"மொத்த ஊதியம் இதைவிட அதிகமானால் இந்த விதி பொருந்தாது (எ.கா. ESI வரம்பு)"
+
+#: apps/payroll/models.py:49
+msgid "maximum amount"
+msgstr "அதிகபட்சத் தொகை"
+
+#: apps/payroll/models.py:50
+msgid "applies to"
+msgstr "பொருந்துவது"
+
+#: apps/payroll/models.py:52
+msgid "apply to everyone automatically"
+msgstr "அனைவருக்கும் தானாகப் பொருந்தும்"
+
+#: apps/payroll/models.py:53
+msgid "Otherwise it applies only to employees it is selected for"
+msgstr "இல்லையெனில் தேர்ந்தெடுத்த ஊழியர்களுக்கு மட்டும்"
+
+#: apps/payroll/models.py:55
+msgid "round to whole number"
+msgstr "முழு எண்ணாக்கு"
+
+#: apps/payroll/models.py:57
+msgid "display order"
+msgstr "காட்சி வரிசை"
+
+#: apps/payroll/models.py:61
+msgid "pay component"
+msgstr "ஊதியக் கூறு"
+
+#: apps/payroll/models.py:62
+msgid "pay components"
+msgstr "ஊதியக் கூறுகள்"
+
+#: apps/payroll/models.py:73
+msgid "amount"
+msgstr "தொகை"
+
+#: apps/payroll/models.py:75
+msgid "recover per payroll"
+msgstr "ஒவ்வொரு சம்பளத்திலும் பிடிக்கும் தொகை"
+
+#: apps/payroll/models.py:76
+msgid "Leave blank to recover the full balance in the next payroll"
+msgstr "அடுத்த சம்பளத்தில் முழு நிலுவையும் பிடிக்க காலியாக விடவும்"
+
+#: apps/payroll/models.py:78
+msgid "recovered so far"
+msgstr "இதுவரை பிடித்தது"
+
+#: apps/payroll/models.py:79
+msgid "reason"
+msgstr "காரணம்"
+
+#: apps/payroll/models.py:84
+msgid "salary advance"
+msgstr "சம்பள முன்பணம்"
+
+#: apps/payroll/models.py:85
+msgid "salary advances"
+msgstr "சம்பள முன்பணங்கள்"
+
+#: apps/payroll/models.py:97
+msgid "Draft"
+msgstr "வரைவு"
+
+#: apps/payroll/models.py:98
+msgid "Finalized"
+msgstr "இறுதி செய்யப்பட்டது"
+
+#: apps/payroll/models.py:100
+msgid "from"
+msgstr "முதல்"
+
+#: apps/payroll/models.py:101
+msgid "to"
+msgstr "வரை"
+
+#: apps/payroll/models.py:103
+msgid "staff"
+msgstr "ஊழியர்கள்"
+
+#: apps/payroll/models.py:104
+msgid "All staff"
+msgstr "அனைத்து ஊழியர்கள்"
+
+#: apps/payroll/models.py:108
+msgid "Leave blank for all sites"
+msgstr "அனைத்து தளங்களுக்கும் காலியாக விடவும்"
+
+#: apps/payroll/models.py:117
+msgid "payroll run"
+msgstr "சம்பளப் பட்டியல்"
+
+#: apps/payroll/models.py:118
+msgid "payroll runs"
+msgstr "சம்பளப் பட்டியல்கள்"
+
+#: apps/payroll/views.py:37 templates/payroll/run_list.html:5
+msgid "New payroll"
+msgstr "புதிய சம்பளப் பட்டியல்"
+
+#: apps/payroll/views.py:38
+msgid "Pay is worked out from attendance in this period."
+msgstr "இந்தக் காலத்தின் வருகையிலிருந்து ஊதியம் கணக்கிடப்படும்."
+
+#: apps/payroll/views.py:68
+msgid "This payroll is finalized and cannot be changed."
+msgstr "இந்தச் சம்பளப் பட்டியல் இறுதி செய்யப்பட்டது, மாற்ற முடியாது."
+
+#: apps/payroll/views.py:71
+msgid "Payroll recalculated from latest attendance."
+msgstr "சமீபத்திய வருகையிலிருந்து மீண்டும் கணக்கிடப்பட்டது."
+
+#: apps/payroll/views.py:74
+msgid "Payroll finalized. Advances have been updated."
+msgstr "சம்பளம் இறுதி செய்யப்பட்டது. முன்பணங்கள் புதுப்பிக்கப்பட்டன."
+
+#: apps/payroll/views.py:77
+msgid "Draft payroll deleted."
+msgstr "வரைவு சம்பளப் பட்டியல் நீக்கப்பட்டது."
+
+#: apps/payroll/views.py:135
+msgid "Give salary advance"
+msgstr "சம்பள முன்பணம் வழங்கு"
+
+#: apps/payroll/views.py:154
+msgid "New pay rule"
+msgstr "புதிய ஊதிய விதி"
+
+#: apps/payroll/views.py:163
+msgid "Edit pay rule"
+msgstr "ஊதிய விதியைத் திருத்து"
+
+#: config/settings.py:99
+msgid "English"
+msgstr "ஆங்கிலம்"
+
+#: config/settings.py:99
+msgid "Tamil"
+msgstr "தமிழ்"
+
+#: templates/403.html:3
+msgid "Not allowed"
+msgstr "அனுமதி இல்லை"
+
+#: templates/403.html:4
+msgid ""
+"Your role does not have access to this page. Ask the owner or admin if you "
+"need it."
+msgstr ""
+"உங்கள் பொறுப்புக்கு இந்தப் பக்கத்தை அணுக அனுமதி இல்லை. தேவைப்பட்டால் "
+"உரிமையாளர் அல்லது நிர்வாகியிடம் கேட்கவும்."
+
+#: templates/403.html:5 templates/_nav_links.html:2 templates/base.html:51
+#: templates/core/dashboard.html:2
+msgid "Home"
+msgstr "முகப்பு"
+
+#: templates/_nav_links.html:4 templates/attendance/me.html:2
+#: templates/attendance/me.html:4
+msgid "My attendance"
+msgstr "என் வருகை"
+
+#: templates/_nav_links.html:5 templates/payroll/my_payslips.html:2
+#: templates/payroll/my_payslips.html:4
+msgid "My payslips"
+msgstr "என் சம்பளச் சீட்டுகள்"
+
+#: templates/_nav_links.html:8
+msgid "Attendance"
+msgstr "வருகை"
+
+#: templates/_nav_links.html:9 templates/attendance/mark.html:2
+#: templates/attendance/mark.html:4
+msgid "Mark site attendance"
+msgstr "தள வருகைப் பதிவு"
+
+#: templates/_nav_links.html:10 templates/attendance/register.html:2
+#: templates/attendance/register.html:4
+msgid "Monthly register"
+msgstr "மாத வருகைப் பதிவேடு"
+
+#: templates/_nav_links.html:13
+msgid "People & sites"
+msgstr "ஆட்கள் & தளங்கள்"
+
+#: templates/_nav_links.html:18
+msgid "Salary"
+msgstr "சம்பளம்"
+
+#: templates/_nav_links.html:19 templates/payroll/run_detail.html:2
+#: templates/payroll/run_detail.html:5 templates/payroll/run_list.html:2
+#: templates/payroll/run_list.html:4
+msgid "Payroll"
+msgstr "சம்பளப் பட்டியல்"
+
+#: templates/_nav_links.html:20 templates/employees/employee_detail.html:31
+#: templates/payroll/advance_list.html:2
+msgid "Advances"
+msgstr "முன்பணங்கள்"
+
+#: templates/_nav_links.html:21 templates/payroll/component_list.html:2
+#: templates/payroll/component_list.html:4
+msgid "Pay rules"
+msgstr "ஊதிய விதிகள்"
+
+#: templates/_nav_links.html:24
+msgid "Administration"
+msgstr "நிர்வாகம்"
+
+#: templates/_nav_links.html:25 templates/accounts/role_list.html:9
+#: templates/accounts/role_list.html:14 templates/accounts/user_list.html:2
+#: templates/accounts/user_list.html:4
+msgid "Users"
+msgstr "பயனர்கள்"
+
+#: templates/_nav_links.html:26 templates/accounts/role_list.html:2
+#: templates/accounts/role_list.html:4
+msgid "Roles & permissions"
+msgstr "பொறுப்புகள் & அனுமதிகள்"
+
+#: templates/_nav_links.html:29
+msgid "Account"
+msgstr "கணக்கு"
+
+#: templates/_pagination.html:3
+msgid "Previous"
+msgstr "முந்தைய"
+
+#: templates/_pagination.html:5
+msgid "Next"
+msgstr "அடுத்து"
+
+#: templates/accounts/login.html:2 templates/accounts/login.html:11
+msgid "Login"
+msgstr "உள்நுழை"
+
+#: templates/accounts/login.html:8 templates/accounts/user_list.html:8
+#: templates/accounts/user_list.html:12
+msgid "Username"
+msgstr "பயனர் பெயர்"
+
+#: templates/accounts/login.html:9
+msgid "Password"
+msgstr "கடவுச்சொல்"
+
+#: templates/accounts/role_form.html:8
+msgid "Module"
+msgstr "பகுதி"
+
+#: templates/accounts/role_form.html:16 templates/form.html:8
+msgid "Save"
+msgstr "சேமி"
+
+#: templates/accounts/role_form.html:17 templates/form.html:9
+msgid "Cancel"
+msgstr "ரத்து"
+
+#: templates/accounts/role_list.html:7
+msgid ""
+"A role decides what its users can see and do. The owner account can always "
+"do everything."
+msgstr ""
+"ஒரு பொறுப்பு அதன் பயனர்கள் எதைப் பார்க்கலாம், செய்யலாம் என்பதை முடிவு "
+"செய்கிறது. உரிமையாளர் கணக்கு எப்போதும் அனைத்தையும் செய்யலாம்."
+
+#: templates/accounts/role_list.html:9 templates/accounts/role_list.html:13
+msgid "Role"
+msgstr "பொறுப்பு"
+
+#: templates/accounts/role_list.html:15
+msgid "Edit permissions"
+msgstr "அனுமதிகளைத் திருத்து"
+
+#: templates/accounts/user_list.html:8 templates/accounts/user_list.html:13
+#: templates/core/project_list.html:8 templates/core/project_list.html:13
+#: templates/employees/employee_list.html:13
+#: templates/employees/employee_list.html:18
+#: templates/payroll/component_list.html:9
+#: templates/payroll/component_list.html:13
+msgid "Name"
+msgstr "பெயர்"
+
+#: templates/accounts/user_list.html:8 templates/accounts/user_list.html:14
+msgid "Roles"
+msgstr "பொறுப்புகள்"
+
+#: templates/accounts/user_list.html:8 templates/accounts/user_list.html:15
+#: templates/attendance/mark.html:24 templates/attendance/mark.html:31
+#: templates/attendance/me.html:39 templates/attendance/me.html:42
+#: templates/core/project_list.html:8 templates/core/project_list.html:15
+#: templates/employees/employee_detail.html:16
+#: templates/employees/employee_detail.html:21
+#: templates/employees/employee_detail.html:24
+#: templates/payroll/component_list.html:9
+#: templates/payroll/component_list.html:18 templates/payroll/run_list.html:8
+#: templates/payroll/run_list.html:15
+msgid "Status"
+msgstr "நிலை"
+
+#: templates/accounts/user_list.html:15
+msgid "Disabled"
+msgstr "முடக்கப்பட்டது"
+
+#: templates/attendance/mark.html:10 templates/attendance/register.html:11
+msgid "Show"
+msgstr "காட்டு"
+
+#: templates/attendance/mark.html:14
+msgid "Create an active project / site first."
+msgstr "முதலில் ஒரு செயலில் உள்ள திட்டம் / தளத்தை உருவாக்கவும்."
+
+#: templates/attendance/mark.html:20
+msgid "All present"
+msgstr "அனைவரும் வருகை"
+
+#: templates/attendance/mark.html:21
+msgid "All absent"
+msgstr "அனைவரும் வரவில்லை"
+
+#: templates/attendance/mark.html:24 templates/attendance/mark.html:29
+#: templates/attendance/register.html:16 templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:11 templates/payroll/run_detail.html:28
+#: templates/payroll/run_detail.html:33
+msgid "Employee"
+msgstr "ஊழியர்"
+
+#: templates/attendance/mark.html:24 templates/attendance/mark.html:38
+#: templates/attendance/me.html:39 templates/attendance/me.html:45
+#: templates/employees/employee_detail.html:21
+#: templates/employees/employee_detail.html:25
+#: templates/payroll/run_detail.html:28 templates/payroll/run_detail.html:35
+msgid "OT hrs"
+msgstr "கூ.நே. மணி"
+
+#: templates/attendance/mark.html:24 templates/attendance/mark.html:39
+msgid "Note"
+msgstr "குறிப்பு"
+
+#: templates/attendance/mark.html:30
+msgid "self"
+msgstr "சுயம்"
+
+#: templates/attendance/mark.html:35
+msgid "Clear"
+msgstr "அழி"
+
+#: templates/attendance/mark.html:43
+msgid ""
+"No employees are assigned to this site. Set the 'assigned site' on "
+"employees."
+msgstr ""
+"இந்தத் தளத்துக்கு ஊழியர்கள் ஒதுக்கப்படவில்லை. ஊழியர்களில் 'ஒதுக்கப்பட்ட "
+"தளம்' அமைக்கவும்."
+
+#: templates/attendance/mark.html:47
+msgid "Save attendance"
+msgstr "வருகையைச் சேமி"
+
+#: templates/attendance/me.html:8 templates/core/dashboard.html:10
+msgid "Checked in at"
+msgstr "வருகை நேரம்"
+
+#: templates/attendance/me.html:11 templates/core/dashboard.html:11
+msgid "Checked out at"
+msgstr "வெளியேறிய நேரம்"
+
+#: templates/attendance/me.html:15 templates/core/dashboard.html:12
+msgid "Check out"
+msgstr "வெளியேறு"
+
+#: templates/attendance/me.html:22 templates/core/dashboard.html:31
+#: templates/core/dashboard.html:35
+#: templates/employees/employee_detail.html:12
+#: templates/employees/employee_detail.html:21
+#: templates/employees/employee_detail.html:25
+#: templates/employees/employee_list.html:13
+#: templates/employees/employee_list.html:20 templates/payroll/run_list.html:8
+#: templates/payroll/run_list.html:14
+msgid "Site"
+msgstr "தளம்"
+
+#: templates/attendance/me.html:28
+msgid "Photo"
+msgstr "புகைப்படம்"
+
+#: templates/attendance/me.html:31
+msgid "Getting your location…"
+msgstr "உங்கள் இருப்பிடத்தைப் பெறுகிறது…"
+
+#: templates/attendance/me.html:32 templates/base.html:54
+msgid "Check in"
+msgstr "வருகை பதிவு"
+
+#: templates/attendance/me.html:37
+msgid "Last 10 days"
+msgstr "கடந்த 10 நாட்கள்"
+
+#: templates/attendance/me.html:39 templates/attendance/me.html:42
+#: templates/employees/employee_detail.html:21
+#: templates/employees/employee_detail.html:24
+#: templates/employees/employee_detail.html:33
+#: templates/employees/employee_detail.html:36
+#: templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:11
+msgid "Date"
+msgstr "தேதி"
+
+#: templates/attendance/me.html:39 templates/attendance/me.html:43
+msgid "In"
+msgstr "வருகை"
+
+#: templates/attendance/me.html:39 templates/attendance/me.html:44
+msgid "Out"
+msgstr "வெளியேறல்"
+
+#: templates/attendance/me.html:46 templates/employees/employee_detail.html:26
+msgid "No attendance yet."
+msgstr "இன்னும் வருகை இல்லை."
+
+#: templates/attendance/me.html:55
+msgid "Location is not available on this device."
+msgstr "இந்தச் சாதனத்தில் இருப்பிடம் கிடைக்கவில்லை."
+
+#: templates/attendance/me.html:59
+msgid "Location found"
+msgstr "இருப்பிடம் கிடைத்தது"
+
+#: templates/attendance/me.html:61
+msgid "Could not get location:"
+msgstr "இருப்பிடம் பெற முடியவில்லை:"
+
+#: templates/attendance/register.html:8
+msgid "All sites"
+msgstr "அனைத்து தளங்கள்"
+
+#: templates/attendance/register.html:12
+msgid "Print"
+msgstr "அச்சிடு"
+
+#: templates/attendance/register.html:16
+msgid "Days"
+msgstr "நாட்கள்"
+
+#: templates/attendance/register.html:16
+msgid "OT"
+msgstr "கூ.நே."
+
+#: templates/attendance/register.html:23
+msgid "No attendance in this month."
+msgstr "இந்த மாதத்தில் வருகை இல்லை."
+
+#: templates/base.html:22
+msgid "Language"
+msgstr "மொழி"
+
+#: templates/base.html:28
+msgid "Logout"
+msgstr "வெளியேறு"
+
+#: templates/base.html:58
+msgid "Mark"
+msgstr "பதிவு"
+
+#: templates/base.html:62 templates/payroll/run_list.html:8
+#: templates/payroll/run_list.html:13
+msgid "Staff"
+msgstr "ஊழியர்"
+
+#: templates/base.html:65
+msgid "More"
+msgstr "மேலும்"
+
+#: templates/core/dashboard.html:4
+#, python-format
+msgid "Hello, %(name)s"
+msgstr "வணக்கம், %(name)s"
+
+#: templates/core/dashboard.html:14
+msgid "Today:"
+msgstr "இன்று:"
+
+#: templates/core/dashboard.html:16
+msgid "Check in now"
+msgstr "இப்போது வருகை பதிவு செய்"
+
+#: templates/core/dashboard.html:23
+msgid "Present today"
+msgstr "இன்று வருகை"
+
+#: templates/core/dashboard.html:25
+msgid "On leave"
+msgstr "விடுப்பில்"
+
+#: templates/core/dashboard.html:26
+msgid "Active employees"
+msgstr "செயலில் உள்ள ஊழியர்கள்"
+
+#: templates/core/dashboard.html:29
+msgid "Active sites today"
+msgstr "இன்றைய செயலில் உள்ள தளங்கள்"
+
+#: templates/core/dashboard.html:31 templates/core/dashboard.html:36
+#: templates/core/project_list.html:8 templates/core/project_list.html:14
+msgid "Client"
+msgstr "வாடிக்கையாளர்"
+
+#: templates/core/dashboard.html:31 templates/core/dashboard.html:37
+msgid "On site"
+msgstr "தளத்தில்"
+
+#: templates/core/dashboard.html:38
+msgid "Mark attendance"
+msgstr "வருகை பதிவு செய்"
+
+#: templates/core/dashboard.html:41
+msgid "No active sites yet."
+msgstr "இன்னும் செயலில் உள்ள தளங்கள் இல்லை."
+
+#: templates/core/menu.html:2 templates/core/menu.html:4
+msgid "Menu"
+msgstr "பட்டியல்"
+
+#: templates/core/project_form.html:9
+msgid "Use my current location"
+msgstr "என் தற்போதைய இருப்பிடத்தைப் பயன்படுத்து"
+
+#: templates/core/project_list.html:5
+msgid "New site"
+msgstr "புதிய தளம்"
+
+#: templates/core/project_list.html:8 templates/core/project_list.html:12
+#: templates/employees/employee_list.html:13
+#: templates/employees/employee_list.html:17
+msgid "Code"
+msgstr "குறியீடு"
+
+#: templates/core/project_list.html:8 templates/core/project_list.html:16
+msgid "Contract value"
+msgstr "ஒப்பந்த மதிப்பு"
+
+#: templates/core/project_list.html:20
+msgid "No sites yet. Add your first site."
+msgstr "இன்னும் தளங்கள் இல்லை. உங்கள் முதல் தளத்தைச் சேர்க்கவும்."
+
+#: templates/employees/employee_detail.html:11
+#: templates/employees/employee_list.html:13
+#: templates/employees/employee_list.html:22
+msgid "Phone"
+msgstr "தொலைபேசி"
+
+#: templates/employees/employee_detail.html:13
+#: templates/employees/employee_list.html:13
+#: templates/employees/employee_list.html:21
+msgid "Wage"
+msgstr "ஊதியம்"
+
+#: templates/employees/employee_detail.html:14
+msgid "Joined"
+msgstr "சேர்ந்தது"
+
+#: templates/employees/employee_detail.html:15
+msgid "Login account"
+msgstr "உள்நுழைவுக் கணக்கு"
+
+#: templates/employees/employee_detail.html:16
+#: templates/employees/employee_list.html:18
+msgid "Inactive"
+msgstr "செயலற்றது"
+
+#: templates/employees/employee_detail.html:19
+msgid "Recent attendance"
+msgstr "சமீபத்திய வருகை"
+
+#: templates/employees/employee_detail.html:33
+#: templates/employees/employee_detail.html:36
+#: templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:12
+msgid "Amount"
+msgstr "தொகை"
+
+#: templates/employees/employee_detail.html:33
+#: templates/employees/employee_detail.html:36
+#: templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:13
+msgid "Balance"
+msgstr "நிலுவை"
+
+#: templates/employees/employee_detail.html:37
+#: templates/payroll/advance_list.html:15
+msgid "No advances."
+msgstr "முன்பணம் இல்லை."
+
+#: templates/employees/employee_list.html:8
+msgid "Search name, code, phone, trade"
+msgstr "பெயர், குறியீடு, தொலைபேசி, தொழில் தேடு"
+
+#: templates/employees/employee_list.html:9
+msgid "Include inactive"
+msgstr "செயலற்றவர்களையும் சேர்"
+
+#: templates/employees/employee_list.html:10
+msgid "Search"
+msgstr "தேடு"
+
+#: templates/employees/employee_list.html:13
+#: templates/employees/employee_list.html:19
+msgid "Trade"
+msgstr "தொழில்"
+
+#: templates/employees/employee_list.html:21
+msgid "day"
+msgstr "நாள்"
+
+#: templates/employees/employee_list.html:21
+msgid "month"
+msgstr "மாதம்"
+
+#: templates/employees/employee_list.html:25
+msgid "No employees found."
+msgstr "ஊழியர்கள் இல்லை."
+
+#: templates/payroll/advance_list.html:5
+msgid "Give advance"
+msgstr "முன்பணம் வழங்கு"
+
+#: templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:12
+msgid "Recovered"
+msgstr "பிடித்தது"
+
+#: templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:14
+msgid "Reason"
+msgstr "காரணம்"
+
+#: templates/payroll/advance_list.html:13
+msgid "Cleared"
+msgstr "தீர்ந்தது"
+
+#: templates/payroll/component_list.html:5
+msgid "New rule"
+msgstr "புதிய விதி"
+
+#: templates/payroll/component_list.html:7
+msgid ""
+"Allowances, deductions and statutory contributions (PF, ESI, social "
+"security, tax …). Add only what applies to your company."
+msgstr ""
+"படிகள், பிடித்தங்கள் மற்றும் சட்டப்பூர்வ பங்களிப்புகள் (PF, ESI, சமூகப் "
+"பாதுகாப்பு, வரி …). உங்கள் நிறுவனத்துக்குப் பொருந்துவதை மட்டும் சேர்க்கவும்."
+
+#: templates/payroll/component_list.html:9
+#: templates/payroll/component_list.html:14
+msgid "Type"
+msgstr "வகை"
+
+#: templates/payroll/component_list.html:9
+#: templates/payroll/component_list.html:15
+msgid "Calculation"
+msgstr "கணக்கீடு"
+
+#: templates/payroll/component_list.html:9
+#: templates/payroll/component_list.html:16
+msgid "Value"
+msgstr "மதிப்பு"
+
+#: templates/payroll/component_list.html:9
+#: templates/payroll/component_list.html:17
+msgid "Applies to"
+msgstr "பொருந்துவது"
+
+#: templates/payroll/component_list.html:17
+msgid "everyone"
+msgstr "அனைவருக்கும்"
+
+#: templates/payroll/component_list.html:17
+msgid "selected staff"
+msgstr "தேர்ந்தெடுத்த ஊழியர்"
+
+#: templates/payroll/component_list.html:18
+msgid "On"
+msgstr "இயக்கம்"
+
+#: templates/payroll/component_list.html:18
+msgid "Off"
+msgstr "நிறுத்தம்"
+
+#: templates/payroll/component_list.html:20
+msgid "No pay rules. Wages are paid as attendance × rate."
+msgstr "ஊதிய விதிகள் இல்லை. ஊதியம் = வருகை × விகிதம்."
+
+#: templates/payroll/my_payslips.html:6 templates/payroll/my_payslips.html:9
+#: templates/payroll/run_list.html:8 templates/payroll/run_list.html:12
+msgid "Period"
+msgstr "காலம்"
+
+#: templates/payroll/my_payslips.html:6 templates/payroll/my_payslips.html:10
+#: templates/payroll/payslip.html:32 templates/payroll/run_list.html:8
+#: templates/payroll/run_list.html:16
+msgid "Net pay"
+msgstr "நிகர ஊதியம்"
+
+#: templates/payroll/my_payslips.html:11
+msgid "No payslips yet."
+msgstr "இன்னும் சம்பளச் சீட்டு இல்லை."
+
+#: templates/payroll/payslip.html:2 templates/payroll/payslip.html:10
+msgid "Payslip"
+msgstr "சம்பளச் சீட்டு"
+
+#: templates/payroll/payslip.html:8
+msgid "Print / Save PDF"
+msgstr "அச்சிடு / PDF சேமி"
+
+#: templates/payroll/payslip.html:15
+msgid "Days worked"
+msgstr "வேலை செய்த நாட்கள்"
+
+#: templates/payroll/payslip.html:16 templates/payroll/run_detail.html:28
+#: templates/payroll/run_detail.html:34
+msgid "Paid days"
+msgstr "ஊதிய நாட்கள்"
+
+#: templates/payroll/payslip.html:17
+msgid "Overtime hours"
+msgstr "கூடுதல் நேரம் (மணி)"
+
+#: templates/payroll/payslip.html:19
+msgid "Earnings"
+msgstr "வருமானம்"
+
+#: templates/payroll/payslip.html:21
+msgid "Wage for paid days"
+msgstr "ஊதிய நாட்களுக்கான ஊதியம்"
+
+#: templates/payroll/payslip.html:22
+msgid "Overtime"
+msgstr "கூடுதல் நேரம்"
+
+#: templates/payroll/payslip.html:24
+msgid "Gross pay"
+msgstr "மொத்த ஊதியம்"
+
+#: templates/payroll/payslip.html:26 templates/payroll/run_detail.html:29
+#: templates/payroll/run_detail.html:37
+msgid "Deductions"
+msgstr "பிடித்தங்கள்"
+
+#: templates/payroll/payslip.html:29
+msgid "Advance recovery"
+msgstr "முன்பணப் பிடித்தம்"
+
+#: templates/payroll/payslip.html:30
+msgid "Total deductions"
+msgstr "மொத்தப் பிடித்தம்"
+
+#: templates/payroll/payslip.html:34
+msgid "Employer contributions (not deducted)"
+msgstr "முதலாளி பங்களிப்பு (பிடிக்கப்படவில்லை)"
+
+#: templates/payroll/run_detail.html:9
+msgid "Download spreadsheet"
+msgstr "விரிதாள் பதிவிறக்கு"
+
+#: templates/payroll/run_detail.html:12
+msgid "Recalculate"
+msgstr "மீண்டும் கணக்கிடு"
+
+#: templates/payroll/run_detail.html:14
+msgid "Finalize? Payslips will be locked and advances recovered."
+msgstr ""
+"இறுதி செய்யவா? சம்பளச் சீட்டுகள் பூட்டப்படும், முன்பணம் பிடிக்கப்படும்."
+
+#: templates/payroll/run_detail.html:14
+msgid "Finalize"
+msgstr "இறுதி செய்"
+
+#: templates/payroll/run_detail.html:16
+msgid "Delete this draft?"
+msgstr "இந்த வரைவை நீக்கவா?"
+
+#: templates/payroll/run_detail.html:23 templates/payroll/run_detail.html:29
+#: templates/payroll/run_detail.html:36
+msgid "Gross"
+msgstr "மொத்தம்"
+
+#: templates/payroll/run_detail.html:24
+msgid "Net to pay"
+msgstr "செலுத்த வேண்டிய நிகரம்"
+
+#: templates/payroll/run_detail.html:25
+msgid "Employer contributions"
+msgstr "முதலாளி பங்களிப்பு"
+
+#: templates/payroll/run_detail.html:29 templates/payroll/run_detail.html:38
+msgid "Advance"
+msgstr "முன்பணம்"
+
+#: templates/payroll/run_detail.html:29 templates/payroll/run_detail.html:39
+msgid "Net"
+msgstr "நிகரம்"
+
+#: templates/payroll/run_detail.html:41
+msgid "No employees matched this payroll."
+msgstr "இந்தச் சம்பளப் பட்டியலுக்கு ஊழியர்கள் இல்லை."
+
+#: templates/payroll/run_list.html:18
+msgid "No payroll yet."
+msgstr "இன்னும் சம்பளப் பட்டியல் இல்லை."
+
+#: templates/pwa/offline.html:3
+msgid "Offline"
+msgstr "இணைப்பு இல்லை"
+
+#: templates/pwa/offline.html:5
+msgid "No internet connection"
+msgstr "இணைய இணைப்பு இல்லை"
+
+#: templates/pwa/offline.html:6
+msgid "Please check your mobile data or Wi-Fi and try again."
+msgstr "மொபைல் டேட்டா அல்லது Wi-Fi-ஐ சரிபார்த்து மீண்டும் முயற்சிக்கவும்."
+
+#: templates/pwa/offline.html:8
+msgid "Try again"
+msgstr "மீண்டும் முயற்சி"

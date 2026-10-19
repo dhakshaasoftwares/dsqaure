@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Roles & permissions" %}{% endblock %}
+{% block content %}
+<div class="toolbar"><h1 style="margin:0">{% trans "Roles & permissions" %}</h1><span class="spacer"></span>
+  {% if perms.auth.add_group %}<a class="btn btn-primary" href="{% url 'accounts:role_create' %}">+ {% trans "New role" %}</a>{% endif %}
+</div>
+<p class="muted">{% trans "A role decides what its users can see and do. The owner account can always do everything." %}</p>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Role" %}</th><th>{% trans "Users" %}</th><th></th></tr></thead>
+  <tbody>
+  {% for g in object_list %}
+    <tr>
+      <td data-label="{% trans 'Role' %}">{{ g.name }}</td>
+      <td data-label="{% trans 'Users' %}">{{ g.user_set.count }}</td>
+      <td class="right">{% if perms.auth.change_group %}<a href="{% url 'accounts:role_update' g.pk %}">{% trans "Edit permissions" %}</a>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

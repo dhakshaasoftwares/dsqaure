@@ -1,0 +1,9 @@
+{% load static i18n %}<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% trans "Offline" %}</title><link rel="stylesheet" href="{% static 'css/app.css' %}"></head>
+<body><div class="login card" style="text-align:center">
+<h1>{% trans "No internet connection" %}</h1>
+<p>{% trans "Please check your mobile data or Wi-Fi and try again." %}</p>
+<p>இணைய இணைப்பு இல்லை. மீண்டும் முயற்சிக்கவும்.</p>
+<button class="btn btn-primary" onclick="location.reload()">{% trans "Try again" %}</button>
+</div></body></html>

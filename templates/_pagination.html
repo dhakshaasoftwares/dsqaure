@@ -1,0 +1,7 @@
+{% load i18n %}{% if is_paginated %}
+<div class="toolbar" style="margin-top:1rem">
+  {% if page_obj.has_previous %}<a class="btn" href="?{% for k, v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v|urlencode }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">‹ {% trans "Previous" %}</a>{% endif %}
+  <span class="muted">{{ page_obj.number }} / {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a class="btn" href="?{% for k, v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v|urlencode }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">{% trans "Next" %} ›</a>{% endif %}
+</div>
+{% endif %}

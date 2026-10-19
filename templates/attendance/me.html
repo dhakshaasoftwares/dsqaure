@@ -1,0 +1,65 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "My attendance" %}{% endblock %}
+{% block content %}
+<h1>{% trans "My attendance" %}</h1>
+
+<div class="card">
+{% if today_record and today_record.check_in_at %}
+  <p>{% trans "Checked in at" %} <b>{{ today_record.check_in_at|time:"H:i" }}</b>
+     {% if today_record.project %}· {{ today_record.project.name }}{% endif %}</p>
+  {% if today_record.check_out_at %}
+    <p>{% trans "Checked out at" %} <b>{{ today_record.check_out_at|time:"H:i" }}</b></p>
+  {% else %}
+    <form method="post">{% csrf_token %}
+      <input type="hidden" name="action" value="check_out">
+      <button class="btn btn-big" type="submit">{% trans "Check out" %}</button>
+    </form>
+  {% endif %}
+{% else %}
+  <form method="post" enctype="multipart/form-data" id="checkin">{% csrf_token %}
+    <input type="hidden" name="lat" id="lat"><input type="hidden" name="lng" id="lng">
+    <div class="field">
+      <label for="project">{% trans "Site" %}</label>
+      <select name="project" id="project">
+        {% for p in projects %}<option value="{{ p.pk }}" {% if p.pk == employee.default_project_id %}selected{% endif %}>{{ p.name }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="photo">{% trans "Photo" %}{% if company.attendance_selfie_required %} *{% endif %}</label>
+      <input type="file" name="photo" id="photo" accept="image/*" capture="user">
+    </div>
+    <p class="muted" id="gps-status">{% trans "Getting your location…" %}</p>
+    <button class="btn btn-primary btn-big" type="submit" id="checkin-btn">{% trans "Check in" %}</button>
+  </form>
+{% endif %}
+</div>
+
+<h2>{% trans "Last 10 days" %}</h2>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Status" %}</th><th>{% trans "In" %}</th><th>{% trans "Out" %}</th><th class="num">{% trans "OT hrs" %}</th></tr></thead>
+  <tbody>
+  {% for a in recent %}
+    <tr><td data-label="{% trans 'Date' %}">{{ a.date }}</td><td data-label="{% trans 'Status' %}">{{ a.get_status_display }}</td>
+        <td data-label="{% trans 'In' %}">{{ a.check_in_at|time:"H:i"|default:"—" }}</td>
+        <td data-label="{% trans 'Out' %}">{{ a.check_out_at|time:"H:i"|default:"—" }}</td>
+        <td data-label="{% trans 'OT hrs' %}" class="num">{{ a.overtime_hours }}</td></tr>
+  {% empty %}<tr><td colspan="5" class="muted">{% trans "No attendance yet." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}
+{% block scripts %}
+<script>
+  (function () {
+    var status = document.getElementById("gps-status");
+    if (!status) return;
+    if (!navigator.geolocation) { status.textContent = "{% trans 'Location is not available on this device.' %}"; return; }
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      document.getElementById("lat").value = pos.coords.latitude.toFixed(6);
+      document.getElementById("lng").value = pos.coords.longitude.toFixed(6);
+      status.textContent = "{% trans 'Location found' %} (±" + Math.round(pos.coords.accuracy) + " m)";
+    }, function (err) {
+      status.textContent = "{% trans 'Could not get location:' %} " + err.message;
+    }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 });
+  })();
+</script>
+{% endblock %}

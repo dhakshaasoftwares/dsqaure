@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Login" %}{% endblock %}
+{% block content %}
+<div class="login">
+  <h1 style="text-align:center">{{ company.name }}</h1>
+  <form method="post" class="card">{% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="field"><label for="id_username">{% trans "Username" %}</label>{{ form.username }}</div>
+    <div class="field"><label for="id_password">{% trans "Password" %}</label>{{ form.password }}</div>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="btn btn-primary btn-big" type="submit">{% trans "Login" %}</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Monthly register" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Monthly register" %}</h1>
+<form method="get" class="toolbar">
+  <input type="month" name="month" value="{{ month|date:'Y-m' }}" style="max-width:170px">
+  <select name="project" style="max-width:240px">
+    <option value="">{% trans "All sites" %}</option>
+    {% for p in projects %}<option value="{{ p.pk }}" {% if p == project %}selected{% endif %}>{{ p.name }}</option>{% endfor %}
+  </select>
+  <button class="btn" type="submit">{% trans "Show" %}</button>
+  <button class="btn no-print" type="button" onclick="window.print()">{% trans "Print" %}</button>
+</form>
+<p class="muted">P = {% trans "Present" %}, ½ = {% trans "Half day" %}, A = {% trans "Absent" %}, L = {% trans "Leave" %}, WO = {% trans "Weekly off" %}, H = {% trans "Holiday" %}</p>
+<div class="table-wrap"><table class="compact">
+  <thead><tr><th style="text-align:left">{% trans "Employee" %}</th>{% for d in days %}<th>{{ d }}</th>{% endfor %}<th>{% trans "Days" %}</th><th>{% trans "OT" %}</th></tr></thead>
+  <tbody>
+  {% for row in table %}
+    <tr><td style="text-align:left;white-space:nowrap">{{ row.employee.name }}</td>
+      {% for c in row.cells %}<td>{{ c }}</td>{% endfor %}
+      <td><b>{{ row.total|floatformat:"-1" }}</b></td><td>{{ row.ot|floatformat:"-1" }}</td></tr>
+  {% empty %}
+    <tr><td colspan="{{ days|length|add:3 }}" class="muted">{% trans "No attendance in this month." %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

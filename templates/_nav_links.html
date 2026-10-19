@@ -1,0 +1,31 @@
+{% load i18n %}{% with path=request.path %}
+<a href="{% url 'core:dashboard' %}" class="{% if path == '/' %}active{% endif %}">{% trans "Home" %}</a>
+{% if user.employee %}
+  <a href="{% url 'attendance:me' %}" class="{% if path == '/attendance/me/' %}active{% endif %}">{% trans "My attendance" %}</a>
+  <a href="{% url 'payroll:my_payslips' %}">{% trans "My payslips" %}</a>
+{% endif %}
+{% if perms.attendance.add_attendance or perms.attendance.view_attendance %}
+  <div class="group">{% trans "Attendance" %}</div>
+  {% if perms.attendance.add_attendance %}<a href="{% url 'attendance:mark' %}" class="{% if path == '/attendance/mark/' %}active{% endif %}">{% trans "Mark site attendance" %}</a>{% endif %}
+  {% if perms.attendance.view_attendance %}<a href="{% url 'attendance:register' %}" class="{% if path == '/attendance/register/' %}active{% endif %}">{% trans "Monthly register" %}</a>{% endif %}
+{% endif %}
+{% if perms.employees.view_employee or perms.core.view_project %}
+  <div class="group">{% trans "People & sites" %}</div>
+  {% if perms.employees.view_employee %}<a href="{% url 'employees:list' %}" class="{% if '/employees/' in path %}active{% endif %}">{% trans "Employees" %}</a>{% endif %}
+  {% if perms.core.view_project %}<a href="{% url 'core:project_list' %}" class="{% if '/projects/' in path %}active{% endif %}">{% trans "Projects / sites" %}</a>{% endif %}
+{% endif %}
+{% if perms.payroll.view_payrollrun or perms.payroll.view_salaryadvance or perms.payroll.view_paycomponent %}
+  <div class="group">{% trans "Salary" %}</div>
+  {% if perms.payroll.view_payrollrun %}<a href="{% url 'payroll:run_list' %}">{% trans "Payroll" %}</a>{% endif %}
+  {% if perms.payroll.view_salaryadvance %}<a href="{% url 'payroll:advance_list' %}">{% trans "Advances" %}</a>{% endif %}
+  {% if perms.payroll.view_paycomponent %}<a href="{% url 'payroll:component_list' %}">{% trans "Pay rules" %}</a>{% endif %}
+{% endif %}
+{% if perms.accounts.view_user or perms.auth.view_group or perms.core.change_companysettings %}
+  <div class="group">{% trans "Administration" %}</div>
+  {% if perms.accounts.view_user %}<a href="{% url 'accounts:user_list' %}">{% trans "Users" %}</a>{% endif %}
+  {% if perms.auth.view_group %}<a href="{% url 'accounts:role_list' %}">{% trans "Roles & permissions" %}</a>{% endif %}
+  {% if perms.core.change_companysettings %}<a href="{% url 'core:settings' %}">{% trans "Company settings" %}</a>{% endif %}
+{% endif %}
+<div class="group">{% trans "Account" %}</div>
+<a href="{% url 'accounts:password_change' %}">{% trans "Change password" %}</a>
+{% endwith %}

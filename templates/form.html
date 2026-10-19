@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if intro %}<p class="muted">{{ intro }}</p>{% endif %}
+<form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
+  {% include "_form_fields.html" %}
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{% trans "Save" %}</button>
+    <a class="btn" href="javascript:history.back()">{% trans "Cancel" %}</a>
+  </div>
+</form>
+{% endblock %}

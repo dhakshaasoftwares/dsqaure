@@ -1,0 +1,74 @@
+{% load static i18n %}<!doctype html>
+{% get_current_language as LANG %}
+<html lang="{{ LANG }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1c1917">
+  <title>{% block title %}{{ title|default:"" }}{% endblock %} · {{ company.name }}</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="{% static 'icons/icon.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{% static 'icons/icon-192.png' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+{% if user.is_authenticated %}
+<header class="topbar">
+  <a class="brand" href="{% url 'core:dashboard' %}">
+    {% if company.logo %}<img src="{{ company.logo.url }}" alt="">{% endif %}{{ company.name }}
+  </a>
+  <form method="post" action="{% url 'accounts:set_language' %}">{% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <select name="language" onchange="this.form.submit()" aria-label="{% trans 'Language' %}">
+      <option value="en" {% if LANG == 'en' %}selected{% endif %}>EN</option>
+      <option value="ta" {% if LANG == 'ta' %}selected{% endif %}>தமிழ்</option>
+    </select>
+  </form>
+  <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
+    <button type="submit">{% trans "Logout" %}</button>
+  </form>
+</header>
+{% endif %}
+
+<div class="layout">
+{% if user.is_authenticated %}
+  <nav class="sidebar">
+    {% include "_nav_links.html" %}
+  </nav>
+{% endif %}
+
+  <main>
+    {% if messages %}
+      <ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+{% if user.is_authenticated %}
+<nav class="bottomnav">
+  <a href="{% url 'core:dashboard' %}" class="{% if request.path == '/' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>{% trans "Home" %}</a>
+  {% if user.employee %}
+  <a href="{% url 'attendance:me' %}" class="{% if request.path == '/attendance/me/' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>{% trans "Check in" %}</a>
+  {% endif %}
+  {% if perms.attendance.add_attendance %}
+  <a href="{% url 'attendance:mark' %}" class="{% if request.path == '/attendance/mark/' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>{% trans "Mark" %}</a>
+  {% endif %}
+  {% if perms.employees.view_employee %}
+  <a href="{% url 'employees:list' %}" class="{% if '/employees/' in request.path %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M1 21v-1a7 7 0 0 1 14 0v1"/><path d="M17 11a3 3 0 1 0 0-6M23 21v-1a6 6 0 0 0-4-5.6"/></svg>{% trans "Staff" %}</a>
+  {% endif %}
+  <a href="{% url 'core:menu' %}" class="{% if request.path == '/menu/' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>{% trans "More" %}</a>
+</nav>
+{% endif %}
+
+<script>
+  if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js"); }
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

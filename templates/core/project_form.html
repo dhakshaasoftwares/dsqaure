@@ -1,0 +1,21 @@
+{% extends "form.html" %}{% load i18n %}
+{% block scripts %}
+<script>
+  // Lets the supervisor stand at the site and capture its GPS position.
+  (function () {
+    var lat = document.getElementById("id_latitude");
+    if (!lat || !navigator.geolocation) return;
+    var btn = document.createElement("button");
+    btn.type = "button"; btn.className = "btn"; btn.textContent = "{% trans 'Use my current location' %}";
+    btn.onclick = function () {
+      btn.disabled = true;
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        lat.value = pos.coords.latitude.toFixed(6);
+        document.getElementById("id_longitude").value = pos.coords.longitude.toFixed(6);
+        btn.disabled = false;
+      }, function (err) { alert(err.message); btn.disabled = false; }, { enableHighAccuracy: true });
+    };
+    lat.parentNode.appendChild(btn);
+  })();
+</script>
+{% endblock %}
