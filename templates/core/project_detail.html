@@ -49,6 +49,16 @@
 </div>
 {% endif %}
 
+{% if billing %}
+<div class="toolbar"><h2 style="margin:0">{% trans "Billing" %}</h2><span class="spacer"></span>
+  {% for ag in billing.agreements %}<a class="btn" href="{% url 'billing:statement' ag.pk %}">{% trans "Statement" %} {{ ag.number }}</a>{% endfor %}</div>
+<div class="stats">
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ billing.billed|money:0 }}</div><div class="label">{% trans "Billed (before tax)" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ billing.received|money:0 }}</div><div class="label">{% trans "Received" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ billing.outstanding|money:0 }}</div><div class="label">{% trans "Outstanding" %}</div></div>
+</div>
+{% endif %}
+
 {% if quotations is not None %}
 <h2>{% trans "Quotations & agreements" %}</h2>
 <div class="table-wrap"><table class="stack">

@@ -38,3 +38,50 @@ def format_money(value, decimals=2, style=None):
     whole, _sep, frac = f"{abs(number):f}".partition(".")
     text = group_digits(whole, style)
     return f"{sign}{text}.{frac}" if decimals else f"{sign}{text}"
+
+
+_ONES = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve",
+         "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"]
+_TENS = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"]
+
+
+def _below_thousand(n):
+    words = []
+    if n >= 100:
+        words += [_ONES[n // 100], "Hundred"]
+        n %= 100
+    if n >= 20:
+        words.append(_TENS[n // 10] + (f"-{_ONES[n % 10]}" if n % 10 else ""))
+    elif n:
+        words.append(_ONES[n])
+    return " ".join(words)
+
+
+def number_in_words(n, style="international"):
+    n = int(n)
+    if n == 0:
+        return "Zero"
+    if style == "indian":
+        scales = [(10 ** 7, "Crore"), (10 ** 5, "Lakh"), (1000, "Thousand")]
+    else:
+        scales = [(10 ** 9, "Billion"), (10 ** 6, "Million"), (1000, "Thousand")]
+    words = []
+    for size, name in scales:
+        if n >= size:
+            words += [number_in_words(n // size, style), name]
+            n %= size
+    if n:
+        words.append(_below_thousand(n))
+    return " ".join(words)
+
+
+def amount_in_words(value, company=None):
+    """12,34,567.50 → 'Rupees Twelve Lakh Thirty-Four Thousand Five Hundred Sixty-Seven and Fifty Paise Only'."""
+    company = company or current_company()
+    amount = Decimal(str(value)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    whole = int(abs(amount))
+    fraction = int((abs(amount) - whole) * 100)
+    text = f"{company.currency_name} {number_in_words(whole, company.number_grouping)}".strip()
+    if fraction:
+        text += f" and {number_in_words(fraction)} {company.currency_fraction_name}".rstrip()
+    return text + " Only"

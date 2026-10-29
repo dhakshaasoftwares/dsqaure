@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Read-only" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Read-only" %}</h1>
+<div class="card">
+  <p>{{ status.message }}</p>
+  <p>{% trans "You can still view and print everything, but nothing can be added or changed." %}</p>
+  {% if perms.core.change_companysettings or user.is_superuser %}<a class="btn btn-primary" href="{% url 'licensing:licence' %}">{% trans "Enter licence key" %}</a>{% endif %}
+  <a class="btn" href="javascript:history.back()">{% trans "Back" %}</a>
+</div>
+{% endblock %}

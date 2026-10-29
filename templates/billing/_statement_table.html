@@ -1,0 +1,16 @@
+{% load i18n money %}<table class="{% if pdf_mode %}items{% else %}stack{% endif %}">
+  <thead><tr><th>{% trans "Stage / milestone" %}</th><th class="num">%</th><th class="num">{% trans "Amount" %}</th><th class="num">{% trans "Billed" %}</th><th class="num">{% trans "Received (incl. tax)" %}</th><th class="num">{% trans "Still to bill" %}</th>{% if not pdf_mode %}<th></th>{% endif %}</tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr><td data-label="{% trans 'Stage / milestone' %}">{{ r.milestone.description }}{% for i in r.invoices %}{% if not pdf_mode %}<br><a href="{% url 'billing:invoice_detail' i.pk %}"><small>{{ i }}</small></a>{% endif %}{% endfor %}</td>
+      <td data-label="%" class="num">{{ r.milestone.percent|floatformat:"-2" }}</td>
+      <td data-label="{% trans 'Amount' %}" class="num">{{ r.amount|money }}</td>
+      <td data-label="{% trans 'Billed' %}" class="num">{{ r.billed|money }}</td>
+      <td data-label="{% trans 'Received' %}" class="num">{{ r.received|money }}</td>
+      <td data-label="{% trans 'Still to bill' %}" class="num">{% if r.to_bill %}<b>{{ r.to_bill|money }}</b>{% else %}✓{% endif %}</td>
+      {% if not pdf_mode %}<td class="right">{% if r.to_bill and perms.billing.add_invoice %}<a class="btn" href="{% url 'billing:invoice_create' %}?milestone={{ r.milestone.pk }}">{% trans "Raise bill" %}</a>{% endif %}</td>{% endif %}</tr>
+  {% endfor %}
+  {% for e in extra %}<tr><td data-label="{% trans 'Extra work' %}" colspan="3">{% trans "Extra work" %}: {% if pdf_mode %}{{ e.invoice }}{% else %}<a href="{% url 'billing:invoice_detail' e.invoice.pk %}">{{ e.invoice }}</a>{% endif %} – {{ e.invoice.title }}</td>
+    <td data-label="{% trans 'Billed' %}" class="num">{{ e.billed|money }}</td><td data-label="{% trans 'Received' %}" class="num">{{ e.received|money }}</td><td></td>{% if not pdf_mode %}<td></td>{% endif %}</tr>{% endfor %}
+  </tbody>
+</table>

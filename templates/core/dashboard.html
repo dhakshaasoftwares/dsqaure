@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n money %}
 {% block title %}{% trans "Home" %}{% endblock %}
 {% block content %}
 <h1>{% blocktrans with name=user.first_name|default:user.username %}Hello, {{ name }}{% endblocktrans %}</h1>
@@ -50,6 +50,17 @@
   {% endfor %}
   </tbody>
 </table></div>
+{% endif %}
+
+{% if receivable_total %}
+<div class="toolbar"><h2 style="margin:0">{% trans "Money to collect" %}</h2><span class="spacer"></span>
+  <a class="btn" href="{% url 'billing:invoice_list' %}?state=unpaid_all">{{ company.currency_symbol }}{{ receivable_total|money:0 }} →</a></div>
+{% if overdue %}<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Overdue invoice" %}</th><th>{% trans "Client" %}</th><th>{% trans "Due" %}</th><th class="num">{% trans "Balance" %}</th></tr></thead>
+  <tbody>{% for r in overdue %}<tr><td data-label="{% trans 'Invoice' %}"><a href="{% url 'billing:invoice_detail' r.invoice.pk %}">{{ r.invoice }}</a></td>
+    <td data-label="{% trans 'Client' %}">{{ r.invoice.client }}</td><td data-label="{% trans 'Due' %}"><span class="badge bad">{{ r.invoice.due_date|date:"d M" }}</span></td>
+    <td data-label="{% trans 'Balance' %}" class="num">{{ r.balance|money }}</td></tr>{% endfor %}</tbody>
+</table></div>{% endif %}
 {% endif %}
 
 {% if low_stock %}

@@ -12,7 +12,7 @@ from django.db.models.fields.files import FieldFile
 from django.db.models.signals import post_delete, post_save, pre_save
 
 _state = threading.local()
-EXCLUDED_FIELDS = {"password", "last_login", "updated_at", "created_at"}
+EXCLUDED_FIELDS = {"password", "email_password", "licence_key", "last_login", "updated_at", "created_at"}
 
 
 def set_current_user(user):

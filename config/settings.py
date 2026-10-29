@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     "apps.inventory",
     "apps.progress",
     "apps.documents",
+    "apps.billing",
+    "apps.licensing",
+    "apps.sharing",
 ]
 
 MIDDLEWARE = [
@@ -60,6 +63,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "apps.accounts.middleware.UserLanguageMiddleware",
+    "apps.licensing.middleware.LicenceMiddleware",
     "apps.core.middleware.CompanyMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -78,6 +82,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.core.context_processors.company",
+                "apps.licensing.context_processors.licence",
             ],
         },
     },
@@ -140,6 +145,13 @@ SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = env_bool("SECURE_COOKIES", False)
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000  # big attendance sheets and BOQs
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+
+# Address used in links when there is no web request (e.g. https://selvam.example.com).
+PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "")
+
+# Licensing: days a new install works without a key, and how many users it allows meanwhile.
+LICENCE_TRIAL_DAYS = int(os.environ.get("LICENCE_TRIAL_DAYS", 30))
+LICENCE_TRIAL_USERS = int(os.environ.get("LICENCE_TRIAL_USERS", 10))
 
 # Keep people logged in on their phones for 30 days.
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30

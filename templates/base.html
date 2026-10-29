@@ -39,6 +39,10 @@
 {% endif %}
 
   <main>
+    {% if user.is_authenticated and licence.show_banner %}{% if licence.read_only or perms.core.change_companysettings %}
+      <ul class="messages"><li class="{% if licence.read_only or licence.state == 'grace' %}error{% else %}warning{% endif %}">{{ licence.message }}
+        {% if perms.core.change_companysettings %} <a href="{% url 'licensing:licence' %}">{% trans "Licence" %} →</a>{% endif %}</li></ul>
+    {% endif %}{% endif %}
     {% if messages %}
       <ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>
     {% endif %}

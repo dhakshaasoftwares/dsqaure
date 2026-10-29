@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Send" %} {{ number }}{% endblock %}
+{% block content %}
+<div class="toolbar"><div><h1 style="margin:0">{% trans "Send" %} {{ d.title }} {{ number }}</h1>
+  <span class="muted">{{ recipient_name }}</span></div><span class="spacer"></span>
+  <a class="btn" href="{{ back_url }}">{% trans "Back" %}</a></div>
+
+<div class="card">
+  <h2 style="margin-top:0">📱 {% trans "Share the PDF from this phone" %}</h2>
+  <p class="muted">{% trans "Opens your phone's share menu – pick WhatsApp and the contact. The PDF file itself is sent." %}</p>
+  <button class="btn btn-primary" type="button" data-share-pdf="{{ pdf_url }}" data-filename="{{ filename }}" data-title="{{ d.title }} {{ number }}" data-wait="{% trans 'The PDF is still loading. Try again in a moment.' %}">{% trans "Share PDF" %}</button>
+  <a class="btn" href="{{ pdf_url }}" target="_blank">{% trans "Download PDF" %}</a>
+  <p class="muted" data-share-unsupported hidden>{% trans "This browser cannot share files. Use WhatsApp with a link below, or download the PDF." %}</p>
+</div>
+
+<form method="post" class="card">{% csrf_token %}
+  <h2 style="margin-top:0">🟢 {% trans "WhatsApp with a link" %}</h2>
+  <p class="muted">{% blocktrans with days=company.share_link_days %}Sends a secure link to the PDF that works for {{ days }} days. Works from a computer too (WhatsApp Web).{% endblocktrans %}</p>
+  {% with form=wa_form %}{% include "_form_fields.html" %}{% endwith %}
+  <button class="btn btn-primary" name="action" value="whatsapp" type="submit">{% trans "Open WhatsApp" %}</button>
+</form>
+
+<form method="post" class="card">{% csrf_token %}
+  <h2 style="margin-top:0">✉ {% trans "Email with PDF attached" %}</h2>
+  {% if not smtp_ready %}<ul class="messages"><li class="warning">{% trans "Email is not set up yet." %}
+    {% if perms.core.change_companysettings %}<a href="{% url 'core:settings' %}">{% trans "Set it up in Company settings → Email & WhatsApp" %}</a>{% endif %}</li></ul>{% endif %}
+  {% with form=email_form %}{% include "_form_fields.html" %}{% endwith %}
+  <button class="btn btn-primary" name="action" value="email" type="submit" {% if not smtp_ready %}disabled{% endif %}>{% trans "Send email" %}</button>
+</form>
+
+<div class="card">
+  <div class="toolbar" style="margin:0"><h2 style="margin:0">🔗 {% trans "Links" %}</h2><span class="spacer"></span>
+    <form method="post">{% csrf_token %}<button class="btn" name="action" value="link">{% trans "Create link" %}</button></form></div>
+  <div class="table-wrap" style="margin-top:.75rem"><table class="stack"><tbody>
+  {% for l in links %}<tr>
+    <td data-label="{% trans 'Link' %}"><input type="text" readonly value="{{ request.scheme }}://{{ request.get_host }}/s/{{ l.token }}/" onclick="this.select()"></td>
+    <td data-label="{% trans 'Status' %}">{% if l.is_active %}<span class="badge ok">{% trans "Active until" %} {{ l.expires_at|date:"d M" }}</span>{% else %}<span class="badge">{% trans "Stopped / expired" %}</span>{% endif %}</td>
+    <td data-label="{% trans 'Opened' %}">{{ l.view_count }}×</td>
+    <td class="right">{% if l.is_active %}<form method="post" action="{% url 'sharing:revoke' l.pk %}">{% csrf_token %}<button class="btn btn-danger" style="min-height:32px">{% trans "Stop" %}</button></form>{% endif %}</td></tr>
+  {% empty %}<tr><td class="muted">{% trans "No links yet." %}</td></tr>{% endfor %}
+  </tbody></table></div>
+</div>
+
+{% include "sharing/_sent_log_list.html" %}
+{% endblock %}

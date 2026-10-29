@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Licence" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Licence" %}</h1>
+<div class="card"><dl class="kv">
+  <dt>{% trans "Installation ID" %}</dt><dd><b style="font-size:1.2rem;letter-spacing:.05em">{{ installation.install_id }}</b>
+    <br><small class="muted">{% trans "Send this ID to your software provider to get a licence key." %}</small></dd>
+  <dt>{% trans "Status" %}</dt><dd>
+    {% if status.state == "unconfigured" %}<span class="badge">{% trans "Licensing not set up" %}</span>
+    {% elif status.state == "valid" %}<span class="badge ok">{% trans "Active" %}</span>
+    {% elif status.state == "trial" %}<span class="badge warn">{% trans "Trial" %}</span>
+    {% elif status.state == "expiring" or status.state == "grace" %}<span class="badge warn">{% trans "Renew soon" %}</span>
+    {% else %}<span class="badge bad">{% trans "Read-only" %}</span>{% endif %}
+    {% if status.message %}<br>{{ status.message }}{% endif %}
+    {% if status.error %}<br><span class="errorlist">{{ status.error }}</span>{% endif %}</dd>
+  {% if status.licence %}
+  <dt>{% trans "Licensed to" %}</dt><dd>{{ status.licence.licensee }}</dd>
+  <dt>{% trans "Valid until" %}</dt><dd>{{ status.licence.expires|date:"d M Y" }}{% if status.licence.grace_days %} <small class="muted">(+{{ status.licence.grace_days }} {% trans "days grace" %})</small>{% endif %}</dd>
+  <dt>{% trans "Modules" %}</dt><dd>{{ status.licence.modules|join:", " }}</dd>
+  {% elif status.ends_on %}
+  <dt>{% trans "Trial ends" %}</dt><dd>{{ status.ends_on|date:"d M Y" }}</dd>
+  {% endif %}
+  <dt>{% trans "Active users" %}</dt><dd>{{ users_active }}{% if status.max_users %} / {{ status.max_users }}{% endif %}</dd>
+  <dt>{% trans "Installed on" %}</dt><dd>{{ installation.installed_on|date:"d M Y" }}</dd>
+</dl></div>
+{% if status.state != "unconfigured" %}
+<form method="post" class="card">{% csrf_token %}
+  <h2 style="margin-top:0">{% trans "Enter licence key" %}</h2>
+  {% include "_form_fields.html" %}
+  <button class="btn btn-primary" type="submit">{% trans "Activate" %}</button>
+</form>
+{% endif %}
+{% endblock %}

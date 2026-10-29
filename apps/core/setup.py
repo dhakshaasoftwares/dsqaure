@@ -24,14 +24,15 @@ DEFAULT_ROLES = {
     "Accountant": {
         "projects": VIEW, "employees": VIEW, "attendance": VIEW, "payroll": ALL, "advances": ALL,
         "payrules": VIEW, "masters": VIEW, "purchase": VIEW, "receipts": VIEW, "stock": VIEW,
-        "quotations": VIEW, "agreements": VIEW,
+        "quotations": VIEW, "agreements": VIEW, "billing": ALL, "sharing": ["view", "add"],
     },
     "Storekeeper": {
         "projects": VIEW, "masters": ["view", "add", "change"], "purchase": ["view", "add", "change"],
-        "receipts": ["view", "add"], "stock": ["view", "add"],
+        "receipts": ["view", "add"], "stock": ["view", "add"], "sharing": ["view", "add"],
     },
     "Sales / Estimator": {
         "projects": ["view", "add", "change"], "quotations": ALL, "agreements": ALL, "progress": VIEW,
+        "billing": ["view", "add", "change"], "sharing": ["view", "add"],
     },
     "Employee": {},
 }
@@ -69,7 +70,9 @@ PAY_PRESETS = {
 
 COUNTRY_PRESETS = {
     "india": {"currency_code": "INR", "currency_symbol": "₹", "number_grouping": "indian", "tax_label": "GST", "tax_code_label": "HSN/SAC",
-              "timezone": "Asia/Kolkata", "financial_year_start_month": 4, "default_tax_rate": Decimal("18")},
+              "timezone": "Asia/Kolkata", "financial_year_start_month": 4, "default_tax_rate": Decimal("18"),
+              "tax_split_enabled": True, "tax_split_labels": "CGST,SGST", "tax_interstate_label": "IGST",
+              "currency_name": "Rupees", "currency_fraction_name": "Paise", "whatsapp_country_code": "91"},
     "none": {},
 }
 

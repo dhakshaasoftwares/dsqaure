@@ -1,0 +1,54 @@
+{% extends "base.html" %}{% load i18n money %}
+{% block title %}{{ invoice }}{% endblock %}
+{% block content %}
+<div class="toolbar"><div><h1 style="margin:0">{% trans "Invoice" %} {{ invoice }}</h1>
+  <span class="muted">{{ invoice.title }}</span>
+  <span class="badge {% if state == 'paid' %}ok{% elif state == 'overdue' or state == 'cancelled' %}bad{% elif state == 'draft' %}{% else %}warn{% endif %}">{{ state_label }}</span></div></div>
+<div class="toolbar">
+  <a class="btn btn-primary" href="{% url 'billing:invoice_pdf' invoice.pk %}" target="_blank">{% trans "PDF" %}</a>
+  {% if invoice.status != "draft" %}{% include "sharing/_share_buttons.html" with doc_type="invoice" doc=invoice %}{% endif %}
+  {% if invoice.is_draft and perms.billing.change_invoice %}<a class="btn" href="{% url 'billing:invoice_update' invoice.pk %}">{% trans "Edit" %}</a>{% endif %}
+  <form method="post" action="{% url 'billing:invoice_action' invoice.pk %}" style="display:contents">{% csrf_token %}
+    {% if invoice.is_draft and perms.billing.change_invoice %}<button class="btn btn-primary" name="action" value="issue" onclick="return confirm('{% trans "Issue this invoice? It gets its final number and can no longer be edited." %}')">{% trans "Issue" %}</button>{% endif %}
+    {% if invoice.status != "cancelled" and not payments and perms.billing.delete_invoice %}<button class="btn btn-danger" name="action" value="cancel" onclick="return confirm('{% if invoice.is_draft %}{% trans "Delete this draft?" %}{% else %}{% trans "Cancel this invoice?" %}{% endif %}')">{% if invoice.is_draft %}{% trans "Delete" %}{% else %}{% trans "Cancel invoice" %}{% endif %}</button>{% endif %}
+  </form>
+</div>
+<div class="card"><dl class="kv">
+  <dt>{% trans "Client" %}</dt><dd>{{ invoice.client }}</dd>
+  {% if invoice.project %}<dt>{% trans "Project" %}</dt><dd><a href="{% url 'core:project_detail' invoice.project.pk %}">{{ invoice.project.name }}</a></dd>{% endif %}
+  {% if invoice.agreement %}<dt>{% trans "Agreement" %}</dt><dd><a href="{% url 'billing:statement' invoice.agreement.pk %}">{{ invoice.agreement.number }}</a>{% if invoice.milestone %} · {{ invoice.milestone.description }}{% endif %}</dd>{% endif %}
+  <dt>{% trans "Date" %}</dt><dd>{{ invoice.date|date:"d M Y" }}{% if invoice.due_date %} · {% trans "due" %} {{ invoice.due_date|date:"d M Y" }}{% endif %}</dd>
+</dl></div>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Description" %}</th><th class="num">{% trans "Qty" %}</th><th class="num">{% trans "Rate" %}</th>{% if company.tax_enabled %}<th class="num">{% trans "Tax %" %}</th>{% endif %}<th class="num">{% trans "Amount" %}</th></tr></thead>
+  <tbody>{% for l in lines %}<tr><td data-label="{% trans 'Description' %}">{{ l.description|linebreaksbr }}</td><td data-label="{% trans 'Qty' %}" class="num">{{ l.quantity|floatformat:"-3" }} {{ l.unit }}</td>
+    <td data-label="{% trans 'Rate' %}" class="num">{{ l.rate|money }}</td>{% if company.tax_enabled %}<td class="num">{{ l.tax_rate|floatformat:"-2" }}</td>{% endif %}<td data-label="{% trans 'Amount' %}" class="num">{{ l.amount|money }}</td></tr>{% endfor %}</tbody>
+</table></div>
+<table class="totals card" style="margin-top:1rem">
+  <tr><td>{% trans "Subtotal" %}</td><td class="num">{{ a.subtotal|money }}</td></tr>
+  {% for label, amount in a.tax_parts %}<tr><td>{{ label }}</td><td class="num">{{ amount|money }}</td></tr>{% endfor %}
+  <tr><td><b>{% trans "Invoice total" %}</b></td><td class="num"><b>{{ a.total|money }}</b></td></tr>
+  {% if a.retention %}<tr><td>{% trans "Less retention" %} ({{ invoice.retention_percent|floatformat:"-2" }}%)</td><td class="num">−{{ a.retention|money }}</td></tr>{% endif %}
+  <tr class="grand"><td>{% trans "Payable" %}</td><td class="num">{{ company.currency_symbol }}{{ a.payable|money }}</td></tr>
+  {% if a.paid %}<tr><td>{% trans "Received" %}</td><td class="num">−{{ a.paid|money }}</td></tr>
+  <tr class="grand"><td>{% trans "Balance due" %}</td><td class="num">{{ company.currency_symbol }}{{ a.balance|money }}</td></tr>{% endif %}
+</table>
+
+{% if invoice.status == "issued" %}
+<h2>{% trans "Payments received" %}</h2>
+<div class="table-wrap"><table class="stack"><tbody>
+  {% for p in payments %}<tr><td data-label="{% trans 'Date' %}">{{ p.date|date:"d M Y" }}</td><td data-label="{% trans 'Mode' %}">{{ p.get_mode_display }} {{ p.reference }}</td>
+    <td data-label="{% trans 'Amount' %}" class="num"><b>{{ p.amount|money }}</b></td>
+    <td class="right">{% if perms.billing.delete_clientpayment %}<form method="post" action="{% url 'billing:payment_delete' p.pk %}">{% csrf_token %}<button class="btn btn-danger" style="min-height:32px;padding:.2rem .6rem" onclick="return confirm('{% trans "Remove this payment?" %}')">✕</button></form>{% endif %}</td></tr>
+  {% empty %}<tr><td class="muted">{% trans "No payments yet." %}</td></tr>{% endfor %}
+</tbody></table></div>
+{% if a.balance > 0 and perms.billing.add_clientpayment %}
+<form method="post" action="{% url 'billing:payment_add' invoice.pk %}" class="card" style="margin-top:1rem">{% csrf_token %}
+  <h2 style="margin-top:0">{% trans "Record a payment" %}</h2>
+  {% with form=payment_form %}{% include "_form_fields.html" %}{% endwith %}
+  <button class="btn btn-primary" type="submit">{% trans "Save payment" %}</button>
+</form>
+{% endif %}
+{% endif %}
+{% include "sharing/_sent_log.html" with doc_type="invoice" doc=invoice %}
+{% endblock %}

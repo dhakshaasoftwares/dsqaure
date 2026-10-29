@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post" class="card">{% csrf_token %}
+  {% include "_form_fields.html" %}
+  <h2>{% trans "Bill lines" %}</h2>
+  {{ formset.management_form }}{{ formset.non_form_errors }}
+  {% with show_amount=True %}
+  <div class="table-wrap"><table class="lines" data-formset="lines">
+    <thead><tr>{% for field in formset.empty_form.visible_fields %}{% if field.name != "DELETE" %}<th>{{ field.label|capfirst }}</th>{% endif %}{% endfor %}<th class="num">{% trans "Amount" %}</th><th></th></tr></thead>
+    <tbody>{% for line in formset %}{% include "_line_row.html" %}{% endfor %}</tbody>
+  </table></div>
+  <template id="lines-empty">{% with line=formset.empty_form %}{% include "_line_row.html" %}{% endwith %}</template>
+  <div class="toolbar" style="margin-top:.75rem"><button class="btn" data-add-row="lines">+ {% trans "Add line" %}</button><span class="spacer"></span>
+    <b>{% trans "Subtotal" %}: {{ company.currency_symbol }}<span data-total-for="lines">0.00</span></b></div>
+  {% endwith %}
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{% trans "Save draft" %}</button>
+    <a class="btn" href="javascript:history.back()">{% trans "Cancel" %}</a>
+  </div>
+</form>
+{% endblock %}

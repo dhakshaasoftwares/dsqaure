@@ -9,6 +9,8 @@
   <a href="{% url 'core:number_series' %}"><b>{% trans "Document numbering" %}</b><span class="muted">{% trans "PO, GRN, quotation, agreement number formats" %}</span></a>
   <a href="{% url 'accounts:role_list' %}"><b>{% trans "Roles & permissions" %}</b><span class="muted">{% trans "Who can see and do what" %}</span></a>
   <a href="{% url 'accounts:user_list' %}"><b>{% trans "Users" %}</b><span class="muted">{% trans "Logins for your staff" %}</span></a>
+  <a href="{% url 'licensing:licence' %}"><b>{% trans "Licence" %}</b><span class="muted">{% trans "Installation ID, licence key, users and expiry" %}</span></a>
+  <a href="{% url 'core:settings' %}"><b>{% trans "Email & WhatsApp" %}</b><span class="muted">{% trans "Email server and message wording for sending documents" %}</span></a>
   <a href="{% url 'core:unit_list' %}"><b>{% trans "Units of measure" %}</b><span class="muted">{% trans "Bag, Kg, Cft, Sqft …" %}</span></a>
 </div>
 {% if company.module_payroll %}

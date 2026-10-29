@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load i18n money %}
+{% block title %}{% trans "Billing statement" %} {{ agreement.number }}{% endblock %}
+{% block content %}
+<div class="toolbar"><div><h1 style="margin:0">{% trans "Billing statement" %}</h1>
+  <span class="muted"><a href="{% url 'documents:agreement_detail' agreement.pk %}">{{ agreement.number }}</a> · {{ agreement.client }}{% if agreement.project %} · {{ agreement.project.name }}{% endif %}</span></div>
+  <span class="spacer"></span>
+  <a class="btn" href="?format=pdf" target="_blank">{% trans "PDF" %}</a>
+  {% if perms.billing.add_invoice %}<a class="btn" href="{% url 'billing:invoice_create' %}?agreement={{ agreement.pk }}">+ {% trans "Extra work bill" %}</a>{% endif %}
+</div>
+<div class="stats">
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.contract|money:0 }}</div><div class="label">{% trans "Contract value" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.billed|money:0 }}</div><div class="label">{% trans "Billed (before tax)" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.received|money:0 }}</div><div class="label">{% trans "Received (incl. tax)" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.outstanding|money:0 }}</div><div class="label">{% trans "Outstanding" %}</div></div>
+  {% if totals.retention %}<div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.retention|money:0 }}</div><div class="label">{% trans "Retention held by client" %}</div></div>{% endif %}
+</div>
+<div class="table-wrap">{% include "billing/_statement_table.html" %}</div>
+{% endblock %}

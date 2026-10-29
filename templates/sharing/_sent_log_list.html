@@ -1,0 +1,8 @@
+{% load i18n %}{% if sent %}
+<h2>{% trans "Sent" %}</h2>
+<div class="table-wrap"><table class="stack"><tbody>
+{% for m in sent %}<tr><td data-label="{% trans 'When' %}">{{ m.sent_at|date:"d M Y H:i" }}</td><td data-label="{% trans 'Sent by' %}">{{ m.get_channel_display }}</td>
+  <td data-label="{% trans 'To' %}">{{ m.recipient|truncatechars:60 }}</td><td data-label="{% trans 'User' %}">{{ m.sent_by|default:"" }}</td>
+  <td>{% if not m.ok %}<span class="badge bad" title="{{ m.error }}">{% trans "Failed" %}</span>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>
+{% endif %}

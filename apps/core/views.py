@@ -54,6 +54,12 @@ def dashboard(request):
         from apps.inventory.services import low_stock
 
         context["low_stock"] = low_stock()[:8]
+    if company.module_billing and user.has_perm("billing.view_invoice"):
+        from apps.billing.services import receivables
+
+        due = receivables(company)
+        context["receivable_total"] = sum((r["balance"] for r in due), 0)
+        context["overdue"] = [r for r in due if r["overdue"]][:8]
     if company.module_inventory and user.has_perm("inventory.approve_purchaseorder"):
         from apps.inventory.models import PurchaseOrder
 
@@ -182,6 +188,19 @@ def project_detail(request, pk):
             ctx["consumed"] = [dict(c, qty=-c["qty"]) for c in consumed]
             ctx["material_cost"] = sum((c["value"] or 0) for c in consumed)
 
+    if company.module_billing and user.has_perm("billing.view_invoice"):
+        from apps.billing.models import Invoice
+
+        invoices = list(project.invoices.exclude(status=Invoice.Status.CANCELLED)
+                        .prefetch_related("lines", "payments"))
+        amounts = [inv.amounts(company) for inv in invoices if inv.status == Invoice.Status.ISSUED]
+        ctx["billing"] = {
+            "billed": sum((a["subtotal"] for a in amounts), 0),
+            "received": sum((a["paid"] for a in amounts), 0),
+            "outstanding": sum((a["balance"] for a in amounts), 0),
+            "agreements": project.agreements.exclude(status="cancelled"),
+        }
+
     if company.module_documents and user.has_perm("documents.view_quotation"):
         ctx["quotations"] = project.quotations.select_related("client")[:10]
         ctx["agreements"] = project.agreements.all()[:10]
@@ -219,6 +238,16 @@ class SettingsUpdate(PermRequired, UpdateView):
 
     def get_object(self, queryset=None):
         return CompanySettings.load()
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        licence = getattr(self.request, "licence", None)
+        if licence is not None:
+            for name, field in form.fields.items():
+                if name.startswith("module_") and not licence.module_allowed(name[len("module_"):]):
+                    field.disabled = True
+                    field.help_text = _("Not included in your licence")
+        return form
 
     def form_valid(self, form):
         messages.success(self.request, _("Settings saved"))

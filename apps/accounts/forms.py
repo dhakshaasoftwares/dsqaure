@@ -29,6 +29,18 @@ class UserForm(forms.ModelForm):
             self.fields["password"].required = True
             self.fields["password"].help_text = ""
 
+    def clean(self):
+        data = super().clean()
+        from apps.licensing.service import active_user_count, get_status
+
+        limit = get_status().max_users
+        becoming_active = data.get("is_active") and not (self.instance.pk and self.instance.is_active)
+        if limit is not None and becoming_active and active_user_count() >= limit:
+            raise forms.ValidationError(
+                _("Your licence allows %(n)s active users. Deactivate a user or ask for a bigger licence.")
+                % {"n": limit})
+        return data
+
     def clean_password(self):
         password = self.cleaned_data.get("password")
         if password:

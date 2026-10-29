@@ -28,8 +28,45 @@ configured from screens, with no code changes per client.
 | **Building progress** | Company standard stages with weights, stage % and planned/actual dates, daily updates with site photos (auto-compressed), delayed-stage alerts, client progress report PDF |
 | **Quotations** | Clients, rate library, quotation with discount and tax, revisions, status, branded PDF |
 | **Agreements** | Your own agreement templates with placeholders, payment milestones, generated from a quotation, editable wording, PDF with signature blocks |
+| **Client billing** | Running bills raised from the agreement's payment milestones (or for extra work), CGST/SGST or IGST (or any tax names), retention, gap-free invoice numbers on issue, payments received (bank/UPI/cheque/cash), billing statement per agreement, overdue alerts, tax invoice PDF with amount in words |
+| **Send documents** | Email with the PDF attached (each client's own email account), WhatsApp with a secure expiring link, or "Share PDF" from the phone straight into WhatsApp; log of what was sent |
+| **Licence** | Signed licence key per installation with expiry, grace period, user limit and licensed modules; read-only when expired |
 | **Users & roles** | Tick-box permissions per module (view/add/edit/delete + special ones like "approve purchase orders") |
 | **Security** | Account lock after repeated wrong passwords, uploaded files visible only to permitted roles, audit log of every change |
+
+## Licensing your clients (you, the vendor)
+
+Licence keys are signed with **your private key**, which stays on your computer. Installations only
+contain the matching public key, so keys cannot be edited (e.g. to extend the date or add users) or
+reused on another installation.
+
+**Once (on your own computer, in this repository):**
+```bash
+python manage.py licence keygen
+```
+This creates `~/.dsquare/licence_private_key.pem`. **Keep it secret and back it up offline**: if you
+lose it you cannot issue renewals, and if someone else gets it they can make keys. It also writes
+`apps/licensing/vendor_public_key.txt`: commit that file and deploy it to every client.
+
+**For each client / renewal:**
+1. The client opens **Licence** in the menu and sends you their **Installation ID** (e.g. `DSQ-ABCD-EFGH-JKLM`).
+2. You run:
+   ```bash
+   python manage.py licence issue --install DSQ-ABCD-EFGH-JKLM --licensee "Selvam Builders" \
+       --expires 2027-10-31 --users 25 --modules all --grace 15
+   ```
+   (`--modules` can be a list, e.g. `attendance,payroll,progress` for a cheaper plan.)
+3. Send the printed key by WhatsApp/email; the owner pastes it on the Licence page.
+
+**What the client sees:** a new installation runs as a 30-day trial (10 users). The owner is
+reminded from 30 days before expiry, then after expiry the grace days give a red warning. After that
+the app becomes **read-only**: everything can be viewed and printed, nothing can be added, until a new
+key is entered. Turning the computer clock back does not help.
+
+Be realistic: when the software runs on the client's own computer, a determined programmer could
+remove the check from the code. The licence, together with the LICENSE file and your written
+agreement with the client, makes copying clearly illegal and inconvenient. Hosting the client
+yourself (only giving them a link) is the strongest protection.
 
 ## Tech stack (all free & open source)
 
@@ -45,6 +82,9 @@ apps/
   inventory/   materials, suppliers, POs, receipts, transfers, issues, stock ledger (services.py = stock rules)
   progress/    stages, updates, site photos, progress report
   documents/   clients, rate items, quotations, agreement templates, agreements
+  billing/     invoices, payments received, agreement statements (services.py = billing rules)
+  sharing/     email / WhatsApp / share links
+  licensing/   installation ID, licence check, vendor 'licence' command
 templates/     all screens and PDF layouts
 locale/ta/     Tamil translations
 scripts/       new_client.sh (new client install), backup.sh
@@ -138,12 +178,23 @@ Database changes and new default settings are applied automatically on start.
    on site so GPS check-in works.
 7. **Opening stock**: Inventory → Adjustments → reason "Opening stock", with rates.
 
+### Sending documents
+
+* **Email:** in Company settings → Email & WhatsApp, enter the client company's email server.
+  For Gmail: server `smtp.gmail.com`, port 587, TLS on, and an *app password*
+  (Google Account → Security → App passwords). The password is stored encrypted.
+* **WhatsApp:** no setup needed. *Share PDF* (on a phone) sends the PDF file itself; *Open WhatsApp*
+  sends a secure link that works for the configured number of days and can be stopped at any time.
+* Message wording uses placeholders: `{client} {document} {number} {amount} {company} {link}`.
+
 ### Daily use
 
 * **Workers**: check in/out from their phone.
 * **Supervisors**: mark site attendance, record material used, post progress updates with photos.
 * **Storekeeper**: raise POs → owner approves → receive goods (partial deliveries supported) → transfer to sites.
 * **Office**: payroll, quotations → agreement → PDFs, client progress reports.
+* **Accounts**: agreement → *Billing statement* → *Raise bill* for each completed milestone → Issue →
+  send by WhatsApp/email → record payments when they arrive.
 
 ### How salary is calculated
 
@@ -171,7 +222,7 @@ pip install -r requirements.txt          # WeasyPrint needs Pango (apt: libpango
 python manage.py migrate
 python manage.py runserver               # open /setup/ to create the company and owner
 python manage.py load_demo               # optional sample data
-python manage.py test                    # 81 tests
+python manage.py test                    # 117 tests
 ```
 Without `DATABASE_URL` it uses SQLite. Add a configurable list with `apps/core/crud.py` (one line per
 screen). Translations: `python manage.py makemessages -l ta`, edit `locale/ta/LC_MESSAGES/django.po`,

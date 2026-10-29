@@ -153,6 +153,9 @@ class Agreement(models.Model):
     start_date = models.DateField(_("start date"), null=True, blank=True)
     completion_date = models.DateField(_("completion date"), null=True, blank=True)
     site_address = models.TextField(_("site address"), blank=True)
+    retention_percent = models.DecimalField(_("retention %"), max_digits=5, decimal_places=2, default=ZERO,
+                                            validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                            help_text=_("Held back from each bill until handover, if agreed"))
     body = models.TextField(_("agreement text"), blank=True)
     status = models.CharField(_("status"), max_length=10, choices=Status.choices, default=Status.DRAFT)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,

@@ -6,14 +6,17 @@
   <span class="badge {% if agreement.status == 'signed' %}ok{% elif agreement.status == 'cancelled' %}bad{% endif %}">{{ agreement.get_status_display }}</span></div></div>
 <div class="toolbar">
   <a class="btn btn-primary" href="{% url 'documents:agreement_pdf' agreement.pk %}" target="_blank">{% trans "PDF" %}</a>
+  {% include "sharing/_share_buttons.html" with doc_type="agreement" doc=agreement %}
   {% if perms.documents.change_agreement %}
     <a class="btn" href="{% url 'documents:agreement_update' agreement.pk %}">{% trans "Edit details & payments" %}</a>
     <a class="btn" href="{% url 'documents:agreement_text' agreement.pk %}">{% trans "Edit wording" %}</a>
   {% endif %}
+  {% if company.module_billing and perms.billing.view_invoice %}<a class="btn" href="{% url 'billing:statement' agreement.pk %}">{% trans "Billing statement" %}</a>{% endif %}
   {% if agreement.quotation %}<a class="btn" href="{% url 'documents:quotation_detail' agreement.quotation.pk %}">{% trans "Quotation" %} {{ agreement.quotation.number }}</a>{% endif %}
 </div>
 {% if milestones and total_pct != 100 %}<ul class="messages"><li class="warning">{% blocktrans with t=total_pct|floatformat:"-2" %}Payment milestones add up to {{ t }}%, not 100%.{% endblocktrans %}</li></ul>{% endif %}
 <div class="card agreement-text">{{ body_html }}
   <div class="toolbar" style="margin-top:2rem;justify-content:space-between"><span>{% trans "Contractor" %}: {{ company.name }}</span><span>{% trans "Owner" %}: {{ agreement.client.name }}</span></div>
 </div>
+{% include "sharing/_sent_log.html" with doc_type="agreement" doc=agreement %}
 {% endblock %}

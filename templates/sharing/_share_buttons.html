@@ -1,0 +1,1 @@
+{% load i18n %}{% if perms.sharing.add_sentmessage %}<a class="btn" href="{% url 'sharing:share' doc_type doc.pk %}">✉ {% trans "Send / WhatsApp" %}</a>{% endif %}

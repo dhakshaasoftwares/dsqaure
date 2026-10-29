@@ -1,0 +1,30 @@
+{% extends "pdf/base.html" %}{% load i18n money %}
+{% block title %}{{ invoice }}{% endblock %}
+{% block doc_title %}<h1>{% if company.tax_enabled %}{% trans "TAX INVOICE" %}{% else %}{% trans "INVOICE" %}{% endif %}</h1><div>{% if invoice.number %}{{ invoice.number }}{% else %}{% trans "DRAFT" %}{% endif %}</div><div>{{ invoice.date|date:"d M Y" }}</div>{% endblock %}
+{% block body %}
+<div class="two">
+  <div><div class="label">{% trans "Bill to" %}</div><b>{{ invoice.client.name }}</b><br>{{ invoice.client.address|linebreaksbr }}
+    {% if invoice.client.phone %}<br>{{ invoice.client.phone }}{% endif %}{% if company.tax_enabled and invoice.client.tax_number %}<br>{{ company.tax_label }}: {{ invoice.client.tax_number }}{% endif %}</div>
+  <div>{% if invoice.project %}<div class="label">{% trans "Project" %}</div><b>{{ invoice.project.name }}</b><br>{{ invoice.project.address|linebreaksbr }}{% endif %}
+    {% if invoice.agreement %}<div class="label" style="margin-top:6px">{% trans "Agreement" %}</div>{{ invoice.agreement.number }}{% endif %}
+    {% if invoice.due_date %}<div class="label" style="margin-top:6px">{% trans "Due date" %}</div>{{ invoice.due_date|date:"d M Y" }}{% endif %}</div>
+</div>
+<p><b>{{ invoice.title }}</b></p>
+<table class="items">
+  <thead><tr><th>#</th><th>{% trans "Description" %}</th>{% if company.tax_enabled %}<th>{{ company.tax_code_label }}</th>{% endif %}<th class="num">{% trans "Qty" %}</th><th>{% trans "Unit" %}</th><th class="num">{% trans "Rate" %}</th>{% if company.tax_enabled %}<th class="num">{% trans "Tax %" %}</th>{% endif %}<th class="num">{% trans "Amount" %}</th></tr></thead>
+  <tbody>{% for l in lines %}<tr><td>{{ forloop.counter }}</td><td>{{ l.description|linebreaksbr }}</td>{% if company.tax_enabled %}<td>{{ l.tax_code }}</td>{% endif %}
+    <td class="num">{{ l.quantity|floatformat:"-3" }}</td><td>{{ l.unit }}</td><td class="num">{{ l.rate|money }}</td>
+    {% if company.tax_enabled %}<td class="num">{{ l.tax_rate|floatformat:"-2" }}</td>{% endif %}<td class="num">{{ l.amount|money }}</td></tr>{% endfor %}</tbody>
+</table>
+<table class="totals">
+  <tr><td>{% trans "Subtotal" %}</td><td class="num">{{ a.subtotal|money }}</td></tr>
+  {% for label, amount in a.tax_parts %}<tr><td>{{ label }}</td><td class="num">{{ amount|money }}</td></tr>{% endfor %}
+  <tr><td><b>{% trans "Invoice total" %}</b></td><td class="num"><b>{{ a.total|money }}</b></td></tr>
+  {% if a.retention %}<tr><td>{% trans "Less retention" %} ({{ invoice.retention_percent|floatformat:"-2" }}%)</td><td class="num">−{{ a.retention|money }}</td></tr>{% endif %}
+  <tr class="grand"><td>{% trans "Payable" %}</td><td class="num">{{ company.currency_symbol }}{{ a.payable|money }}</td></tr>
+</table>
+<p><b>{% trans "Amount in words" %}:</b> {{ a.payable|in_words }}</p>
+{% if invoice.terms %}<div class="terms"><b>{% trans "Terms" %}</b><br>{{ invoice.terms }}</div>{% endif %}
+{% if company.bank_details %}<div class="terms"><b>{% trans "Bank details" %}</b><br>{{ company.bank_details }}</div>{% endif %}
+<div class="sign"><div>{% trans "Received by client" %}</div><div>{% trans "For" %} {{ company.name }}<br>{{ company.signatory_name }} {{ company.signatory_designation }}</div></div>
+{% endblock %}

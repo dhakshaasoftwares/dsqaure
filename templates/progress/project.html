@@ -9,6 +9,7 @@
 <div class="toolbar">
   <a class="btn" href="{% url 'progress:photos' project.pk %}">{% trans "All photos" %}</a>
   <a class="btn" href="{% url 'progress:report' project.pk %}" target="_blank">{% trans "Client report (PDF)" %}</a>
+  {% include "sharing/_share_buttons.html" with doc_type="progress_report" doc=project %}
   {% if perms.progress.add_projectstage %}
     <a class="btn" href="{% url 'progress:stage_create' project.pk %}">+ {% trans "Stage" %}</a>
     <form method="post" action="{% url 'progress:apply_stages' project.pk %}">{% csrf_token %}<button class="btn">{% trans "Add standard stages" %}</button></form>

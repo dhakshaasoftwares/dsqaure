@@ -97,7 +97,7 @@ class DocumentScreensTests(TestCase):
             "date": "2026-10-29", "contract_value": "500000", "start_date": "", "completion_date": "",
             "site_address": "", "status": "draft",
             "ms-TOTAL_FORMS": "2", "ms-INITIAL_FORMS": "0",
-            "ms-0-description": "Advance", "ms-0-percent": "20",
+            "retention_percent": "0", "ms-0-description": "Advance", "ms-0-percent": "20",
             "ms-1-description": "Slab", "ms-1-percent": "30",
         })
         agreement = Agreement.objects.get()
@@ -111,7 +111,7 @@ class DocumentScreensTests(TestCase):
     def test_milestones_over_100_rejected(self):
         resp = self.client.post("/documents/agreements/new/", {
             "client": self.cust.pk, "title": "X", "date": "2026-10-29", "contract_value": "100",
-            "status": "draft", "template": "",
+            "status": "draft", "template": "", "retention_percent": "0",
             "ms-TOTAL_FORMS": "2", "ms-INITIAL_FORMS": "0",
             "ms-0-description": "A", "ms-0-percent": "60", "ms-1-description": "B", "ms-1-percent": "50",
         })

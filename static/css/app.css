@@ -175,3 +175,4 @@ details.section > div { padding: 0 1rem 1rem; }
   table.lines td { display: block; border: 0; }
   table.lines td[data-label]::before { content: attr(data-label); display: block; color: var(--muted); font-size: .8rem; }
 }
+textarea { font-family: inherit; line-height: 1.4; }

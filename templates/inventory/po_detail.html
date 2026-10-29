@@ -7,6 +7,7 @@
 </div>
 <div class="toolbar">
   <a class="btn" href="{% url 'inventory:po_pdf' po.pk %}" target="_blank">{% trans "PDF" %}</a>
+  {% if not po.is_draft %}{% include "sharing/_share_buttons.html" with doc_type="purchase_order" doc=po %}{% endif %}
   {% if po.is_draft and perms.inventory.change_purchaseorder %}<a class="btn" href="{% url 'inventory:po_update' po.pk %}">{% trans "Edit" %}</a>{% endif %}
   {% if po.can_receive and perms.inventory.add_goodsreceipt %}<a class="btn btn-primary" href="{% url 'inventory:doc_create' 'receipt' %}?po={{ po.pk }}">{% trans "Receive goods" %}</a>{% endif %}
   <form method="post" action="{% url 'inventory:po_action' po.pk %}" style="display:contents">{% csrf_token %}
@@ -48,4 +49,5 @@
   {% for r in receipts %}<tr><td><a href="{% url 'inventory:doc_detail' 'receipt' r.pk %}">{{ r.number }}</a></td><td>{{ r.date|date:"d M Y" }}</td><td>{{ r.supplier_invoice_no }}</td></tr>
   {% empty %}<tr><td class="muted">{% trans "Nothing received yet." %}</td></tr>{% endfor %}
 </tbody></table></div>
+{% include "sharing/_sent_log.html" with doc_type="purchase_order" doc=po %}
 {% endblock %}

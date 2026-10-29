@@ -7,3 +7,4 @@ staticfiles/
 backups/
 .env
 clients/
+*.pem

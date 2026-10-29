@@ -33,22 +33,33 @@ class ProjectForm(forms.ModelForm):
 class CompanySettingsForm(forms.ModelForm):
     """All company configuration, shown in sections."""
 
+    email_password = forms.CharField(
+        label=_("email password / app password"), required=False,
+        widget=forms.PasswordInput(render_value=False),
+        help_text=_("Leave blank to keep the saved password. For Gmail use an 'app password'. "
+                    "Placeholders for messages: {client} {document} {number} {amount} {company} {link}"))
+
     SECTIONS = [
         (_("Company profile & branding"),
          ["name", "address", "phone", "email", "website", "logo", "brand_color", "timezone",
           "financial_year_start_month"]),
         (_("Modules in use"),
-         ["module_attendance", "module_payroll", "module_inventory", "module_progress", "module_documents"]),
+         ["module_attendance", "module_payroll", "module_inventory", "module_progress", "module_documents", "module_billing"]),
         (_("Currency & tax"),
          ["currency_code", "currency_symbol", "number_grouping", "tax_enabled", "tax_label", "tax_registration_number",
-          "tax_code_label", "default_tax_rate", "bank_details"]),
+          "tax_code_label", "default_tax_rate", "tax_split_enabled", "tax_split_labels", "tax_interstate_label",
+          "currency_name", "currency_fraction_name", "bank_details"]),
         (_("Documents (quotations, agreements, POs)"),
          ["signatory_name", "signatory_designation", "document_footer", "quotation_validity_days",
-          "quotation_terms", "po_terms"]),
+          "quotation_terms", "po_terms", "invoice_due_days", "invoice_terms"]),
         (_("Attendance & salary"),
          ["working_hours_per_day", "overtime_multiplier", "weekly_off_day", "monthly_salary_basis",
           "paid_weekly_off_for_monthly", "paid_leave_for_monthly", "attendance_geofence_required",
           "attendance_selfie_required"]),
+        (_("Email & WhatsApp"),
+         ["email_host", "email_port", "email_username", "email_password", "email_use_tls", "email_use_ssl",
+          "email_from_name", "email_from_address", "email_subject_template", "email_body_template",
+          "whatsapp_template", "whatsapp_country_code", "share_link_days"]),
         (_("Inventory"), ["allow_negative_stock"]),
         (_("Security"), ["login_max_attempts", "login_lockout_minutes"]),
     ]
@@ -61,8 +72,17 @@ class CompanySettingsForm(forms.ModelForm):
             "bank_details": forms.Textarea(attrs={"rows": 3}),
             "quotation_terms": forms.Textarea(attrs={"rows": 5}),
             "po_terms": forms.Textarea(attrs={"rows": 4}),
+            "invoice_terms": forms.Textarea(attrs={"rows": 3}),
+            "email_body_template": forms.Textarea(attrs={"rows": 5}),
+            "whatsapp_template": forms.Textarea(attrs={"rows": 3}),
             "brand_color": ColorInput(),
         }
+
+    def clean_email_password(self):
+        from apps.sharing.services import encrypt_secret
+
+        new = self.cleaned_data.get("email_password")
+        return encrypt_secret(new) if new else self.instance.email_password
 
     def sections(self):
         for title, names in self.SECTIONS:

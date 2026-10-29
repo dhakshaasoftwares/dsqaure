@@ -62,6 +62,7 @@ class CompanySettings(models.Model):
     module_inventory = models.BooleanField(_("inventory & purchase"), default=True)
     module_progress = models.BooleanField(_("building progress"), default=True)
     module_documents = models.BooleanField(_("quotations & agreements"), default=True)
+    module_billing = models.BooleanField(_("client billing"), default=True)
 
     # Money & tax
     currency_code = models.CharField(_("currency code"), max_length=3, default="INR")
@@ -79,6 +80,15 @@ class CompanySettings(models.Model):
     default_tax_rate = models.DecimalField(
         _("default tax rate %"), max_digits=5, decimal_places=2, default=Decimal("18.00")
     )
+    tax_split_enabled = models.BooleanField(
+        _("split tax into two halves on invoices"), default=False,
+        help_text=_("For example CGST + SGST for clients in the same state"))
+    tax_split_labels = models.CharField(_("names of the two halves"), max_length=40, default="CGST,SGST",
+                                        help_text=_("Two names separated by a comma"))
+    tax_interstate_label = models.CharField(_("tax name for other states / regions"), max_length=30, default="IGST")
+    currency_name = models.CharField(_("currency in words"), max_length=30, default="Rupees",
+                                     help_text=_("Used for 'amount in words' on invoices"))
+    currency_fraction_name = models.CharField(_("small unit in words"), max_length=30, default="Paise")
     bank_details = models.TextField(_("bank details for clients"), blank=True,
                                     help_text=_("Printed on quotations so clients can pay you"))
 
@@ -89,6 +99,31 @@ class CompanySettings(models.Model):
     quotation_validity_days = models.PositiveSmallIntegerField(_("quotation valid for (days)"), default=30)
     quotation_terms = models.TextField(_("default quotation terms"), blank=True, default=DEFAULT_QUOTATION_TERMS)
     po_terms = models.TextField(_("default purchase order terms"), blank=True, default=DEFAULT_PO_TERMS)
+    invoice_due_days = models.PositiveSmallIntegerField(_("invoice payment due in (days)"), default=15)
+    invoice_terms = models.TextField(_("default invoice terms"), blank=True,
+                                     default="Please pay by the due date. Kindly quote the invoice number with your payment.")
+
+    # Sending documents
+    email_host = models.CharField(_("email server (SMTP)"), max_length=100, blank=True,
+                                  help_text=_("e.g. smtp.gmail.com or your email provider's SMTP server"))
+    email_port = models.PositiveIntegerField(_("email server port"), default=587)
+    email_username = models.CharField(_("email login"), max_length=150, blank=True)
+    email_password = models.TextField(_("email password / app password"), blank=True)
+    email_use_tls = models.BooleanField(_("use TLS (port 587)"), default=True)
+    email_use_ssl = models.BooleanField(_("use SSL (port 465)"), default=False)
+    email_from_name = models.CharField(_("sender name"), max_length=100, blank=True)
+    email_from_address = models.EmailField(_("sender email address"), blank=True)
+    email_subject_template = models.CharField(_("email subject"), max_length=200,
+                                              default="{document} {number} from {company}")
+    email_body_template = models.TextField(
+        _("email message"),
+        default="Dear {client},\n\nPlease find attached {document} {number} {amount}.\n\nRegards,\n{company}")
+    whatsapp_template = models.TextField(
+        _("WhatsApp message"),
+        default="Dear {client}, please find {document} {number} {amount} from {company}: {link}")
+    whatsapp_country_code = models.CharField(_("default country code for phone numbers"), max_length=4,
+                                             blank=True, help_text=_("Digits only, e.g. 91 for India"))
+    share_link_days = models.PositiveSmallIntegerField(_("shared links work for (days)"), default=30)
 
     # Inventory
     allow_negative_stock = models.BooleanField(
@@ -183,6 +218,7 @@ class NumberSequence(models.Model):
         "stock_adjustment": (gettext_noop("Stock adjustment"), "ADJ/{FY}/{SEQ}"),
         "quotation": (gettext_noop("Quotation"), "QT/{FY}/{SEQ}"),
         "agreement": (gettext_noop("Agreement"), "AGR/{FY}/{SEQ}"),
+        "invoice": (gettext_noop("Invoice"), "INV/{FY}/{SEQ}"),
     }
 
     key = models.CharField(max_length=40, unique=True, editable=False)

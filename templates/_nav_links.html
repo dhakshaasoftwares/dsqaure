@@ -45,11 +45,18 @@
   {% if perms.documents.view_agreement %}<a href="{% url 'documents:agreement_list' %}" class="{% if '/documents/agreements/' in path %}active{% endif %}">{% trans "Agreements" %}</a>{% endif %}
 {% endif %}{% endif %}
 
+{% if c.module_billing and perms.billing.view_invoice %}
+  <div class="group">{% trans "Billing" %}</div>
+  <a href="{% url 'billing:invoice_list' %}" class="{% if path == '/billing/' or '/billing/' in path and 'payments' not in path %}active{% endif %}">{% trans "Invoices" %}</a>
+  {% if perms.billing.view_clientpayment %}<a href="{% url 'billing:payment_list' %}" class="{% if '/billing/payments/' in path %}active{% endif %}">{% trans "Payments received" %}</a>{% endif %}
+{% endif %}
+
 {% if perms.accounts.view_user or perms.auth.view_group or perms.core.view_companysettings or perms.core.view_auditlog %}
   <div class="group">{% trans "Administration" %}</div>
   {% if perms.core.view_companysettings %}<a href="{% url 'core:configuration' %}" class="{% if '/configuration/' in path or path == '/settings/' %}active{% endif %}">{% trans "Settings & configuration" %}</a>{% endif %}
   {% if perms.accounts.view_user %}<a href="{% url 'accounts:user_list' %}" class="{% if '/accounts/users/' in path %}active{% endif %}">{% trans "Users" %}</a>{% endif %}
   {% if perms.auth.view_group %}<a href="{% url 'accounts:role_list' %}" class="{% if '/accounts/roles/' in path %}active{% endif %}">{% trans "Roles & permissions" %}</a>{% endif %}
+  {% if perms.core.change_companysettings %}<a href="{% url 'licensing:licence' %}" class="{% if '/licence/' in path %}active{% endif %}">{% trans "Licence" %}</a>{% endif %}
   {% if perms.core.view_auditlog %}<a href="{% url 'core:audit_log' %}" class="{% if '/audit/' in path %}active{% endif %}">{% trans "Audit log" %}</a>{% endif %}
 {% endif %}
 <div class="group">{% trans "Account" %}</div>

@@ -5,6 +5,7 @@
   <span class="badge {% if quote.status == 'accepted' %}ok{% elif quote.status == 'rejected' %}bad{% elif quote.status == 'sent' %}warn{% endif %}">{{ quote.get_status_display }}</span></div></div>
 <div class="toolbar">
   <a class="btn btn-primary" href="{% url 'documents:quotation_pdf' quote.pk %}" target="_blank">{% trans "PDF" %}</a>
+  {% include "sharing/_share_buttons.html" with doc_type="quotation" doc=quote %}
   {% if perms.documents.change_quotation %}<a class="btn" href="{% url 'documents:quotation_update' quote.pk %}">{% trans "Edit" %}</a>{% endif %}
   {% if perms.documents.add_quotation %}<a class="btn" href="{% url 'documents:quotation_create' %}?copy={{ quote.pk }}">{% trans "Copy as new revision" %}</a>{% endif %}
   {% if perms.documents.add_agreement %}<a class="btn" href="{% url 'documents:agreement_create' %}?quotation={{ quote.pk }}">{% trans "Make agreement" %}</a>{% endif %}
@@ -34,4 +35,5 @@
   {% if company.tax_enabled %}<tr><td>{{ company.tax_label }}</td><td class="num">{{ totals.tax|money }}</td></tr>{% endif %}
   <tr class="grand"><td>{% trans "Total" %}</td><td class="num">{{ company.currency_symbol }}{{ totals.total|money }}</td></tr>
 </table>
+{% include "sharing/_sent_log.html" with doc_type="quotation" doc=quote %}
 {% endblock %}

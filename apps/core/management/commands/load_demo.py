@@ -138,6 +138,26 @@ class Command(BaseCommand):
                                              ("Flooring & painting complete", 15), ("Handover", 5)]):
             PaymentMilestone.objects.create(agreement=agreement, order=order, description=desc, percent=pct)
 
+        # Running bills: advance billed and paid, foundation billed and not yet paid.
+        from apps.billing.models import ClientPayment, Invoice, InvoiceLine
+        from apps.billing.services import issue_invoice, record_payment, save_invoice
+
+        agreement.retention_percent = D("5")
+        agreement.save()
+        for days_ago, milestone, paid in [(14, agreement.milestones.all()[0], True),
+                                          (3, agreement.milestones.all()[1], False)]:
+            bill_date = today - timedelta(days=days_ago)
+            bill = save_invoice(Invoice(date=bill_date, due_date=bill_date + timedelta(days=c.invoice_due_days),
+                                       client=client, project=villa, agreement=agreement, milestone=milestone,
+                                       title=f"Running bill – {milestone.description}", retention_percent=D("5"),
+                                       terms=c.invoice_terms),
+                               [InvoiceLine(description=milestone.description, tax_code="9954", quantity=1,
+                                            unit="LS", rate=milestone.amount, tax_rate=c.default_tax_rate)], owner)
+            issue_invoice(bill)
+            if paid:
+                record_payment(bill, ClientPayment(date=bill_date + timedelta(days=5), mode="bank",
+                                                   amount=bill.amounts(c)["payable"], reference="NEFT 4471"), c, owner)
+
         for i, (name, trade, wage_type, rate) in enumerate([
             ("Murugan", "Mason", "daily", 900), ("Lakshmi", "Helper", "daily", 600),
             ("Ravi", "Carpenter", "daily", 1000), ("Priya", "Site Engineer", "monthly", 32000),

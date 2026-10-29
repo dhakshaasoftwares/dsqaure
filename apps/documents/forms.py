@@ -53,7 +53,7 @@ class AgreementForm(forms.ModelForm):
     class Meta:
         model = Agreement
         fields = ["client", "project", "template", "title", "date", "contract_value", "start_date",
-                  "completion_date", "site_address", "status"]
+                  "completion_date", "site_address", "retention_percent", "status"]
         widgets = {"date": DateInput(), "start_date": DateInput(), "completion_date": DateInput(),
                    "site_address": forms.Textarea(attrs={"rows": 2})}
 

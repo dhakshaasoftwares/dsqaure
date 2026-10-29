@@ -1,0 +1,17 @@
+{% extends "pdf/base.html" %}{% load i18n money %}
+{% block title %}{% trans "Billing statement" %} {{ agreement.number }}{% endblock %}
+{% block doc_title %}<h1>{% trans "STATEMENT" %}</h1><div>{{ agreement.number }}</div><div>{% now "d M Y" %}</div>{% endblock %}
+{% block body %}
+<div class="two">
+  <div><div class="label">{% trans "Client" %}</div><b>{{ agreement.client.name }}</b><br>{{ agreement.client.address|linebreaksbr }}</div>
+  <div><div class="label">{% trans "Project" %}</div><b>{{ agreement.project.name|default:agreement.title }}</b></div>
+</div>
+<table class="totals" style="width:60%;margin:0 0 12px">
+  <tr><td>{% trans "Contract value" %}</td><td class="num">{{ totals.contract|money }}</td></tr>
+  <tr><td>{% trans "Billed (before tax)" %}</td><td class="num">{{ totals.billed|money }}</td></tr>
+  <tr><td>{% trans "Received (incl. tax)" %}</td><td class="num">{{ totals.received|money }}</td></tr>
+  {% if totals.retention %}<tr><td>{% trans "Retention held by client" %}</td><td class="num">{{ totals.retention|money }}</td></tr>{% endif %}
+  <tr class="grand"><td>{% trans "Outstanding" %}</td><td class="num">{{ company.currency_symbol }}{{ totals.outstanding|money }}</td></tr>
+</table>
+{% with pdf_mode=True %}{% include "billing/_statement_table.html" %}{% endwith %}
+{% endblock %}

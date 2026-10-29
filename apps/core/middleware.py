@@ -24,6 +24,7 @@ MODULE_PREFIXES = {
     "/inventory/": "inventory",
     "/progress/": "progress",
     "/documents/": "documents",
+    "/billing/": "billing",
 }
 
 
@@ -39,6 +40,12 @@ class CompanyMiddleware:
 
     def __call__(self, request):
         company = CompanySettings.load()
+        licence = getattr(request, "licence", None)
+        if licence is not None:
+            # A module the licence does not cover is off, whatever the setting says.
+            for module in MODULE_PREFIXES.values():
+                if not licence.module_allowed(module):
+                    setattr(company, f"module_{module}", False)
         request.company = company
         _local.company = company
         try:

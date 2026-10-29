@@ -102,3 +102,43 @@
     document.querySelectorAll("table[data-formset]").forEach(wire);
   });
 })();
+
+/*
+ * "Share PDF" – hands the real PDF file to the phone's share sheet (WhatsApp, Gmail …).
+ * The file is downloaded when the page opens, because iPhones only allow the share
+ * sheet to open immediately after a tap (not after waiting for a download).
+ */
+(function () {
+  "use strict";
+  var files = new WeakMap();
+
+  function unsupported() {
+    var note = document.querySelector("[data-share-unsupported]");
+    if (note) note.hidden = false;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("[data-share-pdf]").forEach(function (btn) {
+      if (!navigator.share || !window.File) { unsupported(); return; }
+      fetch(btn.dataset.sharePdf, { credentials: "same-origin" })
+        .then(function (res) { return res.blob(); })
+        .then(function (blob) {
+          files.set(btn, new File([blob], btn.dataset.filename || "document.pdf",
+                                  { type: blob.type || "application/pdf" }));
+        })
+        .catch(unsupported);
+    });
+  });
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-share-pdf]");
+    if (!btn) return;
+    e.preventDefault();
+    var file = files.get(btn);
+    if (!file) { if (!navigator.share) unsupported(); else if (btn.dataset.wait) alert(btn.dataset.wait); return; }
+    if (navigator.canShare && !navigator.canShare({ files: [file] })) { unsupported(); return; }
+    navigator.share({ files: [file], title: btn.dataset.title || "" }).catch(function (err) {
+      if (err && err.name !== "AbortError") unsupported();
+    });
+  });
+})();
