@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+from apps.core.images import compress_image
 from apps.core.models import CompanySettings
 
 from .models import Attendance
@@ -57,7 +58,7 @@ def self_check_in(employee, project, lat, lng, photo, user):
         },
     )
     if photo:
-        record.check_in_photo = photo
+        record.check_in_photo = compress_image(photo)
         record.save(update_fields=["check_in_photo"])
     return record
 

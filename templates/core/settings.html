@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Company settings" %}{% endblock %}
+{% block content %}
+<div class="toolbar"><h1 style="margin:0">{% trans "Company settings" %}</h1><span class="spacer"></span>
+  <a class="btn" href="{% url 'core:configuration' %}">{% trans "All configuration" %}</a></div>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  {{ form.non_field_errors }}
+  {% for title, fields in form.sections %}
+  <details class="section" {% if forloop.first %}open{% endif %}{% for f in fields %}{% if f.errors %} open{% endif %}{% endfor %}>
+    <summary>{{ title }}</summary>
+    <div class="form-grid">
+    {% for field in fields %}
+      {% if field.widget_type == "checkbox" %}
+      <div class="field checkbox wide"><label>{{ field }} {{ field.label|capfirst }}</label>
+      {% else %}
+      <div class="field {% if field.widget_type == 'textarea' %}wide{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label|capfirst }}</label>{{ field }}
+      {% endif %}
+        {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}{{ field.errors }}
+      </div>
+    {% endfor %}
+    </div>
+  </details>
+  {% endfor %}
+  <button class="btn btn-primary btn-big" type="submit">{% trans "Save settings" %}</button>
+</form>
+{% endblock %}

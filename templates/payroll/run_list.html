@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n humanize %}
+{% extends "base.html" %}{% load i18n money %}
 {% block title %}{% trans "Payroll" %}{% endblock %}
 {% block content %}
 <div class="toolbar"><h1 style="margin:0">{% trans "Payroll" %}</h1><span class="spacer"></span>
@@ -13,7 +13,7 @@
       <td data-label="{% trans 'Staff' %}">{{ r.get_wage_type_display }}</td>
       <td data-label="{% trans 'Site' %}">{{ r.project.name|default:"—" }}</td>
       <td data-label="{% trans 'Status' %}"><span class="badge {% if r.is_draft %}warn{% else %}ok{% endif %}">{{ r.get_status_display }}</span></td>
-      <td data-label="{% trans 'Net pay' %}" class="num">{{ company.currency_symbol }}{{ r.net|default:0|intcomma }}</td>
+      <td data-label="{% trans 'Net pay' %}" class="num">{{ company.currency_symbol }}{{ r.net|default:0|money }}</td>
     </tr>
   {% empty %}<tr><td colspan="5" class="muted">{% trans "No payroll yet." %}</td></tr>{% endfor %}
   </tbody>

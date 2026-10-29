@@ -1,0 +1,18 @@
+{% extends "pdf/base.html" %}{% load i18n %}
+{% block title %}{% trans "Progress report" %} {{ project.name }}{% endblock %}
+{% block doc_title %}<h1>{% trans "PROGRESS REPORT" %}</h1><div>{% now "d M Y" %}</div>{% endblock %}
+{% block body %}
+<div class="two">
+  <div><div class="label">{% trans "Project" %}</div><b>{{ project.name }}</b><br>{{ project.address|linebreaksbr }}</div>
+  <div><div class="label">{% trans "Client" %}</div><b>{{ project.client_display|default:"—" }}</b>
+    <div class="label" style="margin-top:6px">{% trans "Overall completion" %}</div><b style="font-size:16pt">{{ overall|default:0 }}%</b></div>
+</div>
+<table class="items">
+  <thead><tr><th>{% trans "Stage" %}</th><th style="width:40%">{% trans "Progress" %}</th><th class="num">%</th><th>{% trans "Status" %}</th></tr></thead>
+  <tbody>{% for s in stages %}<tr><td>{{ s.name }}</td><td><div class="bar"><span style="width:{{ s.percent|stringformat:'s' }}%"></span></div></td><td class="num">{{ s.percent|floatformat:"-1" }}%</td><td>{{ s.state_label }}</td></tr>{% endfor %}</tbody>
+</table>
+{% if updates %}<h2>{% trans "Recent work" %}</h2>
+<table class="items"><tbody>{% for u in updates %}<tr><td style="width:18%">{{ u.date|date:"d M Y" }}</td><td>{% if u.stage %}<b>{{ u.stage.name }}</b> {% endif %}{{ u.note }}</td></tr>{% endfor %}</tbody></table>{% endif %}
+{% if photos %}<h2>{% trans "Site photos" %}</h2>
+<div class="photos">{% for ph in photos %}<figure><img src="{% if pdf %}file://{{ ph.image.path }}{% else %}{{ ph.image.url }}{% endif %}" alt=""><figcaption>{{ ph.taken_on|date:"d M Y" }} {{ ph.caption|truncatechars:50 }}</figcaption></figure>{% endfor %}</div>{% endif %}
+{% endblock %}

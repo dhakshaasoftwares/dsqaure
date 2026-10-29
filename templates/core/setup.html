@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Set up" %}{% endblock %}
+{% block content %}
+<div style="max-width:620px;margin:3vh auto">
+  <h1>{% trans "Welcome! Let's set up your company" %}</h1>
+  <p class="muted">{% trans "This appears only once, on a new installation. You can change everything later in Settings." %}</p>
+  <form method="post" class="card">{% csrf_token %}
+    {% include "_form_fields.html" %}
+    <button class="btn btn-primary btn-big" type="submit">{% trans "Create company and owner login" %}</button>
+  </form>
+</div>
+{% endblock %}

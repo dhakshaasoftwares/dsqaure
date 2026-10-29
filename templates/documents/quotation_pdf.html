@@ -1,0 +1,28 @@
+{% extends "pdf/base.html" %}{% load i18n money %}
+{% block title %}{{ quote.number }}{% endblock %}
+{% block doc_title %}<h1>{% trans "QUOTATION" %}</h1><div>{{ quote.number }}</div><div>{{ quote.date|date:"d M Y" }}</div>{% endblock %}
+{% block body %}
+<div class="two">
+  <div><div class="label">{% trans "To" %}</div><b>{{ quote.client.name }}</b><br>{{ quote.client.address|linebreaksbr }}
+    {% if quote.client.phone %}<br>{{ quote.client.phone }}{% endif %}{% if company.tax_enabled and quote.client.tax_number %}<br>{{ company.tax_label }}: {{ quote.client.tax_number }}{% endif %}</div>
+  <div>{% if quote.project %}<div class="label">{% trans "Project" %}</div><b>{{ quote.project.name }}</b><br>{{ quote.project.address|linebreaksbr }}{% endif %}
+    {% if quote.valid_until %}<div class="label" style="margin-top:6px">{% trans "Valid until" %}</div>{{ quote.valid_until|date:"d M Y" }}{% endif %}</div>
+</div>
+<p><b>{% trans "Subject" %}:</b> {{ quote.subject }}</p>
+{% if quote.introduction %}<p>{{ quote.introduction|linebreaksbr }}</p>{% endif %}
+<table class="items">
+  <thead><tr><th>#</th><th>{% trans "Description" %}</th><th class="num">{% trans "Qty" %}</th><th>{% trans "Unit" %}</th><th class="num">{% trans "Rate" %}</th>{% if company.tax_enabled %}<th class="num">{{ company.tax_label }} %</th>{% endif %}<th class="num">{% trans "Amount" %}</th></tr></thead>
+  <tbody>{% for l in lines %}<tr><td>{{ forloop.counter }}</td><td>{{ l.description|linebreaksbr }}{% if company.tax_enabled and l.item.tax_code %}<br><span class="muted">{{ company.tax_code_label }} {{ l.item.tax_code }}</span>{% endif %}</td>
+    <td class="num">{{ l.quantity|floatformat:"-3" }}</td><td>{{ l.unit }}</td><td class="num">{{ l.rate|money }}</td>
+    {% if company.tax_enabled %}<td class="num">{{ l.tax_rate|floatformat:"-2" }}</td>{% endif %}<td class="num">{{ l.amount|money }}</td></tr>{% endfor %}</tbody>
+</table>
+<table class="totals">
+  <tr><td>{% trans "Subtotal" %}</td><td class="num">{{ totals.subtotal|money }}</td></tr>
+  {% if totals.discount %}<tr><td>{% trans "Discount" %} ({{ quote.discount_percent|floatformat:"-2" }}%)</td><td class="num">−{{ totals.discount|money }}</td></tr>{% endif %}
+  {% if company.tax_enabled %}<tr><td>{{ company.tax_label }}</td><td class="num">{{ totals.tax|money }}</td></tr>{% endif %}
+  <tr class="grand"><td>{% trans "Total" %}</td><td class="num">{{ company.currency_symbol }}{{ totals.total|money }}</td></tr>
+</table>
+{% if quote.terms %}<div class="terms"><b>{% trans "Terms & conditions" %}</b><br>{{ quote.terms }}</div>{% endif %}
+{% if company.bank_details %}<div class="terms"><b>{% trans "Bank details" %}</b><br>{{ company.bank_details }}</div>{% endif %}
+<div class="sign"><div>{% trans "Accepted by client" %}</div><div>{% trans "For" %} {{ company.name }}<br>{{ company.signatory_name }} {{ company.signatory_designation }}</div></div>
+{% endblock %}

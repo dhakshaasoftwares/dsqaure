@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ project.name }}{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <div><h1 style="margin:0">{{ project.name }}</h1><a class="muted" href="{% url 'core:project_detail' project.pk %}">{% trans "Project dashboard" %} →</a></div>
+  <span class="spacer"></span>
+  {% if overall is not None %}<div class="big-pct">{{ overall }}%</div>{% endif %}
+</div>
+<div class="toolbar">
+  <a class="btn" href="{% url 'progress:photos' project.pk %}">{% trans "All photos" %}</a>
+  <a class="btn" href="{% url 'progress:report' project.pk %}" target="_blank">{% trans "Client report (PDF)" %}</a>
+  {% if perms.progress.add_projectstage %}
+    <a class="btn" href="{% url 'progress:stage_create' project.pk %}">+ {% trans "Stage" %}</a>
+    <form method="post" action="{% url 'progress:apply_stages' project.pk %}">{% csrf_token %}<button class="btn">{% trans "Add standard stages" %}</button></form>
+  {% endif %}
+</div>
+
+{% if perms.progress.add_progressupdate %}
+<form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
+  <h2 style="margin-top:0">{% trans "Today's update" %}</h2>
+  {% include "_form_fields.html" %}
+  <button class="btn btn-primary btn-big" type="submit">{% trans "Save update" %}</button>
+</form>
+{% endif %}
+
+<h2>{% trans "Stages" %}</h2>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Stage" %}</th><th style="width:35%">{% trans "Progress" %}</th><th>{% trans "Planned" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
+  <tbody>
+  {% for s in stages %}
+    <tr><td data-label="{% trans 'Stage' %}">{{ s.name }}</td>
+      <td data-label="{% trans 'Progress' %}"><div class="bar-row"><div class="bar {% if s.state == 'done' %}done{% elif s.state == 'delayed' %}late{% endif %}"><span style="width:{{ s.percent|stringformat:'s' }}%"></span></div>{{ s.percent|floatformat:"-1" }}%</div></td>
+      <td data-label="{% trans 'Planned' %}">{{ s.planned_start|date:"d M"|default:"—" }} – {{ s.planned_end|date:"d M Y"|default:"—" }}</td>
+      <td data-label="{% trans 'Status' %}"><span class="badge {% if s.state == 'done' %}ok{% elif s.state == 'delayed' %}bad{% elif s.state == 'in_progress' %}warn{% endif %}">{{ s.state_label }}</span></td>
+      <td class="right">{% if perms.progress.change_projectstage %}<a href="{% url 'progress:stage_update' project.pk s.pk %}">{% trans "Edit" %}</a>{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="5" class="muted">{% trans "No stages yet. Press 'Add standard stages' to start from your company's list." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+
+<h2>{% trans "Recent updates" %}</h2>
+{% for u in updates %}
+<div class="card">
+  <div class="toolbar" style="margin:0"><b>{{ u.date|date:"d M Y" }}</b>{% if u.stage %}<span class="badge">{{ u.stage.name }}{% if u.percent is not None %} → {{ u.percent|floatformat:"-1" }}%{% endif %}</span>{% endif %}
+    <span class="spacer"></span><small class="muted">{{ u.created_by|default:"" }}</small></div>
+  {% if u.note %}<p>{{ u.note|linebreaksbr }}</p>{% endif %}
+  {% if u.photos.all %}<div class="photos">{% for ph in u.photos.all %}<figure><a href="{{ ph.image.url }}" target="_blank"><img src="{{ ph.image.url }}" alt="" loading="lazy"></a></figure>{% endfor %}</div>{% endif %}
+</div>
+{% empty %}<p class="muted">{% trans "No updates yet." %}</p>{% endfor %}
+{% endblock %}

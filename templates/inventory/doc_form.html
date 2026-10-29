@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if po %}<p class="muted">{% blocktrans with n=po.number s=po.supplier %}Receiving against {{ n }} from {{ s }}. Change quantities to what actually arrived; set 0 for items not received.{% endblocktrans %}</p>{% endif %}
+<form method="post" class="card">{% csrf_token %}
+  {% if po %}<input type="hidden" name="po" value="{{ po.pk }}">{% endif %}
+  {% include "_form_fields.html" %}
+  <h2>{% trans "Materials" %}</h2>
+  {{ formset.management_form }}
+  {{ formset.non_form_errors }}
+  {% with show_amount=formset.empty_form.rate %}
+  <div class="table-wrap"><table class="lines" data-formset="lines" data-lookup="materials" data-lookup-field="material-select">
+    <thead><tr>{% for field in formset.empty_form.visible_fields %}{% if field.name != "DELETE" %}<th>{{ field.label|capfirst }}</th>{% endif %}{% endfor %}{% if show_amount %}<th class="num">{% trans "Amount" %}</th>{% endif %}<th></th></tr></thead>
+    <tbody>{% for line in formset %}{% include "_line_row.html" %}{% endfor %}</tbody>
+  </table></div>
+  <template id="lines-empty">{% with line=formset.empty_form %}{% include "_line_row.html" %}{% endwith %}</template>
+  <div class="toolbar" style="margin-top:.75rem">
+    <button class="btn" data-add-row="lines">+ {% trans "Add line" %}</button><span class="spacer"></span>
+    {% if show_amount %}<b>{% trans "Total" %}: {{ company.currency_symbol }}<span data-total-for="lines">0.00</span></b>{% endif %}
+  </div>
+  {% endwith %}
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{% trans "Save" %}</button>
+    <a class="btn" href="javascript:history.back()">{% trans "Cancel" %}</a>
+  </div>
+</form>
+{{ materials_json|json_script:"materials" }}
+{% endblock %}

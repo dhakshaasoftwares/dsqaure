@@ -1,0 +1,51 @@
+{% extends "base.html" %}{% load i18n money %}
+{% block title %}{{ po.number }}{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <div><h1 style="margin:0">{% trans "Purchase order" %} {{ po.number }}</h1>
+    <span class="badge {% if po.status == 'draft' %}warn{% elif po.status == 'received' %}ok{% elif po.status == 'cancelled' %}bad{% endif %}">{{ po.get_status_display }}</span></div>
+</div>
+<div class="toolbar">
+  <a class="btn" href="{% url 'inventory:po_pdf' po.pk %}" target="_blank">{% trans "PDF" %}</a>
+  {% if po.is_draft and perms.inventory.change_purchaseorder %}<a class="btn" href="{% url 'inventory:po_update' po.pk %}">{% trans "Edit" %}</a>{% endif %}
+  {% if po.can_receive and perms.inventory.add_goodsreceipt %}<a class="btn btn-primary" href="{% url 'inventory:doc_create' 'receipt' %}?po={{ po.pk }}">{% trans "Receive goods" %}</a>{% endif %}
+  <form method="post" action="{% url 'inventory:po_action' po.pk %}" style="display:contents">{% csrf_token %}
+    {% if po.is_draft and perms.inventory.approve_purchaseorder %}<button class="btn btn-primary" name="action" value="approve">{% trans "Approve" %}</button>{% endif %}
+    {% if po.status != 'cancelled' and po.status != 'received' and not receipts and perms.inventory.change_purchaseorder %}<button class="btn" name="action" value="cancel" onclick="return confirm('{% trans "Cancel this purchase order?" %}')">{% trans "Cancel PO" %}</button>{% endif %}
+    {% if po.is_draft and perms.inventory.delete_purchaseorder %}<button class="btn btn-danger" name="action" value="delete" onclick="return confirm('{% trans "Delete this draft?" %}')">{% trans "Delete" %}</button>{% endif %}
+  </form>
+</div>
+<div class="card"><dl class="kv">
+  <dt>{% trans "Date" %}</dt><dd>{{ po.date|date:"d M Y" }}</dd>
+  <dt>{% trans "Supplier" %}</dt><dd>{{ po.supplier }}{% if po.supplier.phone %} · <a href="tel:{{ po.supplier.phone }}">{{ po.supplier.phone }}</a>{% endif %}</dd>
+  <dt>{% trans "Deliver to" %}</dt><dd>{{ po.location }}</dd>
+  <dt>{% trans "Expected delivery" %}</dt><dd>{{ po.expected_date|default:"—" }}</dd>
+  <dt>{% trans "Created by" %}</dt><dd>{{ po.created_by|default:"—" }}</dd>
+  <dt>{% trans "Approved by" %}</dt><dd>{{ po.approved_by|default:"—" }}{% if po.approved_at %} · {{ po.approved_at|date:"d M Y H:i" }}{% endif %}</dd>
+  {% if po.notes %}<dt>{% trans "Notes" %}</dt><dd>{{ po.notes|linebreaksbr }}</dd>{% endif %}
+</dl></div>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Material" %}</th><th class="num">{% trans "Ordered" %}</th><th class="num">{% trans "Received" %}</th><th class="num">{% trans "Pending" %}</th><th class="num">{% trans "Rate" %}</th>{% if company.tax_enabled %}<th class="num">{{ company.tax_label }} %</th>{% endif %}<th class="num">{% trans "Amount" %}</th></tr></thead>
+  <tbody>
+  {% for l in lines %}
+    <tr><td data-label="{% trans 'Material' %}">{{ l.material.name }}{% if l.description %}<br><small class="muted">{{ l.description }}</small>{% endif %}</td>
+      <td data-label="{% trans 'Ordered' %}" class="num">{{ l.quantity|floatformat:"-3" }} {{ l.material.unit.symbol }}</td>
+      <td data-label="{% trans 'Received' %}" class="num">{{ l.received_quantity|floatformat:"-3" }}</td>
+      <td data-label="{% trans 'Pending' %}" class="num">{% if l.pending_quantity %}<b>{{ l.pending_quantity|floatformat:"-3" }}</b>{% else %}✓{% endif %}</td>
+      <td data-label="{% trans 'Rate' %}" class="num">{{ l.rate|money }}</td>
+      {% if company.tax_enabled %}<td class="num">{{ l.tax_rate|floatformat:"-2" }}</td>{% endif %}
+      <td data-label="{% trans 'Amount' %}" class="num">{{ l.amount|money }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+<table class="totals card" style="margin-top:1rem">
+  <tr><td>{% trans "Subtotal" %}</td><td class="num">{{ po.subtotal|money }}</td></tr>
+  {% if company.tax_enabled %}<tr><td>{{ company.tax_label }}</td><td class="num">{{ po.tax_total|money }}</td></tr>{% endif %}
+  <tr class="grand"><td>{% trans "Total" %}</td><td class="num">{{ company.currency_symbol }}{{ po.total|money }}</td></tr>
+</table>
+<h2>{% trans "Goods received against this PO" %}</h2>
+<div class="table-wrap"><table class="stack"><tbody>
+  {% for r in receipts %}<tr><td><a href="{% url 'inventory:doc_detail' 'receipt' r.pk %}">{{ r.number }}</a></td><td>{{ r.date|date:"d M Y" }}</td><td>{{ r.supplier_invoice_no }}</td></tr>
+  {% empty %}<tr><td class="muted">{% trans "Nothing received yet." %}</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

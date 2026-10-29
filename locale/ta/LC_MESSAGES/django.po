@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 11:34+0530\n"
+"POT-Creation-Date: 2026-10-30 04:57+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,8 +34,9 @@ msgstr "பொறுப்புகள்"
 msgid "role name"
 msgstr "பொறுப்பு பெயர்"
 
-#: apps/accounts/models.py:9 apps/core/models.py:26
-#: apps/employees/models.py:15
+#: apps/accounts/models.py:9 apps/core/models.py:47
+#: apps/documents/models.py:20 apps/employees/models.py:15
+#: apps/inventory/models.py:50
 msgid "phone"
 msgstr "தொலைபேசி"
 
@@ -43,11 +44,20 @@ msgstr "தொலைபேசி"
 msgid "preferred language"
 msgstr "விருப்ப மொழி"
 
-#: apps/accounts/models.py:23
+#: apps/accounts/models.py:23 templates/documents/agreement_detail.html:17
+#: templates/documents/agreement_pdf.html:7
 msgid "Owner"
 msgstr "உரிமையாளர்"
 
-#: apps/accounts/urls.py:13 templates/_nav_links.html:30
+#: apps/accounts/security.py:44
+#, python-format
+msgid ""
+"Too many wrong passwords. This account is locked for %(minutes)s minutes."
+msgstr ""
+"பல முறை தவறான கடவுச்சொல். இந்தக் கணக்கு %(minutes)s நிமிடங்களுக்குப் "
+"பூட்டப்பட்டுள்ளது."
+
+#: apps/accounts/urls.py:15 templates/_nav_links.html:56
 msgid "Change password"
 msgstr "கடவுச்சொல் மாற்று"
 
@@ -80,7 +90,7 @@ msgid "Half day"
 msgstr "அரை நாள்"
 
 #: apps/attendance/models.py:14 templates/attendance/register.html:14
-#: templates/core/dashboard.html:24
+#: templates/core/dashboard.html:28
 msgid "Absent"
 msgstr "வரவில்லை"
 
@@ -109,7 +119,10 @@ msgstr "மேற்பார்வையாளர் பதிவு"
 msgid "employee"
 msgstr "ஊழியர்"
 
-#: apps/attendance/models.py:32 apps/payroll/models.py:72
+#: apps/attendance/models.py:32 apps/documents/models.py:65
+#: apps/inventory/models.py:99 apps/inventory/models.py:189
+#: apps/inventory/models.py:308 apps/payroll/models.py:72
+#: apps/progress/models.py:75 apps/progress/models.py:100
 msgid "date"
 msgstr "தேதி"
 
@@ -117,8 +130,9 @@ msgstr "தேதி"
 msgid "site"
 msgstr "தளம்"
 
-#: apps/attendance/models.py:37 apps/core/models.py:111
-#: apps/payroll/models.py:110
+#: apps/attendance/models.py:37 apps/core/models.py:275
+#: apps/documents/models.py:76 apps/documents/models.py:157
+#: apps/inventory/models.py:105 apps/payroll/models.py:110
 msgid "status"
 msgstr "நிலை"
 
@@ -146,27 +160,31 @@ msgstr "வருகை புகைப்படம்"
 msgid "source"
 msgstr "மூலம்"
 
-#: apps/attendance/models.py:51 apps/employees/models.py:55
+#: apps/attendance/models.py:51 apps/documents/models.py:24
+#: apps/employees/models.py:55 apps/inventory/models.py:36
+#: apps/inventory/models.py:106 apps/inventory/models.py:190
+#: apps/progress/models.py:46
 msgid "notes"
 msgstr "குறிப்புகள்"
 
 #: apps/attendance/models.py:59 apps/attendance/models.py:60
+#: apps/core/models.py:60
 msgid "attendance"
 msgstr "வருகைப் பதிவு"
 
-#: apps/attendance/services.py:29
+#: apps/attendance/services.py:30
 msgid "You have already checked in today."
 msgstr "இன்று ஏற்கனவே வருகை பதிவு செய்துவிட்டீர்கள்."
 
-#: apps/attendance/services.py:31
+#: apps/attendance/services.py:32
 msgid "Please take a photo to check in."
 msgstr "வருகை பதிவு செய்ய புகைப்படம் எடுக்கவும்."
 
-#: apps/attendance/services.py:38
+#: apps/attendance/services.py:39
 msgid "Location is required. Please allow location access and try again."
 msgstr "இருப்பிடம் தேவை. இருப்பிட அனுமதி வழங்கி மீண்டும் முயற்சிக்கவும்."
 
-#: apps/attendance/services.py:41
+#: apps/attendance/services.py:42
 #, python-format
 msgid ""
 "You are %(d)s m away from the site. Check-in is allowed within %(r)s m."
@@ -174,11 +192,11 @@ msgstr ""
 "நீங்கள் தளத்திலிருந்து %(d)s மீ தொலைவில் உள்ளீர்கள். %(r)s மீ-க்குள் மட்டுமே"
 " வருகை பதிவு செய்யலாம்."
 
-#: apps/attendance/services.py:69
+#: apps/attendance/services.py:70
 msgid "You have not checked in today."
 msgstr "இன்று நீங்கள் வருகை பதிவு செய்யவில்லை."
 
-#: apps/attendance/services.py:71
+#: apps/attendance/services.py:72
 msgid "You have already checked out today."
 msgstr "இன்று ஏற்கனவே வெளியேறிவிட்டீர்கள்."
 
@@ -202,266 +220,1023 @@ msgstr "வருகை வெற்றிகரமாக பதிவு செ
 msgid "Attendance saved for %(n)s people."
 msgstr "%(n)s பேருக்கு வருகை சேமிக்கப்பட்டது."
 
-#: apps/core/models.py:15
+#: apps/core/crud.py:119
+#, python-format
+msgid "New %(name)s"
+msgstr "புதிய %(name)s"
+
+#: apps/core/crud.py:124 apps/core/crud.py:141
+msgid "Saved."
+msgstr "சேமிக்கப்பட்டது."
+
+#: apps/core/crud.py:134
+#, python-format
+msgid "Edit %(name)s"
+msgstr "%(name)s திருத்து"
+
+#: apps/core/crud.py:152
+msgid "This record is in use and cannot be deleted. Mark it inactive instead."
+msgstr ""
+"இந்தப் பதிவு பயன்பாட்டில் உள்ளது, நீக்க முடியாது. பதிலாக செயலற்றதாகக் "
+"குறிக்கவும்."
+
+#: apps/core/forms.py:30
+msgid "Only needed if the client is not in the client list"
+msgstr "வாடிக்கையாளர் பட்டியலில் இல்லையெனில் மட்டும்"
+
+#: apps/core/forms.py:37
+msgid "Company profile & branding"
+msgstr "நிறுவன விவரம் & அடையாளம்"
+
+#: apps/core/forms.py:40
+msgid "Modules in use"
+msgstr "பயன்படுத்தும் பகுதிகள்"
+
+#: apps/core/forms.py:42
+msgid "Currency & tax"
+msgstr "நாணயம் & வரி"
+
+#: apps/core/forms.py:45
+msgid "Documents (quotations, agreements, POs)"
+msgstr "ஆவணங்கள் (விலைப்புள்ளி, ஒப்பந்தம், கொள்முதல் ஆணை)"
+
+#: apps/core/forms.py:48
+msgid "Attendance & salary"
+msgstr "வருகை & சம்பளம்"
+
+#: apps/core/forms.py:52 templates/_nav_links.html:30
+#: templates/core/configuration.html:21
+msgid "Inventory"
+msgstr "சரக்கு"
+
+#: apps/core/forms.py:53
+msgid "Security"
+msgstr "பாதுகாப்பு"
+
+#: apps/core/forms.py:80
+#, python-brace-format
+msgid "The format must contain {SEQ}."
+msgstr "வடிவத்தில் {SEQ} இருக்க வேண்டும்."
+
+#: apps/core/forms.py:85
+msgid "Company name"
+msgstr "நிறுவனப் பெயர்"
+
+#: apps/core/forms.py:86 templates/employees/employee_detail.html:11
+#: templates/employees/employee_list.html:13
+#: templates/employees/employee_list.html:22
+msgid "Phone"
+msgstr "தொலைபேசி"
+
+#: apps/core/forms.py:87 templates/core/project_detail.html:65
+msgid "Address"
+msgstr "முகவரி"
+
+#: apps/core/forms.py:89
+msgid "Country preset"
+msgstr "நாட்டு அமைப்பு"
+
+#: apps/core/forms.py:90
+msgid "None – I will set currency and tax myself"
+msgstr "இல்லை – நாணயம், வரியை நானே அமைப்பேன்"
+
+#: apps/core/forms.py:90
+msgid "India (INR, GST, PF/ESI samples)"
+msgstr "இந்தியா (INR, GST, PF/ESI மாதிரிகள்)"
+
+#: apps/core/forms.py:93
+msgid "Your language"
+msgstr "உங்கள் மொழி"
+
+#: apps/core/forms.py:94
+msgid "Your name"
+msgstr "உங்கள் பெயர்"
+
+#: apps/core/forms.py:95
+msgid "Owner username"
+msgstr "உரிமையாளர் பயனர் பெயர்"
+
+#: apps/core/forms.py:96 templates/accounts/login.html:9
+msgid "Password"
+msgstr "கடவுச்சொல்"
+
+#: apps/core/forms.py:97
+msgid "Repeat password"
+msgstr "கடவுச்சொல்லை மீண்டும் உள்ளிடவும்"
+
+#: apps/core/forms.py:102
+msgid "Unknown preset"
+msgstr "தெரியாத அமைப்பு"
+
+#: apps/core/forms.py:108
+msgid "The two passwords do not match."
+msgstr "இரண்டு கடவுச்சொற்களும் பொருந்தவில்லை."
+
+#: apps/core/models.py:32
 msgid "Monday"
 msgstr "திங்கள்"
 
-#: apps/core/models.py:16
+#: apps/core/models.py:33
 msgid "Tuesday"
 msgstr "செவ்வாய்"
 
-#: apps/core/models.py:17
+#: apps/core/models.py:34
 msgid "Wednesday"
 msgstr "புதன்"
 
-#: apps/core/models.py:18
+#: apps/core/models.py:35
 msgid "Thursday"
 msgstr "வியாழன்"
 
-#: apps/core/models.py:19
+#: apps/core/models.py:36
 msgid "Friday"
 msgstr "வெள்ளி"
 
-#: apps/core/models.py:20
+#: apps/core/models.py:37
 msgid "Saturday"
 msgstr "சனி"
 
-#: apps/core/models.py:21
+#: apps/core/models.py:38
 msgid "Sunday"
 msgstr "ஞாயிறு"
 
-#: apps/core/models.py:24
+#: apps/core/models.py:45
 msgid "company name"
 msgstr "நிறுவனப் பெயர்"
 
-#: apps/core/models.py:25 apps/employees/models.py:20
+#: apps/core/models.py:46 apps/documents/models.py:22
+#: apps/employees/models.py:20 apps/inventory/models.py:52
+#: apps/inventory/models.py:78
 msgid "address"
 msgstr "முகவரி"
 
-#: apps/core/models.py:27
+#: apps/core/models.py:48 apps/documents/models.py:21
+#: apps/inventory/models.py:51
 msgid "email"
 msgstr "மின்னஞ்சல்"
 
-#: apps/core/models.py:28
+#: apps/core/models.py:49
+msgid "website"
+msgstr "இணையதளம்"
+
+#: apps/core/models.py:50
 msgid "logo"
 msgstr "சின்னம்"
 
-#: apps/core/models.py:30
+#: apps/core/models.py:52
+msgid "brand colour"
+msgstr "நிறுவன நிறம்"
+
+#: apps/core/models.py:53
+msgid "Use a colour like #d97706"
+msgstr "#d97706 போன்ற நிறத்தைப் பயன்படுத்தவும்"
+
+#: apps/core/models.py:55
+msgid "time zone"
+msgstr "நேர மண்டலம்"
+
+#: apps/core/models.py:57
+msgid "financial year starts in"
+msgstr "நிதியாண்டு தொடங்கும் மாதம்"
+
+#: apps/core/models.py:61
+msgid "salary / payroll"
+msgstr "சம்பளம் / சம்பளப் பட்டியல்"
+
+#: apps/core/models.py:62
+msgid "inventory & purchase"
+msgstr "சரக்கு & கொள்முதல்"
+
+#: apps/core/models.py:63
+msgid "building progress"
+msgstr "கட்டுமான முன்னேற்றம்"
+
+#: apps/core/models.py:64
+msgid "quotations & agreements"
+msgstr "விலைப்புள்ளி & ஒப்பந்தங்கள்"
+
+#: apps/core/models.py:67
 msgid "currency code"
 msgstr "நாணயக் குறியீடு"
 
-#: apps/core/models.py:31
+#: apps/core/models.py:68
 msgid "currency symbol"
 msgstr "நாணயச் சின்னம்"
 
-#: apps/core/models.py:33
+#: apps/core/models.py:70 apps/core/models.py:190
+msgid "number format"
+msgstr "எண் வடிவம்"
+
+#: apps/core/models.py:71
+msgid "1,234,567.00 (international)"
+msgstr "1,234,567.00 (சர்வதேச முறை)"
+
+#: apps/core/models.py:71
+msgid "12,34,567.00 (Indian lakh)"
+msgstr "12,34,567.00 (இந்திய லட்சம் முறை)"
+
+#: apps/core/models.py:72
 msgid "charge tax on quotations / POs"
 msgstr "விலைப்புள்ளி / கொள்முதல் ஆணைகளில் வரி விதி"
 
-#: apps/core/models.py:35
+#: apps/core/models.py:74
 msgid "tax name"
 msgstr "வரியின் பெயர்"
 
-#: apps/core/models.py:35
+#: apps/core/models.py:74
 msgid "e.g. GST, VAT, Sales Tax"
 msgstr "எ.கா. GST, VAT, விற்பனை வரி"
 
-#: apps/core/models.py:37
+#: apps/core/models.py:76 apps/documents/models.py:23
+#: apps/inventory/models.py:53
 msgid "tax registration number"
 msgstr "வரிப் பதிவு எண்"
 
-#: apps/core/models.py:39
+#: apps/core/models.py:77
+msgid "item tax code name"
+msgstr "பொருள் வரிக் குறியீட்டுப் பெயர்"
+
+#: apps/core/models.py:78
+msgid "Shown on materials and quotations, e.g. HSN/SAC"
+msgstr "பொருட்கள், விலைப்புள்ளிகளில் காட்டப்படும், எ.கா. HSN/SAC"
+
+#: apps/core/models.py:80
 msgid "default tax rate %"
 msgstr "இயல்பு வரி விகிதம் %"
 
-#: apps/core/models.py:43
+#: apps/core/models.py:82
+msgid "bank details for clients"
+msgstr "வாடிக்கையாளர்களுக்கான வங்கி விவரம்"
+
+#: apps/core/models.py:83
+msgid "Printed on quotations so clients can pay you"
+msgstr "வாடிக்கையாளர் பணம் செலுத்த விலைப்புள்ளியில் அச்சிடப்படும்"
+
+#: apps/core/models.py:86
+msgid "authorised signatory"
+msgstr "அங்கீகரிக்கப்பட்ட கையொப்பமிடுபவர்"
+
+#: apps/core/models.py:87
+msgid "signatory designation"
+msgstr "கையொப்பமிடுபவர் பதவி"
+
+#: apps/core/models.py:88
+msgid "document footer"
+msgstr "ஆவண அடிக்குறிப்பு"
+
+#: apps/core/models.py:89
+msgid "quotation valid for (days)"
+msgstr "விலைப்புள்ளி செல்லுபடி (நாட்கள்)"
+
+#: apps/core/models.py:90
+msgid "default quotation terms"
+msgstr "இயல்பு விலைப்புள்ளி நிபந்தனைகள்"
+
+#: apps/core/models.py:91
+msgid "default purchase order terms"
+msgstr "இயல்பு கொள்முதல் ஆணை நிபந்தனைகள்"
+
+#: apps/core/models.py:95
+msgid "allow stock to go below zero"
+msgstr "சரக்கு பூஜ்ஜியத்துக்குக் கீழ் செல்ல அனுமதி"
+
+#: apps/core/models.py:96
+msgid ""
+"Keep off so issues and transfers cannot use material that was never received"
+msgstr "பெறாத பொருளைப் பயன்படுத்த/மாற்ற முடியாதபடி இதை அணைத்து வைக்கவும்"
+
+#: apps/core/models.py:100
 msgid "working hours per day"
 msgstr "ஒரு நாள் வேலை நேரம்"
 
-#: apps/core/models.py:46
+#: apps/core/models.py:103
 msgid "overtime pay multiplier"
 msgstr "கூடுதல் நேர ஊதியப் பெருக்கி"
 
-#: apps/core/models.py:50
+#: apps/core/models.py:107
 msgid "1.00 = normal hourly rate, 1.50 = time and a half, 2.00 = double"
 msgstr "1.00 = சாதாரண மணி விகிதம், 1.50 = ஒன்றரை மடங்கு, 2.00 = இரட்டிப்பு"
 
-#: apps/core/models.py:52
+#: apps/core/models.py:109
 msgid "weekly off day"
 msgstr "வார விடுமுறை நாள்"
 
-#: apps/core/models.py:54
+#: apps/core/models.py:111
 msgid "monthly salary per-day basis"
 msgstr "மாத சம்பளம் – நாள் கணக்கு முறை"
 
-#: apps/core/models.py:57
+#: apps/core/models.py:114
 msgid "Calendar days in month"
 msgstr "மாதத்தின் மொத்த நாட்கள்"
 
-#: apps/core/models.py:58
+#: apps/core/models.py:115
 msgid "Working days (excluding weekly off)"
 msgstr "வேலை நாட்கள் (வார விடுமுறை தவிர)"
 
-#: apps/core/models.py:59
+#: apps/core/models.py:116
 msgid "Fixed 30 days"
 msgstr "நிலையான 30 நாட்கள்"
 
-#: apps/core/models.py:64
+#: apps/core/models.py:121
 msgid "monthly staff are paid for weekly off days"
 msgstr "மாத ஊழியர்களுக்கு வார விடுமுறைக்கு ஊதியம் உண்டு"
 
-#: apps/core/models.py:67
+#: apps/core/models.py:124
 msgid "approved leave is paid for monthly staff"
 msgstr "மாத ஊழியர்களுக்கு அனுமதி விடுப்புக்கு ஊதியம் உண்டு"
 
-#: apps/core/models.py:71
+#: apps/core/models.py:127
 msgid "self check-in must be inside the site radius"
 msgstr "சுய வருகை தள எல்லைக்குள் இருக்க வேண்டும்"
 
-#: apps/core/models.py:73
+#: apps/core/models.py:129
 msgid "self check-in needs a photo"
 msgstr "சுய வருகைக்கு புகைப்படம் தேவை"
 
-#: apps/core/models.py:76 apps/core/models.py:77
+#: apps/core/models.py:133
+msgid "wrong password attempts before lock"
+msgstr "பூட்டும் முன் தவறான முயற்சிகள்"
+
+#: apps/core/models.py:134
+msgid "lock time (minutes)"
+msgstr "பூட்டு நேரம் (நிமிடம்)"
+
+#: apps/core/models.py:137 apps/core/models.py:138
 msgid "company settings"
 msgstr "நிறுவன அமைப்புகள்"
 
-#: apps/core/models.py:96
+#: apps/core/models.py:159 apps/documents/models.py:18
+#: apps/documents/models.py:122 apps/employees/models.py:14
+#: apps/inventory/models.py:13 apps/inventory/models.py:26
+#: apps/inventory/models.py:48 apps/inventory/models.py:74
+#: apps/payroll/models.py:33
+msgid "name"
+msgstr "பெயர்"
+
+#: apps/core/models.py:160
+msgid "symbol"
+msgstr "சின்னம்"
+
+#: apps/core/models.py:164 apps/documents/models.py:42
+#: apps/documents/models.py:106 apps/inventory/models.py:29
+msgid "unit"
+msgstr "அளவு"
+
+#: apps/core/models.py:165
+msgid "units"
+msgstr "அளவுகள்"
+
+#: apps/core/models.py:179 templates/inventory/doc_detail.html:14
+#: templates/inventory/po_detail.html:5
+msgid "Purchase order"
+msgstr "கொள்முதல் ஆணை"
+
+#: apps/core/models.py:180
+msgid "Goods receipt"
+msgstr "பொருள் வரவு"
+
+#: apps/core/models.py:181
+msgid "Stock transfer"
+msgstr "சரக்கு இடமாற்றம்"
+
+#: apps/core/models.py:182
+msgid "Material issue"
+msgstr "பொருள் பயன்பாடு"
+
+#: apps/core/models.py:183
+msgid "Stock adjustment"
+msgstr "சரக்கு திருத்தம்"
+
+#: apps/core/models.py:184 templates/documents/agreement_detail.html:13
+#: templates/documents/quotation_detail.html:4
+msgid "Quotation"
+msgstr "விலைப்புள்ளி"
+
+#: apps/core/models.py:185
+msgid "Agreement"
+msgstr "ஒப்பந்தம்"
+
+#: apps/core/models.py:189 apps/inventory/models.py:318
+msgid "document"
+msgstr "ஆவணம்"
+
+#: apps/core/models.py:191
+#, python-brace-format
+msgid "Use {FY}, {YYYY}, {YY}, {MM} and {SEQ}"
+msgstr "{FY}, {YYYY}, {YY}, {MM}, {SEQ} பயன்படுத்தவும்"
+
+#: apps/core/models.py:192
+msgid "digits in running number"
+msgstr "தொடர் எண்ணின் இலக்கங்கள்"
+
+#: apps/core/models.py:194
+msgid "next running number"
+msgstr "அடுத்த தொடர் எண்"
+
+#: apps/core/models.py:199 apps/core/models.py:200
+msgid "number series"
+msgstr "எண் வரிசை"
+
+#: apps/core/models.py:258 templates/progress/project.html:28
+#: templates/progress/project.html:33
 msgid "Planned"
 msgstr "திட்டமிடப்பட்டது"
 
-#: apps/core/models.py:97 templates/accounts/user_list.html:15
+#: apps/core/models.py:259 templates/accounts/user_list.html:15
 #: templates/employees/employee_detail.html:16
 msgid "Active"
 msgstr "செயலில்"
 
-#: apps/core/models.py:98
+#: apps/core/models.py:260
 msgid "On hold"
 msgstr "நிறுத்தி வைக்கப்பட்டது"
 
-#: apps/core/models.py:99
+#: apps/core/models.py:261 apps/progress/models.py:35
 msgid "Completed"
 msgstr "முடிந்தது"
 
-#: apps/core/models.py:101
+#: apps/core/models.py:263
 msgid "project name"
 msgstr "திட்டப் பெயர்"
 
-#: apps/core/models.py:102
+#: apps/core/models.py:264 apps/inventory/models.py:25
 msgid "code"
 msgstr "குறியீடு"
 
-#: apps/core/models.py:103
+#: apps/core/models.py:266 apps/documents/models.py:28
+#: apps/documents/models.py:67 apps/documents/models.py:145
+msgid "client"
+msgstr "வாடிக்கையாளர்"
+
+#: apps/core/models.py:267
 msgid "client name"
 msgstr "வாடிக்கையாளர் பெயர்"
 
-#: apps/core/models.py:104
+#: apps/core/models.py:268
 msgid "client phone"
 msgstr "வாடிக்கையாளர் தொலைபேசி"
 
-#: apps/core/models.py:105
+#: apps/core/models.py:269 apps/documents/models.py:155
 msgid "site address"
 msgstr "தள முகவரி"
 
-#: apps/core/models.py:106
+#: apps/core/models.py:270
 msgid "latitude"
 msgstr "அட்சரேகை"
 
-#: apps/core/models.py:107
+#: apps/core/models.py:271
 msgid "longitude"
 msgstr "தீர்க்கரேகை"
 
-#: apps/core/models.py:109
+#: apps/core/models.py:273
 msgid "check-in radius (metres)"
 msgstr "வருகை எல்லை (மீட்டர்)"
 
-#: apps/core/models.py:112
+#: apps/core/models.py:276 apps/documents/models.py:153
 msgid "start date"
 msgstr "தொடக்க தேதி"
 
-#: apps/core/models.py:113
+#: apps/core/models.py:277
 msgid "expected end date"
 msgstr "எதிர்பார்க்கும் முடிவு தேதி"
 
-#: apps/core/models.py:114
+#: apps/core/models.py:278 apps/documents/models.py:152
 msgid "contract value"
 msgstr "ஒப்பந்த மதிப்பு"
 
-#: apps/core/models.py:119
+#: apps/core/models.py:283
 msgid "project / site"
 msgstr "திட்டம் / தளம்"
 
-#: apps/core/models.py:120
+#: apps/core/models.py:284
 msgid "projects / sites"
 msgstr "திட்டங்கள் / தளங்கள்"
 
-#: apps/core/permissions.py:13 templates/accounts/role_form.html:8
+#: apps/core/models.py:302 templates/core/audit_log.html:8
+msgid "Created"
+msgstr "உருவாக்கப்பட்டது"
+
+#: apps/core/models.py:303 templates/core/audit_log.html:9
+msgid "Changed"
+msgstr "மாற்றப்பட்டது"
+
+#: apps/core/models.py:304 templates/core/audit_log.html:10
+msgid "Deleted"
+msgstr "நீக்கப்பட்டது"
+
+#: apps/core/models.py:306
+msgid "time"
+msgstr "நேரம்"
+
+#: apps/core/models.py:308
+msgid "user"
+msgstr "பயனர்"
+
+#: apps/core/models.py:309
+msgid "action"
+msgstr "செயல்"
+
+#: apps/core/models.py:310
+msgid "record type"
+msgstr "பதிவு வகை"
+
+#: apps/core/models.py:312
+msgid "record"
+msgstr "பதிவு"
+
+#: apps/core/models.py:313
+msgid "changes"
+msgstr "மாற்றங்கள்"
+
+#: apps/core/models.py:317
+msgid "audit log entry"
+msgstr "தணிக்கைப் பதிவு"
+
+#: apps/core/models.py:318
+msgid "audit log"
+msgstr "தணிக்கைப் பதிவேடு"
+
+#: apps/core/permissions.py:15 templates/accounts/role_form.html:8
 msgid "View"
 msgstr "பார்"
 
-#: apps/core/permissions.py:14 templates/accounts/role_form.html:8
+#: apps/core/permissions.py:16 templates/accounts/role_form.html:8
+#: templates/crud/list.html:5
 msgid "Add"
 msgstr "சேர்"
 
-#: apps/core/permissions.py:15 templates/accounts/role_form.html:8
-#: templates/accounts/user_list.html:16 templates/core/project_list.html:17
+#: apps/core/permissions.py:17 templates/accounts/role_form.html:8
+#: templates/accounts/user_list.html:16 templates/core/number_series.html:12
+#: templates/core/project_detail.html:8 templates/crud/list.html:20
+#: templates/documents/quotation_detail.html:8
 #: templates/employees/employee_detail.html:8
+#: templates/inventory/po_detail.html:10 templates/progress/project.html:35
 msgid "Edit"
 msgstr "திருத்து"
 
-#: apps/core/permissions.py:16 templates/accounts/role_form.html:8
-#: templates/payroll/run_detail.html:16
+#: apps/core/permissions.py:18 templates/accounts/role_form.html:8
+#: templates/crud/confirm_delete.html:3 templates/crud/confirm_delete.html:7
+#: templates/form.html:10 templates/inventory/doc_detail.html:8
+#: templates/inventory/po_detail.html:15 templates/payroll/run_detail.html:16
+#: templates/progress/photos.html:15 templates/progress/stage_form.html:9
 msgid "Delete"
 msgstr "நீக்கு"
 
-#: apps/core/permissions.py:21 templates/_nav_links.html:15
+#: apps/core/permissions.py:22 templates/_nav_links.html:10
 #: templates/core/project_list.html:2 templates/core/project_list.html:4
 msgid "Projects / sites"
 msgstr "திட்டங்கள் / தளங்கள்"
 
-#: apps/core/permissions.py:22 templates/_nav_links.html:14
+#: apps/core/permissions.py:23 templates/_nav_links.html:16
 #: templates/employees/employee_list.html:2
 #: templates/employees/employee_list.html:4
 #: templates/payroll/run_detail.html:22
 msgid "Employees"
 msgstr "ஊழியர்கள்"
 
-#: apps/core/permissions.py:23
+#: apps/core/permissions.py:24
 msgid "Attendance (all staff)"
 msgstr "வருகை (அனைத்து ஊழியர்கள்)"
 
-#: apps/core/permissions.py:24
+#: apps/core/permissions.py:25
 msgid "Payroll runs & payslips"
 msgstr "சம்பளப் பட்டியல் & சம்பளச் சீட்டு"
 
-#: apps/core/permissions.py:25 templates/payroll/advance_list.html:4
+#: apps/core/permissions.py:27 templates/payroll/advance_list.html:4
 msgid "Salary advances"
 msgstr "சம்பள முன்பணம்"
 
-#: apps/core/permissions.py:26
+#: apps/core/permissions.py:28
 msgid "Pay rules (allowances, PF, tax ...)"
 msgstr "ஊதிய விதிகள் (படிகள், PF, வரி ...)"
 
-#: apps/core/permissions.py:27 apps/core/views.py:77
-#: templates/_nav_links.html:27
-msgid "Company settings"
-msgstr "நிறுவன அமைப்புகள்"
+#: apps/core/permissions.py:29
+msgid "Materials, suppliers & stores"
+msgstr "பொருட்கள், விநியோகஸ்தர்கள் & கிடங்குகள்"
 
-#: apps/core/permissions.py:28
+#: apps/core/permissions.py:32 templates/_nav_links.html:32
+#: templates/inventory/po_list.html:2 templates/inventory/po_list.html:4
+msgid "Purchase orders"
+msgstr "கொள்முதல் ஆணைகள்"
+
+#: apps/core/permissions.py:33
+msgid "Approve purchase orders"
+msgstr "கொள்முதல் ஆணைகளை அங்கீகரி"
+
+#: apps/core/permissions.py:34 templates/_nav_links.html:33
+msgid "Goods receipts"
+msgstr "பொருள் வரவுகள்"
+
+#: apps/core/permissions.py:35
+msgid "Stock transfers, issues & adjustments"
+msgstr "சரக்கு இடமாற்றம், பயன்பாடு & திருத்தம்"
+
+#: apps/core/permissions.py:38
+msgid "Building progress & site photos"
+msgstr "கட்டுமான முன்னேற்றம் & தளப் புகைப்படங்கள்"
+
+#: apps/core/permissions.py:40
+msgid "Clients & quotations"
+msgstr "வாடிக்கையாளர்கள் & விலைப்புள்ளிகள்"
+
+#: apps/core/permissions.py:42 templates/_nav_links.html:45
+#: templates/documents/agreement_list.html:2
+#: templates/documents/agreement_list.html:4
+msgid "Agreements"
+msgstr "ஒப்பந்தங்கள்"
+
+#: apps/core/permissions.py:44
+msgid "Company settings & numbering"
+msgstr "நிறுவன அமைப்புகள் & எண் வரிசை"
+
+#: apps/core/permissions.py:46
 msgid "Users & roles"
 msgstr "பயனர்கள் & பொறுப்புகள்"
 
-#: apps/core/views.py:60
+#: apps/core/permissions.py:47 templates/_nav_links.html:53
+#: templates/core/audit_log.html:2 templates/core/audit_log.html:4
+msgid "Audit log"
+msgstr "தணிக்கைப் பதிவேடு"
+
+#: apps/core/views.py:89
+msgid ""
+"Welcome! Check the company settings and switch on the modules you need."
+msgstr "வருக! நிறுவன அமைப்புகளைச் சரிபார்த்து தேவையான பகுதிகளை இயக்கவும்."
+
+#: apps/core/views.py:196
 msgid "New project / site"
 msgstr "புதிய திட்டம் / தளம்"
 
-#: apps/core/views.py:69
+#: apps/core/views.py:207
 msgid "Edit project / site"
 msgstr "திட்டம் / தளம் திருத்து"
 
-#: apps/core/views.py:83
+#: apps/core/views.py:218 templates/core/configuration.html:8
+#: templates/core/settings.html:2 templates/core/settings.html:4
+msgid "Company settings"
+msgstr "நிறுவன அமைப்புகள்"
+
+#: apps/core/views.py:224
 msgid "Settings saved"
 msgstr "அமைப்புகள் சேமிக்கப்பட்டன"
+
+#: apps/core/views.py:260
+#, python-format
+msgid "Number format: %(doc)s"
+msgstr "எண் வடிவம்: %(doc)s"
+
+#: apps/core/views.py:261
+#, python-brace-format
+msgid ""
+"Example: PO/{FY}/{SEQ} gives PO/2026-27/0001. The running number restarts "
+"every financial year when {FY} is used."
+msgstr ""
+"எ.கா: PO/{FY}/{SEQ} → PO/2026-27/0001. {FY} பயன்படுத்தினால் ஒவ்வொரு "
+"நிதியாண்டும் தொடர் எண் மீண்டும் 1-இல் தொடங்கும்."
+
+#: apps/documents/forms.py:48
+msgid "Enter a description or choose a rate item."
+msgstr "விவரம் உள்ளிடவும் அல்லது விலைப் பொருளைத் தேர்ந்தெடுக்கவும்."
+
+#: apps/documents/forms.py:81
+#, python-format
+msgid "Payment milestones add up to %(t)s%%, more than 100%%."
+msgstr "கட்டண நிலைகள் மொத்தம் %(t)s%%, 100%%-ஐ விட அதிகம்."
+
+#: apps/documents/models.py:19 apps/inventory/models.py:49
+msgid "contact person"
+msgstr "தொடர்பு நபர்"
+
+#: apps/documents/models.py:29
+msgid "clients"
+msgstr "வாடிக்கையாளர்கள்"
+
+#: apps/documents/models.py:38
+msgid "group"
+msgstr "குழு"
+
+#: apps/documents/models.py:39
+msgid "e.g. Civil, Electrical, Plumbing"
+msgstr "எ.கா. சிவில், மின்சாரம், குழாய்"
+
+#: apps/documents/models.py:40
+msgid "item"
+msgstr "பொருள்"
+
+#: apps/documents/models.py:41
+msgid "specification"
+msgstr "விவரக்குறிப்பு"
+
+#: apps/documents/models.py:43 apps/documents/models.py:108
+#: apps/inventory/models.py:162 apps/inventory/models.py:228
+#: apps/inventory/models.py:295 apps/inventory/models.py:314
+msgid "rate"
+msgstr "விலை"
+
+#: apps/documents/models.py:44
+msgid "tax code (HSN/SAC)"
+msgstr "வரிக் குறியீடு (HSN/SAC)"
+
+#: apps/documents/models.py:45 apps/inventory/models.py:31
+msgid "tax rate %"
+msgstr "வரி விகிதம் %"
+
+#: apps/documents/models.py:46 apps/documents/models.py:125
+#: apps/employees/models.py:54 apps/inventory/models.py:35
+#: apps/inventory/models.py:56 apps/inventory/models.py:79
+#: apps/payroll/models.py:56 apps/progress/models.py:19
+msgid "active"
+msgstr "செயலில்"
+
+#: apps/documents/models.py:50 apps/documents/models.py:104
+msgid "rate item"
+msgstr "விலைப் பொருள்"
+
+#: apps/documents/models.py:51
+msgid "rate items"
+msgstr "விலைப் பொருட்கள்"
+
+#: apps/documents/models.py:59 apps/documents/models.py:138
+#: apps/payroll/models.py:97
+msgid "Draft"
+msgstr "வரைவு"
+
+#: apps/documents/models.py:60
+msgid "Sent to client"
+msgstr "வாடிக்கையாளருக்கு அனுப்பப்பட்டது"
+
+#: apps/documents/models.py:61
+msgid "Accepted"
+msgstr "ஏற்கப்பட்டது"
+
+#: apps/documents/models.py:62
+msgid "Rejected"
+msgstr "நிராகரிக்கப்பட்டது"
+
+#: apps/documents/models.py:64
+msgid "quotation no."
+msgstr "விலைப்புள்ளி எண்"
+
+#: apps/documents/models.py:66 templates/documents/quotation_detail.html:20
+msgid "valid until"
+msgstr "செல்லுபடி வரை"
+
+#: apps/documents/models.py:69 apps/documents/models.py:147
+msgid "project"
+msgstr "திட்டம்"
+
+#: apps/documents/models.py:70
+msgid "subject"
+msgstr "பொருள்"
+
+#: apps/documents/models.py:71
+msgid "e.g. Construction of G+1 residential building"
+msgstr "எ.கா. G+1 குடியிருப்புக் கட்டடம் கட்டுதல்"
+
+#: apps/documents/models.py:72
+msgid "introduction"
+msgstr "முன்னுரை"
+
+#: apps/documents/models.py:73
+msgid "discount %"
+msgstr "தள்ளுபடி %"
+
+#: apps/documents/models.py:75
+msgid "terms & conditions"
+msgstr "நிபந்தனைகள்"
+
+#: apps/documents/models.py:77
+msgid "internal notes"
+msgstr "உள் குறிப்புகள்"
+
+#: apps/documents/models.py:77
+msgid "Not printed"
+msgstr "அச்சிடப்படாது"
+
+#: apps/documents/models.py:84 apps/documents/models.py:149
+msgid "quotation"
+msgstr "விலைப்புள்ளி"
+
+#: apps/documents/models.py:85
+msgid "quotations"
+msgstr "விலைப்புள்ளிகள்"
+
+#: apps/documents/models.py:105
+msgid "description"
+msgstr "விவரம்"
+
+#: apps/documents/models.py:107 apps/inventory/models.py:161
+#: apps/inventory/models.py:227 apps/inventory/models.py:250
+#: apps/inventory/models.py:270 apps/inventory/models.py:313
+msgid "quantity"
+msgstr "அளவு"
+
+#: apps/documents/models.py:109 apps/inventory/models.py:163
+msgid "tax %"
+msgstr "வரி %"
+
+#: apps/documents/models.py:123
+msgid "text"
+msgstr "உரை"
+
+#: apps/documents/models.py:123
+msgid ""
+"Lines starting with # become headings. Use the placeholders listed below."
+msgstr ""
+"# உடன் தொடங்கும் வரிகள் தலைப்பாகும். கீழே உள்ள இடக்குறிகளைப் பயன்படுத்தவும்."
+
+#: apps/documents/models.py:124
+msgid "default"
+msgstr "இயல்பு"
+
+#: apps/documents/models.py:129
+msgid "agreement template"
+msgstr "ஒப்பந்த வார்ப்புரு"
+
+#: apps/documents/models.py:130
+msgid "agreement templates"
+msgstr "ஒப்பந்த வார்ப்புருக்கள்"
+
+#: apps/documents/models.py:139
+msgid "Signed"
+msgstr "கையொப்பமிடப்பட்டது"
+
+#: apps/documents/models.py:140 apps/inventory/models.py:96
+msgid "Cancelled"
+msgstr "ரத்து செய்யப்பட்டது"
+
+#: apps/documents/models.py:142
+msgid "agreement no."
+msgstr "ஒப்பந்த எண்"
+
+#: apps/documents/models.py:143
+msgid "agreement date"
+msgstr "ஒப்பந்த தேதி"
+
+#: apps/documents/models.py:144
+msgid "title"
+msgstr "தலைப்பு"
+
+#: apps/documents/models.py:151
+msgid "template"
+msgstr "வார்ப்புரு"
+
+#: apps/documents/models.py:154
+msgid "completion date"
+msgstr "முடிவு தேதி"
+
+#: apps/documents/models.py:156
+msgid "agreement text"
+msgstr "ஒப்பந்த உரை"
+
+#: apps/documents/models.py:164
+msgid "agreement"
+msgstr "ஒப்பந்தம்"
+
+#: apps/documents/models.py:165
+msgid "agreements"
+msgstr "ஒப்பந்தங்கள்"
+
+#: apps/documents/models.py:174
+msgid "stage / milestone"
+msgstr "நிலை / கட்டம்"
+
+#: apps/documents/models.py:175
+msgid "share of value (%)"
+msgstr "மதிப்பில் பங்கு (%)"
+
+#: apps/documents/rendering.py:25
+msgid "Agreement number"
+msgstr "ஒப்பந்த எண்"
+
+#: apps/documents/rendering.py:26
+msgid "Agreement date"
+msgstr "ஒப்பந்த தேதி"
+
+#: apps/documents/rendering.py:27
+msgid "Your company name"
+msgstr "உங்கள் நிறுவனப் பெயர்"
+
+#: apps/documents/rendering.py:28
+msgid "Your company address"
+msgstr "உங்கள் நிறுவன முகவரி"
+
+#: apps/documents/rendering.py:29
+msgid "Your company phone"
+msgstr "உங்கள் நிறுவனத் தொலைபேசி"
+
+#: apps/documents/rendering.py:30
+msgid "Authorised signatory"
+msgstr "அங்கீகரிக்கப்பட்ட கையொப்பமிடுபவர்"
+
+#: apps/documents/rendering.py:31
+msgid "Client name"
+msgstr "வாடிக்கையாளர் பெயர்"
+
+#: apps/documents/rendering.py:32
+msgid "Client address"
+msgstr "வாடிக்கையாளர் முகவரி"
+
+#: apps/documents/rendering.py:33 templates/core/project_detail.html:68
+msgid "Client phone"
+msgstr "வாடிக்கையாளர் தொலைபேசி"
+
+#: apps/documents/rendering.py:34
+msgid "Project name"
+msgstr "திட்டப் பெயர்"
+
+#: apps/documents/rendering.py:35
+msgid "Site address"
+msgstr "தள முகவரி"
+
+#: apps/documents/rendering.py:36
+msgid "Currency symbol"
+msgstr "நாணயச் சின்னம்"
+
+#: apps/documents/rendering.py:37 templates/core/project_detail.html:13
+#: templates/core/project_list.html:13 templates/core/project_list.html:22
+msgid "Contract value"
+msgstr "ஒப்பந்த மதிப்பு"
+
+#: apps/documents/rendering.py:38
+msgid "Start date"
+msgstr "தொடக்க தேதி"
+
+#: apps/documents/rendering.py:39
+msgid "Completion date"
+msgstr "முடிவு தேதி"
+
+#: apps/documents/rendering.py:40
+msgid "Payment schedule table"
+msgstr "கட்டண அட்டவணை"
+
+#: apps/documents/rendering.py:78 templates/documents/agreement_form.html:12
+msgid "Stage / milestone"
+msgstr "நிலை / கட்டம்"
+
+#: apps/documents/rendering.py:79 templates/_line_row.html:6
+#: templates/documents/quotation_detail.html:25
+#: templates/documents/quotation_detail.html:29
+#: templates/documents/quotation_form.html:13
+#: templates/documents/quotation_pdf.html:14
+#: templates/employees/employee_detail.html:33
+#: templates/employees/employee_detail.html:36
+#: templates/inventory/doc_detail.html:29
+#: templates/inventory/doc_detail.html:35 templates/inventory/doc_form.html:14
+#: templates/inventory/po_detail.html:28 templates/inventory/po_detail.html:37
+#: templates/inventory/po_pdf.html:12 templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:12
+msgid "Amount"
+msgstr "தொகை"
+
+#: apps/documents/urls.py:22
+msgid ""
+"Your standard items and rates. Pick them when making a quotation; you can "
+"still change the rate."
+msgstr ""
+"உங்கள் வழக்கமான பொருட்கள், விலைகள். விலைப்புள்ளியில் தேர்ந்தெடுக்கலாம்; "
+"விலையை மாற்றவும் முடியும்."
+
+#: apps/documents/urls.py:28
+#, python-brace-format
+msgid ""
+"Write your agreement wording. Placeholders like {client_name} are filled in "
+"automatically – see the placeholder list."
+msgstr ""
+"உங்கள் ஒப்பந்த வாசகத்தை எழுதவும். {client_name} போன்ற இடக்குறிகள் தானாக "
+"நிரப்பப்படும் – இடக்குறிப் பட்டியலைப் பார்க்கவும்."
+
+#: apps/documents/views.py:70
+msgid "Add at least one line."
+msgstr "குறைந்தது ஒரு வரியைச் சேர்க்கவும்."
+
+#: apps/documents/views.py:82 apps/documents/views.py:196
+#: apps/inventory/views.py:119 apps/inventory/views.py:188
+#, python-format
+msgid "%(doc)s saved."
+msgstr "%(doc)s சேமிக்கப்பட்டது."
+
+#: apps/documents/views.py:104 apps/documents/views.py:215
+#: apps/inventory/views.py:200
+#, python-format
+msgid "Edit %(doc)s"
+msgstr "%(doc)s திருத்து"
+
+#: apps/documents/views.py:104 templates/documents/quotation_list.html:5
+msgid "New quotation"
+msgstr "புதிய விலைப்புள்ளி"
+
+#: apps/documents/views.py:143
+msgid "Status updated."
+msgstr "நிலை புதுப்பிக்கப்பட்டது."
+
+#: apps/documents/views.py:215 templates/documents/agreement_list.html:5
+msgid "New agreement"
+msgstr "புதிய ஒப்பந்தம்"
+
+#: apps/documents/views.py:238
+msgid "Agreement text saved."
+msgstr "ஒப்பந்த உரை சேமிக்கப்பட்டது."
 
 #: apps/employees/models.py:10 apps/payroll/models.py:104
 #: templates/payroll/payslip.html:12
@@ -477,11 +1252,7 @@ msgstr "மாத சம்பளம்"
 msgid "employee code"
 msgstr "ஊழியர் குறியீடு"
 
-#: apps/employees/models.py:14 apps/payroll/models.py:33
-msgid "name"
-msgstr "பெயர்"
-
-#: apps/employees/models.py:16
+#: apps/employees/models.py:16 apps/progress/models.py:98
 msgid "photo"
 msgstr "புகைப்படம்"
 
@@ -572,10 +1343,6 @@ msgstr "உள்நுழைவுக் கணக்கு"
 msgid "date joined"
 msgstr "சேர்ந்த தேதி"
 
-#: apps/employees/models.py:54 apps/payroll/models.py:56
-msgid "active"
-msgstr "செயலில்"
-
 #: apps/employees/models.py:60
 msgid "employees"
 msgstr "ஊழியர்கள்"
@@ -587,6 +1354,364 @@ msgstr "புதிய ஊழியர்"
 #: apps/employees/views.py:57
 msgid "Edit employee"
 msgstr "ஊழியரைத் திருத்து"
+
+#: apps/inventory/forms.py:114
+msgid "Needed for opening stock so stock value is correct"
+msgstr "சரக்கு மதிப்பு சரியாக இருக்க தொடக்கச் சரக்குக்குத் தேவை"
+
+#: apps/inventory/models.py:17
+msgid "material category"
+msgstr "பொருள் வகை"
+
+#: apps/inventory/models.py:18
+msgid "material categories"
+msgstr "பொருள் வகைகள்"
+
+#: apps/inventory/models.py:28
+msgid "category"
+msgstr "வகை"
+
+#: apps/inventory/models.py:30
+msgid "tax code (HSN etc.)"
+msgstr "வரிக் குறியீடு (HSN போன்றவை)"
+
+#: apps/inventory/models.py:32
+msgid "reorder level"
+msgstr "மறு ஆர்டர் அளவு"
+
+#: apps/inventory/models.py:33
+msgid "Warn when total stock falls to this quantity"
+msgstr "மொத்தச் சரக்கு இந்த அளவுக்குக் குறைந்தால் எச்சரி"
+
+#: apps/inventory/models.py:34
+msgid "last purchase rate"
+msgstr "கடைசி கொள்முதல் விலை"
+
+#: apps/inventory/models.py:40 apps/inventory/models.py:159
+#: apps/inventory/models.py:224 apps/inventory/models.py:249
+#: apps/inventory/models.py:269 apps/inventory/models.py:293
+#: apps/inventory/models.py:310
+msgid "material"
+msgstr "பொருள்"
+
+#: apps/inventory/models.py:41
+msgid "materials"
+msgstr "பொருட்கள்"
+
+#: apps/inventory/models.py:54
+msgid "payment terms"
+msgstr "கட்டண நிபந்தனைகள்"
+
+#: apps/inventory/models.py:55
+msgid "bank details"
+msgstr "வங்கி விவரம்"
+
+#: apps/inventory/models.py:60 apps/inventory/models.py:101
+#: apps/inventory/models.py:205
+msgid "supplier"
+msgstr "விநியோகஸ்தர்"
+
+#: apps/inventory/models.py:61
+msgid "suppliers"
+msgstr "விநியோகஸ்தர்கள்"
+
+#: apps/inventory/models.py:71
+msgid "Project site"
+msgstr "திட்டத் தளம்"
+
+#: apps/inventory/models.py:72
+msgid "Godown / store"
+msgstr "கிடங்கு / ஸ்டோர்"
+
+#: apps/inventory/models.py:75 apps/inventory/models.py:315
+#: apps/payroll/models.py:35
+msgid "type"
+msgstr "வகை"
+
+#: apps/inventory/models.py:83
+msgid "stock location"
+msgstr "சரக்கு இடம்"
+
+#: apps/inventory/models.py:84
+msgid "stock locations"
+msgstr "சரக்கு இடங்கள்"
+
+#: apps/inventory/models.py:92
+msgid "Draft – waiting approval"
+msgstr "வரைவு – அங்கீகாரத்துக்குக் காத்திருக்கிறது"
+
+#: apps/inventory/models.py:93
+msgid "Approved"
+msgstr "அங்கீகரிக்கப்பட்டது"
+
+#: apps/inventory/models.py:94
+msgid "Partly received"
+msgstr "பகுதி பெறப்பட்டது"
+
+#: apps/inventory/models.py:95
+msgid "Fully received"
+msgstr "முழுமையாகப் பெறப்பட்டது"
+
+#: apps/inventory/models.py:98 templates/inventory/po_list.html:17
+#: templates/inventory/po_list.html:20
+msgid "PO number"
+msgstr "PO எண்"
+
+#: apps/inventory/models.py:103
+msgid "deliver to"
+msgstr "விநியோக இடம்"
+
+#: apps/inventory/models.py:104
+msgid "expected delivery"
+msgstr "எதிர்பார்க்கும் விநியோகம்"
+
+#: apps/inventory/models.py:107
+msgid "terms"
+msgstr "நிபந்தனைகள்"
+
+#: apps/inventory/models.py:117 apps/inventory/models.py:207
+msgid "purchase order"
+msgstr "கொள்முதல் ஆணை"
+
+#: apps/inventory/models.py:118
+msgid "purchase orders"
+msgstr "கொள்முதல் ஆணைகள்"
+
+#: apps/inventory/models.py:160
+msgid "description / specification"
+msgstr "விவரம் / விவரக்குறிப்பு"
+
+#: apps/inventory/models.py:164
+msgid "received"
+msgstr "பெறப்பட்டது"
+
+#: apps/inventory/models.py:188
+msgid "number"
+msgstr "எண்"
+
+#: apps/inventory/models.py:209
+msgid "received at"
+msgstr "பெற்ற இடம்"
+
+#: apps/inventory/models.py:210
+msgid "supplier invoice / DC no."
+msgstr "விநியோகஸ்தர் பில் / DC எண்"
+
+#: apps/inventory/models.py:211 apps/inventory/models.py:240
+msgid "vehicle no."
+msgstr "வாகன எண்"
+
+#: apps/inventory/models.py:214
+msgid "goods receipt"
+msgstr "பொருள் வரவு"
+
+#: apps/inventory/models.py:215
+msgid "goods receipts"
+msgstr "பொருள் வரவுகள்"
+
+#: apps/inventory/models.py:237 apps/payroll/models.py:100
+msgid "from"
+msgstr "முதல்"
+
+#: apps/inventory/models.py:239 apps/payroll/models.py:101
+msgid "to"
+msgstr "வரை"
+
+#: apps/inventory/models.py:243
+msgid "stock transfer"
+msgstr "சரக்கு இடமாற்றம்"
+
+#: apps/inventory/models.py:244
+msgid "stock transfers"
+msgstr "சரக்கு இடமாற்றங்கள்"
+
+#: apps/inventory/models.py:257 apps/inventory/models.py:283
+msgid "site / store"
+msgstr "தளம் / கிடங்கு"
+
+#: apps/inventory/models.py:258
+msgid "issued to"
+msgstr "வழங்கப்பட்டவர்"
+
+#: apps/inventory/models.py:259
+msgid "used for"
+msgstr "பயன்பாடு"
+
+#: apps/inventory/models.py:260
+msgid "e.g. 2nd floor slab, compound wall"
+msgstr "எ.கா. 2-ஆம் மாடி தளம், சுற்றுச்சுவர்"
+
+#: apps/inventory/models.py:263
+msgid "material issue"
+msgstr "பொருள் பயன்பாடு"
+
+#: apps/inventory/models.py:264
+msgid "material issues"
+msgstr "பொருள் பயன்பாடுகள்"
+
+#: apps/inventory/models.py:277
+msgid "Opening stock"
+msgstr "தொடக்கச் சரக்கு"
+
+#: apps/inventory/models.py:278
+msgid "Physical count correction"
+msgstr "நேரடி எண்ணிக்கைத் திருத்தம்"
+
+#: apps/inventory/models.py:279
+msgid "Damaged / wasted"
+msgstr "சேதம் / வீணானது"
+
+#: apps/inventory/models.py:280
+msgid "Other"
+msgstr "மற்றவை"
+
+#: apps/inventory/models.py:284 apps/payroll/models.py:79
+msgid "reason"
+msgstr "காரணம்"
+
+#: apps/inventory/models.py:287
+msgid "stock adjustment"
+msgstr "சரக்கு திருத்தம்"
+
+#: apps/inventory/models.py:288
+msgid "stock adjustments"
+msgstr "சரக்கு திருத்தங்கள்"
+
+#: apps/inventory/models.py:294
+msgid "quantity (+ add / − remove)"
+msgstr "அளவு (+ சேர் / − குறை)"
+
+#: apps/inventory/models.py:302 templates/inventory/po_detail.html:28
+#: templates/inventory/po_detail.html:33
+msgid "Received"
+msgstr "பெறப்பட்டது"
+
+#: apps/inventory/models.py:303
+msgid "Transfer in"
+msgstr "உள்வரும் மாற்றம்"
+
+#: apps/inventory/models.py:304
+msgid "Transfer out"
+msgstr "வெளிச்செல்லும் மாற்றம்"
+
+#: apps/inventory/models.py:305
+msgid "Used / issued"
+msgstr "பயன்படுத்தப்பட்டது"
+
+#: apps/inventory/models.py:306
+msgid "Adjustment"
+msgstr "திருத்தம்"
+
+#: apps/inventory/models.py:312
+msgid "location"
+msgstr "இடம்"
+
+#: apps/inventory/models.py:324
+msgid "stock movement"
+msgstr "சரக்கு நகர்வு"
+
+#: apps/inventory/models.py:325
+msgid "stock movements"
+msgstr "சரக்கு நகர்வுகள்"
+
+#: apps/inventory/services.py:85
+#, python-format
+msgid "%(m)s: only %(have)s %(unit)s at %(loc)s, need %(need)s"
+msgstr "%(m)s: %(loc)s-இல் %(have)s %(unit)s மட்டுமே உள்ளது, தேவை %(need)s"
+
+#: apps/inventory/services.py:89
+msgid "Not enough stock. "
+msgstr "போதுமான சரக்கு இல்லை. "
+
+#: apps/inventory/services.py:109 apps/inventory/views.py:215
+msgid "Only draft purchase orders can be changed."
+msgstr "வரைவு கொள்முதல் ஆணைகளை மட்டுமே மாற்ற முடியும்."
+
+#: apps/inventory/services.py:125
+msgid "This purchase order is not waiting for approval."
+msgstr "இந்தக் கொள்முதல் ஆணை அங்கீகாரத்துக்குக் காத்திருக்கவில்லை."
+
+#: apps/inventory/services.py:127
+msgid "Add at least one material before approving."
+msgstr "அங்கீகரிக்கும் முன் குறைந்தது ஒரு பொருளைச் சேர்க்கவும்."
+
+#: apps/inventory/services.py:137
+msgid ""
+"Goods have already been received against this PO; it cannot be cancelled."
+msgstr "இந்த PO-க்கு ஏற்கனவே பொருட்கள் வந்துவிட்டன; ரத்து செய்ய முடியாது."
+
+#: apps/inventory/services.py:148 apps/inventory/views.py:97
+msgid "This purchase order is not approved or is already closed."
+msgstr ""
+"இந்தக் கொள்முதல் ஆணை அங்கீகரிக்கப்படவில்லை அல்லது ஏற்கனவே முடிந்துவிட்டது."
+
+#: apps/inventory/services.py:152 apps/inventory/services.py:195
+#: apps/inventory/services.py:213
+msgid "Quantities must be more than zero."
+msgstr "அளவுகள் பூஜ்ஜியத்தை விட அதிகமாக இருக்க வேண்டும்."
+
+#: apps/inventory/services.py:155
+msgid "Line does not belong to this purchase order."
+msgstr "இந்த வரி இந்தக் கொள்முதல் ஆணையைச் சேர்ந்தது அல்ல."
+
+#: apps/inventory/services.py:160
+#, python-format
+msgid "%(m)s: receiving %(q)s but only %(p)s is pending on the PO."
+msgstr ""
+"%(m)s: %(q)s பெறுகிறீர்கள், ஆனால் PO-வில் %(p)s மட்டுமே நிலுவையில் உள்ளது."
+
+#: apps/inventory/services.py:193
+msgid "'From' and 'To' must be different locations."
+msgstr "'இருந்து' மற்றும் 'க்கு' வெவ்வேறு இடங்களாக இருக்க வேண்டும்."
+
+#: apps/inventory/services.py:230
+msgid "Quantities cannot be zero."
+msgstr "அளவு பூஜ்ஜியமாக இருக்கக் கூடாது."
+
+#: apps/inventory/urls.py:31
+msgid ""
+"Project sites are added automatically. Add godowns / central stores here."
+msgstr ""
+"திட்டத் தளங்கள் தானாகச் சேர்க்கப்படும். கிடங்குகள் / மையக் கிடங்குகளை இங்கே "
+"சேர்க்கவும்."
+
+#: apps/inventory/views.py:115 apps/inventory/views.py:184
+msgid "Add at least one material line."
+msgstr "குறைந்தது ஒரு பொருள் வரியைச் சேர்க்கவும்."
+
+#: apps/inventory/views.py:128
+#, python-format
+msgid "New %(doc)s"
+msgstr "புதிய %(doc)s"
+
+#: apps/inventory/views.py:153
+msgid "Cannot delete: "
+msgstr "நீக்க முடியாது: "
+
+#: apps/inventory/views.py:155
+#, python-format
+msgid "%(doc)s deleted and stock reversed."
+msgstr "%(doc)s நீக்கப்பட்டது, சரக்கு திருப்பப்பட்டது."
+
+#: apps/inventory/views.py:200
+msgid "New purchase order"
+msgstr "புதிய கொள்முதல் ஆணை"
+
+#: apps/inventory/views.py:247
+msgid "Purchase order approved."
+msgstr "கொள்முதல் ஆணை அங்கீகரிக்கப்பட்டது."
+
+#: apps/inventory/views.py:251
+msgid "Purchase order cancelled."
+msgstr "கொள்முதல் ஆணை ரத்து செய்யப்பட்டது."
+
+#: apps/inventory/views.py:255
+msgid "Only draft purchase orders can be deleted."
+msgstr "வரைவு கொள்முதல் ஆணைகளை மட்டுமே நீக்க முடியும்."
+
+#: apps/inventory/views.py:257
+msgid "Draft purchase order deleted."
+msgstr "வரைவு கொள்முதல் ஆணை நீக்கப்பட்டது."
 
 #: apps/payroll/forms.py:20
 msgid "'To' date must be after 'From' date."
@@ -639,10 +1764,6 @@ msgstr "மாத ஊழியர்கள் மட்டும்"
 #: apps/payroll/models.py:34
 msgid "short code"
 msgstr "சுருக்கக் குறியீடு"
-
-#: apps/payroll/models.py:35
-msgid "type"
-msgstr "வகை"
 
 #: apps/payroll/models.py:36
 msgid "calculation"
@@ -724,10 +1845,6 @@ msgstr "அடுத்த சம்பளத்தில் முழு நி
 msgid "recovered so far"
 msgstr "இதுவரை பிடித்தது"
 
-#: apps/payroll/models.py:79
-msgid "reason"
-msgstr "காரணம்"
-
 #: apps/payroll/models.py:84
 msgid "salary advance"
 msgstr "சம்பள முன்பணம்"
@@ -736,21 +1853,9 @@ msgstr "சம்பள முன்பணம்"
 msgid "salary advances"
 msgstr "சம்பள முன்பணங்கள்"
 
-#: apps/payroll/models.py:97
-msgid "Draft"
-msgstr "வரைவு"
-
 #: apps/payroll/models.py:98
 msgid "Finalized"
 msgstr "இறுதி செய்யப்பட்டது"
-
-#: apps/payroll/models.py:100
-msgid "from"
-msgstr "முதல்"
-
-#: apps/payroll/models.py:101
-msgid "to"
-msgstr "வரை"
 
 #: apps/payroll/models.py:103
 msgid "staff"
@@ -808,11 +1913,181 @@ msgstr "புதிய ஊதிய விதி"
 msgid "Edit pay rule"
 msgstr "ஊதிய விதியைத் திருத்து"
 
-#: config/settings.py:99
+#: apps/progress/forms.py:27 templates/progress/project.html:13
+#: templates/progress/project.html:28 templates/progress/project.html:31
+#: templates/progress/report_pdf.html:11
+msgid "Stage"
+msgstr "நிலை"
+
+#: apps/progress/forms.py:28
+msgid "Stage now complete (%)"
+msgstr "நிலை இப்போது முடிந்தது (%)"
+
+#: apps/progress/forms.py:30 templates/attendance/me.html:39
+#: templates/attendance/me.html:42 templates/documents/agreement_list.html:12
+#: templates/documents/agreement_list.html:16
+#: templates/documents/quotation_detail.html:20
+#: templates/documents/quotation_list.html:15
+#: templates/documents/quotation_list.html:19
+#: templates/employees/employee_detail.html:21
+#: templates/employees/employee_detail.html:24
+#: templates/employees/employee_detail.html:33
+#: templates/employees/employee_detail.html:36
+#: templates/inventory/doc_list.html:12 templates/inventory/doc_list.html:16
+#: templates/inventory/ledger.html:13 templates/inventory/ledger.html:16
+#: templates/inventory/po_detail.html:19 templates/inventory/po_list.html:17
+#: templates/inventory/po_list.html:21 templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:11
+msgid "Date"
+msgstr "தேதி"
+
+#: apps/progress/forms.py:31
+msgid "What was done"
+msgstr "செய்த வேலை"
+
+#: apps/progress/forms.py:32 templates/progress/photos.html:2
+#: templates/progress/photos.html:4 templates/progress/report_pdf.html:16
+msgid "Site photos"
+msgstr "தளப் புகைப்படங்கள்"
+
+#: apps/progress/forms.py:41
+msgid "Choose the stage this percentage is for."
+msgstr "இந்தச் சதவீதம் எந்த நிலைக்கு என்று தேர்ந்தெடுக்கவும்."
+
+#: apps/progress/forms.py:43
+msgid "Enter a note, a percentage or at least one photo."
+msgstr "குறிப்பு, சதவீதம் அல்லது குறைந்தது ஒரு புகைப்படம் உள்ளிடவும்."
+
+#: apps/progress/models.py:15 apps/progress/models.py:38
+#: apps/progress/models.py:74 apps/progress/models.py:95
+msgid "stage"
+msgstr "நிலை"
+
+#: apps/progress/models.py:16 apps/progress/models.py:39
+msgid "order"
+msgstr "வரிசை"
+
+#: apps/progress/models.py:17 apps/progress/models.py:40
+msgid "weight"
+msgstr "பங்கு"
+
+#: apps/progress/models.py:18
+msgid "How much of the whole job this stage is, e.g. slab 12, painting 8"
+msgstr "முழு வேலையில் இந்த நிலையின் பங்கு, எ.கா. தளம் 12, பெயிண்ட் 8"
+
+#: apps/progress/models.py:23
+msgid "standard stage"
+msgstr "நிலையான நிலை"
+
+#: apps/progress/models.py:24
+msgid "standard stages"
+msgstr "நிலையான நிலைகள்"
+
+#: apps/progress/models.py:32
+msgid "Not started"
+msgstr "தொடங்கவில்லை"
+
+#: apps/progress/models.py:33
+msgid "In progress"
+msgstr "நடைபெறுகிறது"
+
+#: apps/progress/models.py:34
+msgid "Delayed"
+msgstr "தாமதம்"
+
+#: apps/progress/models.py:41
+msgid "planned start"
+msgstr "திட்டமிட்ட தொடக்கம்"
+
+#: apps/progress/models.py:42
+msgid "planned finish"
+msgstr "திட்டமிட்ட முடிவு"
+
+#: apps/progress/models.py:43
+msgid "actual start"
+msgstr "உண்மையான தொடக்கம்"
+
+#: apps/progress/models.py:44
+msgid "actual finish"
+msgstr "உண்மையான முடிவு"
+
+#: apps/progress/models.py:45
+msgid "complete (%)"
+msgstr "முடிந்தது (%)"
+
+#: apps/progress/models.py:50
+msgid "project stage"
+msgstr "திட்ட நிலை"
+
+#: apps/progress/models.py:51
+msgid "project stages"
+msgstr "திட்ட நிலைகள்"
+
+#: apps/progress/models.py:76
+msgid "stage now complete (%)"
+msgstr "நிலை இப்போது முடிந்தது (%)"
+
+#: apps/progress/models.py:78
+msgid "what was done"
+msgstr "செய்த வேலை"
+
+#: apps/progress/models.py:85
+msgid "progress update"
+msgstr "முன்னேற்றப் பதிவு"
+
+#: apps/progress/models.py:86
+msgid "progress updates"
+msgstr "முன்னேற்றப் பதிவுகள்"
+
+#: apps/progress/models.py:99
+msgid "caption"
+msgstr "தலைப்புக் குறிப்பு"
+
+#: apps/progress/models.py:106
+msgid "site photo"
+msgstr "தளப் புகைப்படம்"
+
+#: apps/progress/models.py:107
+msgid "site photos"
+msgstr "தளப் புகைப்படங்கள்"
+
+#: apps/progress/urls.py:14
+msgid ""
+"These stages are copied into a project when you press 'Add standard stages'."
+msgstr ""
+"'நிலையான நிலைகளைச் சேர்' அழுத்தும்போது இந்த நிலைகள் திட்டத்தில் "
+"நகலெடுக்கப்படும்."
+
+#: apps/progress/views.py:36
+msgid "Your role cannot add progress updates."
+msgstr "உங்கள் பொறுப்புக்கு முன்னேற்றம் சேர்க்க அனுமதி இல்லை."
+
+#: apps/progress/views.py:40
+msgid "Progress saved."
+msgstr "முன்னேற்றம் சேமிக்கப்பட்டது."
+
+#: apps/progress/views.py:54
+#, python-format
+msgid "%(n)s standard stages added."
+msgstr "%(n)s நிலையான நிலைகள் சேர்க்கப்பட்டன."
+
+#: apps/progress/views.py:70
+msgid "Stage deleted."
+msgstr "நிலை நீக்கப்பட்டது."
+
+#: apps/progress/views.py:76
+msgid "Stage saved."
+msgstr "நிலை சேமிக்கப்பட்டது."
+
+#: apps/progress/views.py:102
+msgid "Photo deleted."
+msgstr "புகைப்படம் நீக்கப்பட்டது."
+
+#: config/settings.py:103
 msgid "English"
 msgstr "ஆங்கிலம்"
 
-#: config/settings.py:99
+#: config/settings.py:103
 msgid "Tamil"
 msgstr "தமிழ்"
 
@@ -828,10 +2103,14 @@ msgstr ""
 "உங்கள் பொறுப்புக்கு இந்தப் பக்கத்தை அணுக அனுமதி இல்லை. தேவைப்பட்டால் "
 "உரிமையாளர் அல்லது நிர்வாகியிடம் கேட்கவும்."
 
-#: templates/403.html:5 templates/_nav_links.html:2 templates/base.html:51
+#: templates/403.html:5 templates/_nav_links.html:2 templates/base.html:52
 #: templates/core/dashboard.html:2
 msgid "Home"
 msgstr "முகப்பு"
+
+#: templates/_line_row.html:7
+msgid "Remove"
+msgstr "நீக்கு"
 
 #: templates/_nav_links.html:4 templates/attendance/me.html:2
 #: templates/attendance/me.html:4
@@ -843,60 +2122,105 @@ msgstr "என் வருகை"
 msgid "My payslips"
 msgstr "என் சம்பளச் சீட்டுகள்"
 
-#: templates/_nav_links.html:8
-msgid "Attendance"
-msgstr "வருகை"
+#: templates/_nav_links.html:9
+msgid "Projects"
+msgstr "திட்டங்கள்"
 
-#: templates/_nav_links.html:9 templates/attendance/mark.html:2
+#: templates/_nav_links.html:11 templates/core/configuration.html:30
+#: templates/core/project_detail.html:20 templates/progress/overview.html:2
+#: templates/progress/overview.html:4
+msgid "Building progress"
+msgstr "கட்டுமான முன்னேற்றம்"
+
+#: templates/_nav_links.html:15
+msgid "People"
+msgstr "ஆட்கள்"
+
+#: templates/_nav_links.html:18 templates/attendance/mark.html:2
 #: templates/attendance/mark.html:4
 msgid "Mark site attendance"
 msgstr "தள வருகைப் பதிவு"
 
-#: templates/_nav_links.html:10 templates/attendance/register.html:2
+#: templates/_nav_links.html:19 templates/attendance/register.html:2
 #: templates/attendance/register.html:4
 msgid "Monthly register"
 msgstr "மாத வருகைப் பதிவேடு"
 
-#: templates/_nav_links.html:13
-msgid "People & sites"
-msgstr "ஆட்கள் & தளங்கள்"
-
-#: templates/_nav_links.html:18
+#: templates/_nav_links.html:24 templates/core/configuration.html:15
 msgid "Salary"
 msgstr "சம்பளம்"
 
-#: templates/_nav_links.html:19 templates/payroll/run_detail.html:2
+#: templates/_nav_links.html:25 templates/payroll/run_detail.html:2
 #: templates/payroll/run_detail.html:5 templates/payroll/run_list.html:2
 #: templates/payroll/run_list.html:4
 msgid "Payroll"
 msgstr "சம்பளப் பட்டியல்"
 
-#: templates/_nav_links.html:20 templates/employees/employee_detail.html:31
+#: templates/_nav_links.html:26 templates/employees/employee_detail.html:31
 #: templates/payroll/advance_list.html:2
 msgid "Advances"
 msgstr "முன்பணங்கள்"
 
-#: templates/_nav_links.html:21 templates/payroll/component_list.html:2
-#: templates/payroll/component_list.html:4
-msgid "Pay rules"
-msgstr "ஊதிய விதிகள்"
+#: templates/_nav_links.html:31 templates/inventory/stock.html:2
+#: templates/inventory/stock.html:4
+msgid "Stock"
+msgstr "சரக்கு"
 
-#: templates/_nav_links.html:24
+#: templates/_nav_links.html:34
+msgid "Material used at site"
+msgstr "தளத்தில் பயன்படுத்திய பொருள்"
+
+#: templates/_nav_links.html:35
+msgid "Transfers"
+msgstr "இடமாற்றங்கள்"
+
+#: templates/_nav_links.html:36
+msgid "Adjustments / opening stock"
+msgstr "திருத்தம் / தொடக்கச் சரக்கு"
+
+#: templates/_nav_links.html:37 templates/core/configuration.html:23
+#: templates/inventory/doc_form.html:9
+msgid "Materials"
+msgstr "பொருட்கள்"
+
+#: templates/_nav_links.html:38 templates/core/configuration.html:25
+msgid "Suppliers"
+msgstr "விநியோகஸ்தர்கள்"
+
+#: templates/_nav_links.html:42
+msgid "Sales"
+msgstr "விற்பனை"
+
+#: templates/_nav_links.html:43 templates/core/configuration.html:40
+msgid "Clients"
+msgstr "வாடிக்கையாளர்கள்"
+
+#: templates/_nav_links.html:44 templates/documents/quotation_list.html:2
+#: templates/documents/quotation_list.html:4
+msgid "Quotations"
+msgstr "விலைப்புள்ளிகள்"
+
+#: templates/_nav_links.html:49
 msgid "Administration"
 msgstr "நிர்வாகம்"
 
-#: templates/_nav_links.html:25 templates/accounts/role_list.html:9
+#: templates/_nav_links.html:50 templates/core/configuration.html:2
+#: templates/core/configuration.html:4
+msgid "Settings & configuration"
+msgstr "அமைப்புகள் & கட்டமைப்பு"
+
+#: templates/_nav_links.html:51 templates/accounts/role_list.html:9
 #: templates/accounts/role_list.html:14 templates/accounts/user_list.html:2
-#: templates/accounts/user_list.html:4
+#: templates/accounts/user_list.html:4 templates/core/configuration.html:11
 msgid "Users"
 msgstr "பயனர்கள்"
 
-#: templates/_nav_links.html:26 templates/accounts/role_list.html:2
-#: templates/accounts/role_list.html:4
+#: templates/_nav_links.html:52 templates/accounts/role_list.html:2
+#: templates/accounts/role_list.html:4 templates/core/configuration.html:10
 msgid "Roles & permissions"
 msgstr "பொறுப்புகள் & அனுமதிகள்"
 
-#: templates/_nav_links.html:29
+#: templates/_nav_links.html:55
 msgid "Account"
 msgstr "கணக்கு"
 
@@ -917,19 +2241,27 @@ msgstr "உள்நுழை"
 msgid "Username"
 msgstr "பயனர் பெயர்"
 
-#: templates/accounts/login.html:9
-msgid "Password"
-msgstr "கடவுச்சொல்"
-
 #: templates/accounts/role_form.html:8
 msgid "Module"
 msgstr "பகுதி"
 
-#: templates/accounts/role_form.html:16 templates/form.html:8
+#: templates/accounts/role_form.html:16
+msgid "Special permissions"
+msgstr "சிறப்பு அனுமதிகள்"
+
+#: templates/accounts/role_form.html:20
+#: templates/documents/agreement_form.html:19
+#: templates/documents/agreement_text.html:8
+#: templates/documents/quotation_form.html:23 templates/form.html:8
+#: templates/inventory/doc_form.html:24 templates/progress/stage_form.html:7
 msgid "Save"
 msgstr "சேமி"
 
-#: templates/accounts/role_form.html:17 templates/form.html:9
+#: templates/accounts/role_form.html:21 templates/crud/confirm_delete.html:8
+#: templates/documents/agreement_form.html:20
+#: templates/documents/agreement_text.html:9
+#: templates/documents/quotation_form.html:24 templates/form.html:9
+#: templates/inventory/doc_form.html:25 templates/progress/stage_form.html:8
 msgid "Cancel"
 msgstr "ரத்து"
 
@@ -950,7 +2282,7 @@ msgid "Edit permissions"
 msgstr "அனுமதிகளைத் திருத்து"
 
 #: templates/accounts/user_list.html:8 templates/accounts/user_list.html:13
-#: templates/core/project_list.html:8 templates/core/project_list.html:13
+#: templates/core/project_list.html:12 templates/core/project_list.html:18
 #: templates/employees/employee_list.html:13
 #: templates/employees/employee_list.html:18
 #: templates/payroll/component_list.html:9
@@ -965,13 +2297,20 @@ msgstr "பொறுப்புகள்"
 #: templates/accounts/user_list.html:8 templates/accounts/user_list.html:15
 #: templates/attendance/mark.html:24 templates/attendance/mark.html:31
 #: templates/attendance/me.html:39 templates/attendance/me.html:42
-#: templates/core/project_list.html:8 templates/core/project_list.html:15
+#: templates/core/project_list.html:12 templates/core/project_list.html:20
+#: templates/documents/agreement_list.html:12
+#: templates/documents/agreement_list.html:18
+#: templates/documents/quotation_list.html:15
+#: templates/documents/quotation_list.html:21
 #: templates/employees/employee_detail.html:16
 #: templates/employees/employee_detail.html:21
 #: templates/employees/employee_detail.html:24
+#: templates/inventory/po_list.html:17 templates/inventory/po_list.html:24
 #: templates/payroll/component_list.html:9
 #: templates/payroll/component_list.html:18 templates/payroll/run_list.html:8
-#: templates/payroll/run_list.html:15
+#: templates/payroll/run_list.html:15 templates/progress/overview.html:7
+#: templates/progress/overview.html:11 templates/progress/project.html:28
+#: templates/progress/project.html:34 templates/progress/report_pdf.html:11
 msgid "Status"
 msgstr "நிலை"
 
@@ -980,6 +2319,8 @@ msgid "Disabled"
 msgstr "முடக்கப்பட்டது"
 
 #: templates/attendance/mark.html:10 templates/attendance/register.html:11
+#: templates/inventory/ledger.html:10 templates/inventory/stock.html:15
+#: templates/progress/photos.html:8
 msgid "Show"
 msgstr "காட்டு"
 
@@ -1046,8 +2387,8 @@ msgstr "வெளியேறிய நேரம்"
 msgid "Check out"
 msgstr "வெளியேறு"
 
-#: templates/attendance/me.html:22 templates/core/dashboard.html:31
-#: templates/core/dashboard.html:35
+#: templates/attendance/me.html:22 templates/core/dashboard.html:38
+#: templates/core/dashboard.html:42
 #: templates/employees/employee_detail.html:12
 #: templates/employees/employee_detail.html:21
 #: templates/employees/employee_detail.html:25
@@ -1065,23 +2406,13 @@ msgstr "புகைப்படம்"
 msgid "Getting your location…"
 msgstr "உங்கள் இருப்பிடத்தைப் பெறுகிறது…"
 
-#: templates/attendance/me.html:32 templates/base.html:54
+#: templates/attendance/me.html:32 templates/base.html:55
 msgid "Check in"
 msgstr "வருகை பதிவு"
 
 #: templates/attendance/me.html:37
 msgid "Last 10 days"
 msgstr "கடந்த 10 நாட்கள்"
-
-#: templates/attendance/me.html:39 templates/attendance/me.html:42
-#: templates/employees/employee_detail.html:21
-#: templates/employees/employee_detail.html:24
-#: templates/employees/employee_detail.html:33
-#: templates/employees/employee_detail.html:36
-#: templates/payroll/advance_list.html:8
-#: templates/payroll/advance_list.html:11
-msgid "Date"
-msgstr "தேதி"
 
 #: templates/attendance/me.html:39 templates/attendance/me.html:43
 msgid "In"
@@ -1111,7 +2442,7 @@ msgstr "இருப்பிடம் பெற முடியவில்ல�
 msgid "All sites"
 msgstr "அனைத்து தளங்கள்"
 
-#: templates/attendance/register.html:12
+#: templates/attendance/register.html:12 templates/inventory/doc_detail.html:6
 msgid "Print"
 msgstr "அச்சிடு"
 
@@ -1127,26 +2458,177 @@ msgstr "கூ.நே."
 msgid "No attendance in this month."
 msgstr "இந்த மாதத்தில் வருகை இல்லை."
 
-#: templates/base.html:22
+#: templates/base.html:23
 msgid "Language"
 msgstr "மொழி"
 
-#: templates/base.html:28
+#: templates/base.html:29
 msgid "Logout"
 msgstr "வெளியேறு"
 
-#: templates/base.html:58
+#: templates/base.html:59
 msgid "Mark"
 msgstr "பதிவு"
 
-#: templates/base.html:62 templates/payroll/run_list.html:8
+#: templates/base.html:63
+msgid "Sites"
+msgstr "தளங்கள்"
+
+#: templates/base.html:66 templates/payroll/run_list.html:8
 #: templates/payroll/run_list.html:13
 msgid "Staff"
 msgstr "ஊழியர்"
 
-#: templates/base.html:65
+#: templates/base.html:69
 msgid "More"
 msgstr "மேலும்"
+
+#: templates/core/audit_log.html:6
+msgid "Search record, type or user"
+msgstr "பதிவு, வகை அல்லது பயனரைத் தேடு"
+
+#: templates/core/audit_log.html:7
+msgid "All actions"
+msgstr "அனைத்துச் செயல்கள்"
+
+#: templates/core/audit_log.html:11 templates/crud/list.html:10
+#: templates/crud/list.html:11 templates/documents/agreement_list.html:9
+#: templates/documents/quotation_list.html:12
+#: templates/employees/employee_list.html:10
+#: templates/inventory/doc_list.html:9 templates/inventory/po_list.html:14
+msgid "Search"
+msgstr "தேடு"
+
+#: templates/core/audit_log.html:14 templates/core/audit_log.html:18
+msgid "Time"
+msgstr "நேரம்"
+
+#: templates/core/audit_log.html:14 templates/core/audit_log.html:19
+msgid "User"
+msgstr "பயனர்"
+
+#: templates/core/audit_log.html:14 templates/core/audit_log.html:20
+msgid "Action"
+msgstr "செயல்"
+
+#: templates/core/audit_log.html:14 templates/core/audit_log.html:21
+msgid "Record"
+msgstr "பதிவு"
+
+#: templates/core/audit_log.html:14 templates/core/audit_log.html:22
+msgid "Changes"
+msgstr "மாற்றங்கள்"
+
+#: templates/core/audit_log.html:24
+msgid "No entries."
+msgstr "பதிவுகள் இல்லை."
+
+#: templates/core/configuration.html:5
+msgid ""
+"Everything that is different for each company is set here – no programming "
+"needed."
+msgstr ""
+"ஒவ்வொரு நிறுவனத்துக்கும் மாறுபடும் அனைத்தும் இங்கே அமைக்கப்படும் – "
+"நிரலாக்கம் தேவையில்லை."
+
+#: templates/core/configuration.html:6
+msgid "Company"
+msgstr "நிறுவனம்"
+
+#: templates/core/configuration.html:8
+msgid "Profile, logo, colour, modules, tax, salary rules, security"
+msgstr "விவரம், சின்னம், நிறம், பகுதிகள், வரி, சம்பள விதிகள், பாதுகாப்பு"
+
+#: templates/core/configuration.html:9 templates/core/number_series.html:2
+#: templates/core/number_series.html:4
+msgid "Document numbering"
+msgstr "ஆவண எண் வரிசை"
+
+#: templates/core/configuration.html:9
+msgid "PO, GRN, quotation, agreement number formats"
+msgstr "PO, GRN, விலைப்புள்ளி, ஒப்பந்த எண் வடிவங்கள்"
+
+#: templates/core/configuration.html:10
+msgid "Who can see and do what"
+msgstr "யார் எதைப் பார்க்கலாம், செய்யலாம்"
+
+#: templates/core/configuration.html:11
+msgid "Logins for your staff"
+msgstr "உங்கள் ஊழியர்களுக்கான உள்நுழைவுகள்"
+
+#: templates/core/configuration.html:12
+msgid "Units of measure"
+msgstr "அளவைகள்"
+
+#: templates/core/configuration.html:12
+msgid "Bag, Kg, Cft, Sqft …"
+msgstr "மூட்டை, கிலோ, கன அடி, சதுர அடி …"
+
+#: templates/core/configuration.html:17
+#: templates/payroll/component_list.html:2
+#: templates/payroll/component_list.html:4
+msgid "Pay rules"
+msgstr "ஊதிய விதிகள்"
+
+#: templates/core/configuration.html:17
+msgid "Allowances, PF, ESI, tax, other deductions"
+msgstr "படிகள், PF, ESI, வரி, பிற பிடித்தங்கள்"
+
+#: templates/core/configuration.html:23
+msgid "Item list with unit, tax and reorder level"
+msgstr "அளவு, வரி, மறு ஆர்டர் அளவுடன் பொருள் பட்டியல்"
+
+#: templates/core/configuration.html:24
+msgid "Material categories"
+msgstr "பொருள் வகைகள்"
+
+#: templates/core/configuration.html:24
+msgid "Cement, steel, sand, electrical …"
+msgstr "சிமெண்ட், கம்பி, மணல், மின்சாரம் …"
+
+#: templates/core/configuration.html:25
+msgid "Vendors you buy from"
+msgstr "நீங்கள் வாங்கும் விநியோகஸ்தர்கள்"
+
+#: templates/core/configuration.html:26
+msgid "Stock locations"
+msgstr "சரக்கு இடங்கள்"
+
+#: templates/core/configuration.html:26
+msgid "Godowns / central stores"
+msgstr "கிடங்குகள் / மையக் கிடங்குகள்"
+
+#: templates/core/configuration.html:32
+msgid "Standard stages"
+msgstr "நிலையான நிலைகள்"
+
+#: templates/core/configuration.html:32
+msgid "Foundation, slab, brickwork … with weights"
+msgstr "அடித்தளம், தளம், செங்கல் வேலை … பங்குடன்"
+
+#: templates/core/configuration.html:36 templates/core/project_detail.html:53
+msgid "Quotations & agreements"
+msgstr "விலைப்புள்ளி & ஒப்பந்தங்கள்"
+
+#: templates/core/configuration.html:38
+msgid "Rate items"
+msgstr "விலைப் பொருட்கள்"
+
+#: templates/core/configuration.html:38
+msgid "Your standard work items and rates"
+msgstr "உங்கள் வழக்கமான வேலைகள், விலைகள்"
+
+#: templates/core/configuration.html:39
+msgid "Agreement templates"
+msgstr "ஒப்பந்த வார்ப்புருக்கள்"
+
+#: templates/core/configuration.html:39
+msgid "Your agreement wording with placeholders"
+msgstr "இடக்குறிகளுடன் உங்கள் ஒப்பந்த வாசகம்"
+
+#: templates/core/configuration.html:40
+msgid "Customers you quote for"
+msgstr "நீங்கள் விலைப்புள்ளி தரும் வாடிக்கையாளர்கள்"
 
 #: templates/core/dashboard.html:4
 #, python-format
@@ -1161,42 +2643,196 @@ msgstr "இன்று:"
 msgid "Check in now"
 msgstr "இப்போது வருகை பதிவு செய்"
 
-#: templates/core/dashboard.html:23
+#: templates/core/dashboard.html:22
+#, python-format
+msgid "%(n)s purchase order is waiting for your approval"
+msgid_plural "%(n)s purchase orders are waiting for your approval"
+msgstr[0] "%(n)s கொள்முதல் ஆணை உங்கள் அங்கீகாரத்துக்குக் காத்திருக்கிறது"
+msgstr[1] "%(n)s கொள்முதல் ஆணைகள் உங்கள் அங்கீகாரத்துக்குக் காத்திருக்கின்றன"
+
+#: templates/core/dashboard.html:27
 msgid "Present today"
 msgstr "இன்று வருகை"
 
-#: templates/core/dashboard.html:25
+#: templates/core/dashboard.html:29
 msgid "On leave"
 msgstr "விடுப்பில்"
 
-#: templates/core/dashboard.html:26
+#: templates/core/dashboard.html:30
 msgid "Active employees"
 msgstr "செயலில் உள்ள ஊழியர்கள்"
 
-#: templates/core/dashboard.html:29
-msgid "Active sites today"
-msgstr "இன்றைய செயலில் உள்ள தளங்கள்"
+#: templates/core/dashboard.html:36
+msgid "Active sites"
+msgstr "செயலில் உள்ள தளங்கள்"
 
-#: templates/core/dashboard.html:31 templates/core/dashboard.html:36
-#: templates/core/project_list.html:8 templates/core/project_list.html:14
+#: templates/core/dashboard.html:38 templates/core/dashboard.html:43
+#: templates/core/project_list.html:12 templates/core/project_list.html:19
+#: templates/documents/agreement_list.html:12
+#: templates/documents/agreement_list.html:16
+#: templates/documents/quotation_detail.html:18
+#: templates/documents/quotation_list.html:15
+#: templates/documents/quotation_list.html:19
+#: templates/progress/report_pdf.html:7
 msgid "Client"
 msgstr "வாடிக்கையாளர்"
 
-#: templates/core/dashboard.html:31 templates/core/dashboard.html:37
+#: templates/core/dashboard.html:38 templates/core/dashboard.html:44
 msgid "On site"
 msgstr "தளத்தில்"
 
-#: templates/core/dashboard.html:38
+#: templates/core/dashboard.html:38 templates/core/dashboard.html:45
+#: templates/core/project_list.html:13 templates/core/project_list.html:21
+#: templates/progress/overview.html:7 templates/progress/overview.html:12
+#: templates/progress/project.html:28 templates/progress/project.html:32
+#: templates/progress/report_pdf.html:11
+msgid "Progress"
+msgstr "முன்னேற்றம்"
+
+#: templates/core/dashboard.html:46
 msgid "Mark attendance"
 msgstr "வருகை பதிவு செய்"
 
-#: templates/core/dashboard.html:41
+#: templates/core/dashboard.html:49
 msgid "No active sites yet."
 msgstr "இன்னும் செயலில் உள்ள தளங்கள் இல்லை."
+
+#: templates/core/dashboard.html:56
+msgid "Low stock"
+msgstr "குறைந்த சரக்கு"
+
+#: templates/core/dashboard.html:58 templates/core/dashboard.html:59
+#: templates/inventory/doc_detail.html:29
+#: templates/inventory/doc_detail.html:32 templates/inventory/ledger.html:13
+#: templates/inventory/ledger.html:16 templates/inventory/po_detail.html:28
+#: templates/inventory/po_detail.html:31 templates/inventory/po_pdf.html:12
+#: templates/inventory/stock.html:14 templates/inventory/stock.html:19
+#: templates/inventory/stock.html:22
+msgid "Material"
+msgstr "பொருள்"
+
+#: templates/core/dashboard.html:58 templates/core/dashboard.html:59
+msgid "In stock"
+msgstr "கையிருப்பு"
+
+#: templates/core/dashboard.html:58 templates/core/dashboard.html:59
+msgid "Reorder level"
+msgstr "மறு ஆர்டர் அளவு"
 
 #: templates/core/menu.html:2 templates/core/menu.html:4
 msgid "Menu"
 msgstr "பட்டியல்"
+
+#: templates/core/number_series.html:5
+#, python-brace-format
+msgid ""
+"Tokens: {FY} financial year, {YYYY} year, {YY} short year, {MM} month, {SEQ}"
+" running number."
+msgstr ""
+"குறியீடுகள்: {FY} நிதியாண்டு, {YYYY} ஆண்டு, {YY} சுருக்க ஆண்டு, {MM} மாதம், "
+"{SEQ} தொடர் எண்."
+
+#: templates/core/number_series.html:7 templates/core/number_series.html:10
+#: templates/inventory/ledger.html:13 templates/inventory/ledger.html:19
+msgid "Document"
+msgstr "ஆவணம்"
+
+#: templates/core/number_series.html:7 templates/core/number_series.html:10
+msgid "Format"
+msgstr "வடிவம்"
+
+#: templates/core/number_series.html:7 templates/core/number_series.html:11
+msgid "Next number"
+msgstr "அடுத்த எண்"
+
+#: templates/core/project_detail.html:12
+msgid "Work complete"
+msgstr "முடிந்த வேலை"
+
+#: templates/core/project_detail.html:14
+msgid "On site today"
+msgstr "இன்று தளத்தில்"
+
+#: templates/core/project_detail.html:15
+msgid "Man-days this month"
+msgstr "இந்த மாத ஆள்-நாட்கள்"
+
+#: templates/core/project_detail.html:16
+msgid "Material used (value)"
+msgstr "பயன்படுத்திய பொருள் (மதிப்பு)"
+
+#: templates/core/project_detail.html:21
+msgid "Update progress"
+msgstr "முன்னேற்றம் பதிவு செய்"
+
+#: templates/core/project_detail.html:22 templates/progress/project.html:11
+msgid "Client report (PDF)"
+msgstr "வாடிக்கையாளர் அறிக்கை (PDF)"
+
+#: templates/core/project_detail.html:28
+msgid "No stages yet."
+msgstr "இன்னும் நிலைகள் இல்லை."
+
+#: templates/core/project_detail.html:28
+msgid "Add stages"
+msgstr "நிலைகளைச் சேர்"
+
+#: templates/core/project_detail.html:36
+msgid "Material at this site"
+msgstr "இந்தத் தளத்தில் உள்ள பொருள்"
+
+#: templates/core/project_detail.html:37
+msgid "Full stock"
+msgstr "முழுச் சரக்கு"
+
+#: templates/core/project_detail.html:40
+msgid "In stock now"
+msgstr "தற்போதைய கையிருப்பு"
+
+#: templates/core/project_detail.html:40 templates/core/project_detail.html:45
+#: templates/documents/quotation_detail.html:25
+#: templates/documents/quotation_detail.html:27
+#: templates/documents/quotation_pdf.html:14
+#: templates/inventory/po_pdf.html:12
+msgid "Qty"
+msgstr "அளவு"
+
+#: templates/core/project_detail.html:42
+msgid "No stock at this site."
+msgstr "இந்தத் தளத்தில் சரக்கு இல்லை."
+
+#: templates/core/project_detail.html:45
+msgid "Used so far"
+msgstr "இதுவரை பயன்படுத்தியது"
+
+#: templates/core/project_detail.html:45
+#: templates/documents/agreement_list.html:12
+#: templates/documents/agreement_list.html:19
+#: templates/inventory/stock.html:19 templates/inventory/stock.html:25
+#: templates/payroll/component_list.html:9
+#: templates/payroll/component_list.html:16
+msgid "Value"
+msgstr "மதிப்பு"
+
+#: templates/core/project_detail.html:47
+msgid "Nothing used yet."
+msgstr "இன்னும் எதுவும் பயன்படுத்தவில்லை."
+
+#: templates/core/project_detail.html:58
+msgid "None yet."
+msgstr "இன்னும் இல்லை."
+
+#: templates/core/project_detail.html:63
+msgid "Site details"
+msgstr "தள விவரங்கள்"
+
+#: templates/core/project_detail.html:66
+msgid "Start"
+msgstr "தொடக்கம்"
+
+#: templates/core/project_detail.html:67
+msgid "Expected finish"
+msgstr "எதிர்பார்க்கும் முடிவு"
 
 #: templates/core/project_form.html:9
 msgid "Use my current location"
@@ -1206,25 +2842,297 @@ msgstr "என் தற்போதைய இருப்பிடத்தை�
 msgid "New site"
 msgstr "புதிய தளம்"
 
-#: templates/core/project_list.html:8 templates/core/project_list.html:12
+#: templates/core/project_list.html:8
+#: templates/documents/quotation_list.html:7
+#: templates/inventory/po_list.html:8
+msgid "All"
+msgstr "அனைத்தும்"
+
+#: templates/core/project_list.html:12 templates/core/project_list.html:17
 #: templates/employees/employee_list.html:13
 #: templates/employees/employee_list.html:17
 msgid "Code"
 msgstr "குறியீடு"
 
-#: templates/core/project_list.html:8 templates/core/project_list.html:16
-msgid "Contract value"
-msgstr "ஒப்பந்த மதிப்பு"
-
-#: templates/core/project_list.html:20
+#: templates/core/project_list.html:25
 msgid "No sites yet. Add your first site."
 msgstr "இன்னும் தளங்கள் இல்லை. உங்கள் முதல் தளத்தைச் சேர்க்கவும்."
 
-#: templates/employees/employee_detail.html:11
-#: templates/employees/employee_list.html:13
-#: templates/employees/employee_list.html:22
-msgid "Phone"
-msgstr "தொலைபேசி"
+#: templates/core/settings.html:5
+msgid "All configuration"
+msgstr "அனைத்து அமைப்புகள்"
+
+#: templates/core/settings.html:25
+msgid "Save settings"
+msgstr "அமைப்புகளைச் சேமி"
+
+#: templates/core/setup.html:2
+msgid "Set up"
+msgstr "அமைவு"
+
+#: templates/core/setup.html:5
+msgid "Welcome! Let's set up your company"
+msgstr "வருக! உங்கள் நிறுவனத்தை அமைப்போம்"
+
+#: templates/core/setup.html:6
+msgid ""
+"This appears only once, on a new installation. You can change everything "
+"later in Settings."
+msgstr ""
+"இது புதிய நிறுவலில் ஒரு முறை மட்டுமே வரும். பின்னர் அமைப்புகளில் அனைத்தையும்"
+" மாற்றலாம்."
+
+#: templates/core/setup.html:9
+msgid "Create company and owner login"
+msgstr "நிறுவனம் மற்றும் உரிமையாளர் கணக்கை உருவாக்கு"
+
+#: templates/crud/confirm_delete.html:5
+#, python-format
+msgid "Delete \"%(obj)s\"? This cannot be undone."
+msgstr "\"%(obj)s\" நீக்கவா? இதைத் திரும்பப் பெற முடியாது."
+
+#: templates/crud/list.html:23 templates/inventory/doc_list.html:18
+msgid "Nothing here yet."
+msgstr "இங்கே இன்னும் எதுவும் இல்லை."
+
+#: templates/documents/_placeholder_help.html:1
+msgid "How to write"
+msgstr "எப்படி எழுதுவது"
+
+#: templates/documents/_placeholder_help.html:2
+msgid "Leave an empty line between paragraphs."
+msgstr "பத்திகளுக்கு இடையே ஒரு வெற்று வரி விடவும்."
+
+#: templates/documents/_placeholder_help.html:3
+msgid "Start a line with # for a title, ## for a heading."
+msgstr "தலைப்புக்கு #, துணைத் தலைப்புக்கு ## உடன் வரியைத் தொடங்கவும்."
+
+#: templates/documents/_placeholder_help.html:4
+msgid "Placeholders are replaced with real details:"
+msgstr "இடக்குறிகள் உண்மையான விவரங்களால் மாற்றப்படும்:"
+
+#: templates/documents/agreement_detail.html:8
+#: templates/documents/quotation_detail.html:7
+#: templates/inventory/po_detail.html:9
+msgid "PDF"
+msgstr "PDF"
+
+#: templates/documents/agreement_detail.html:10
+msgid "Edit details & payments"
+msgstr "விவரங்கள் & கட்டணங்களைத் திருத்து"
+
+#: templates/documents/agreement_detail.html:11
+#: templates/documents/agreement_text.html:2
+#: templates/documents/agreement_text.html:4
+msgid "Edit wording"
+msgstr "வாசகத்தைத் திருத்து"
+
+#: templates/documents/agreement_detail.html:15
+#, python-format
+msgid "Payment milestones add up to %(t)s%%, not 100%%."
+msgstr "கட்டண நிலைகள் மொத்தம் %(t)s%%, 100%% அல்ல."
+
+#: templates/documents/agreement_detail.html:17
+msgid "Contractor"
+msgstr "ஒப்பந்ததாரர்"
+
+#: templates/documents/agreement_form.html:5
+#, python-format
+msgid "Based on quotation %(n)s."
+msgstr "விலைப்புள்ளி %(n)s அடிப்படையில்."
+
+#: templates/documents/agreement_form.html:9
+msgid "Payment schedule"
+msgstr "கட்டண அட்டவணை"
+
+#: templates/documents/agreement_form.html:12
+#, python-format
+msgid "Share of value (%%)"
+msgstr "மதிப்பில் பங்கு (%%)"
+
+#: templates/documents/agreement_form.html:16
+msgid "Add milestone"
+msgstr "கட்டத்தைச் சேர்"
+
+#: templates/documents/agreement_form.html:17
+msgid ""
+"Replace the agreement text with the chosen template (your text edits will be"
+" lost)"
+msgstr ""
+"ஒப்பந்த உரையைத் தேர்ந்த வார்ப்புருவால் மாற்று (உங்கள் திருத்தங்கள் "
+"இழக்கப்படும்)"
+
+#: templates/documents/agreement_list.html:6
+msgid "Templates"
+msgstr "வார்ப்புருக்கள்"
+
+#: templates/documents/agreement_list.html:8
+msgid "Number, client or title"
+msgstr "எண், வாடிக்கையாளர் அல்லது தலைப்பு"
+
+#: templates/documents/agreement_list.html:12
+#: templates/documents/agreement_list.html:15
+#: templates/documents/quotation_list.html:15
+#: templates/documents/quotation_list.html:18
+#: templates/inventory/doc_list.html:12 templates/inventory/doc_list.html:15
+msgid "Number"
+msgstr "எண்"
+
+#: templates/documents/agreement_list.html:12
+#: templates/documents/agreement_list.html:17
+msgid "Title"
+msgstr "தலைப்பு"
+
+#: templates/documents/agreement_list.html:20
+msgid "No agreements yet."
+msgstr "இன்னும் ஒப்பந்தங்கள் இல்லை."
+
+#: templates/documents/agreement_pdf.html:7
+msgid "For the Contractor"
+msgstr "ஒப்பந்ததாரர் சார்பாக"
+
+#: templates/documents/agreement_pdf.html:8
+msgid "Witness 1"
+msgstr "சாட்சி 1"
+
+#: templates/documents/agreement_pdf.html:8
+msgid "Witness 2"
+msgstr "சாட்சி 2"
+
+#: templates/documents/placeholders.html:2
+msgid "Agreement placeholders"
+msgstr "ஒப்பந்த இடக்குறிகள்"
+
+#: templates/documents/quotation_detail.html:9
+msgid "Copy as new revision"
+msgstr "புதிய திருத்தமாக நகலெடு"
+
+#: templates/documents/quotation_detail.html:10
+msgid "Make agreement"
+msgstr "ஒப்பந்தம் உருவாக்கு"
+
+#: templates/documents/quotation_detail.html:14
+msgid "Update status"
+msgstr "நிலையைப் புதுப்பி"
+
+#: templates/documents/quotation_detail.html:19
+#: templates/documents/quotation_pdf.html:8 templates/progress/overview.html:7
+#: templates/progress/overview.html:10 templates/progress/report_pdf.html:6
+msgid "Project"
+msgstr "திட்டம்"
+
+#: templates/documents/quotation_detail.html:21
+#: templates/documents/quotation_list.html:15
+#: templates/documents/quotation_list.html:20
+#: templates/documents/quotation_pdf.html:11
+msgid "Subject"
+msgstr "பொருள்"
+
+#: templates/documents/quotation_detail.html:22
+msgid "Internal notes"
+msgstr "உள் குறிப்புகள்"
+
+#: templates/documents/quotation_detail.html:25
+#: templates/documents/quotation_detail.html:26
+#: templates/documents/quotation_pdf.html:14
+msgid "Description"
+msgstr "விவரம்"
+
+#: templates/documents/quotation_detail.html:25
+#: templates/documents/quotation_detail.html:27
+#: templates/documents/quotation_pdf.html:14
+#: templates/inventory/po_pdf.html:12
+msgid "Unit"
+msgstr "அளவு"
+
+#: templates/documents/quotation_detail.html:25
+#: templates/documents/quotation_detail.html:28
+#: templates/documents/quotation_pdf.html:14
+#: templates/inventory/doc_detail.html:29
+#: templates/inventory/doc_detail.html:34
+#: templates/inventory/po_detail.html:28 templates/inventory/po_detail.html:35
+#: templates/inventory/po_pdf.html:12
+msgid "Rate"
+msgstr "விலை"
+
+#: templates/documents/quotation_detail.html:32
+#: templates/documents/quotation_form.html:19
+#: templates/documents/quotation_pdf.html:20
+#: templates/inventory/po_detail.html:42 templates/inventory/po_pdf.html:18
+msgid "Subtotal"
+msgstr "கூட்டுத்தொகை"
+
+#: templates/documents/quotation_detail.html:33
+#: templates/documents/quotation_pdf.html:21
+msgid "Discount"
+msgstr "தள்ளுபடி"
+
+#: templates/documents/quotation_detail.html:35
+#: templates/documents/quotation_list.html:15
+#: templates/documents/quotation_list.html:22
+#: templates/documents/quotation_pdf.html:23
+#: templates/inventory/doc_detail.html:37 templates/inventory/doc_form.html:20
+#: templates/inventory/po_detail.html:44 templates/inventory/po_list.html:17
+#: templates/inventory/po_list.html:25 templates/inventory/po_pdf.html:20
+msgid "Total"
+msgstr "மொத்தம்"
+
+#: templates/documents/quotation_form.html:7
+msgid "Items"
+msgstr "பொருட்கள்"
+
+#: templates/documents/quotation_form.html:8
+msgid "Pick a rate item to fill the description and rate, or type your own."
+msgstr ""
+"விவரம், விலையை நிரப்ப விலைப் பொருளைத் தேர்ந்தெடுக்கவும் அல்லது நீங்களே "
+"தட்டச்சு செய்யவும்."
+
+#: templates/documents/quotation_form.html:9
+msgid "Add rate item"
+msgstr "விலைப் பொருளைச் சேர்"
+
+#: templates/documents/quotation_form.html:18
+#: templates/inventory/doc_form.html:19
+msgid "Add line"
+msgstr "வரியைச் சேர்"
+
+#: templates/documents/quotation_list.html:11
+msgid "Number, client or subject"
+msgstr "எண், வாடிக்கையாளர் அல்லது பொருள்"
+
+#: templates/documents/quotation_list.html:23
+msgid "No quotations yet."
+msgstr "இன்னும் விலைப்புள்ளிகள் இல்லை."
+
+#: templates/documents/quotation_pdf.html:3
+msgid "QUOTATION"
+msgstr "விலைப்புள்ளி"
+
+#: templates/documents/quotation_pdf.html:6
+#: templates/inventory/doc_detail.html:18
+msgid "To"
+msgstr "பெறுநர்"
+
+#: templates/documents/quotation_pdf.html:9
+msgid "Valid until"
+msgstr "செல்லுபடி வரை"
+
+#: templates/documents/quotation_pdf.html:25
+msgid "Terms & conditions"
+msgstr "நிபந்தனைகள்"
+
+#: templates/documents/quotation_pdf.html:26
+msgid "Bank details"
+msgstr "வங்கி விவரம்"
+
+#: templates/documents/quotation_pdf.html:27
+msgid "Accepted by client"
+msgstr "வாடிக்கையாளர் ஒப்புதல்"
+
+#: templates/documents/quotation_pdf.html:27
+#: templates/inventory/po_pdf.html:23
+msgid "For"
+msgstr "சார்பாக"
 
 #: templates/employees/employee_detail.html:13
 #: templates/employees/employee_list.html:13
@@ -1252,13 +3160,6 @@ msgstr "சமீபத்திய வருகை"
 #: templates/employees/employee_detail.html:33
 #: templates/employees/employee_detail.html:36
 #: templates/payroll/advance_list.html:8
-#: templates/payroll/advance_list.html:12
-msgid "Amount"
-msgstr "தொகை"
-
-#: templates/employees/employee_detail.html:33
-#: templates/employees/employee_detail.html:36
-#: templates/payroll/advance_list.html:8
 #: templates/payroll/advance_list.html:13
 msgid "Balance"
 msgstr "நிலுவை"
@@ -1275,10 +3176,6 @@ msgstr "பெயர், குறியீடு, தொலைபேசி, த
 #: templates/employees/employee_list.html:9
 msgid "Include inactive"
 msgstr "செயலற்றவர்களையும் சேர்"
-
-#: templates/employees/employee_list.html:10
-msgid "Search"
-msgstr "தேடு"
 
 #: templates/employees/employee_list.html:13
 #: templates/employees/employee_list.html:19
@@ -1297,6 +3194,224 @@ msgstr "மாதம்"
 msgid "No employees found."
 msgstr "ஊழியர்கள் இல்லை."
 
+#: templates/inventory/doc_detail.html:4
+msgid "by"
+msgstr "மூலம்"
+
+#: templates/inventory/doc_detail.html:8
+msgid "Delete this document and reverse its stock entries?"
+msgstr "இந்த ஆவணத்தை நீக்கி சரக்குப் பதிவுகளைத் திருப்பவா?"
+
+#: templates/inventory/doc_detail.html:12
+#: templates/inventory/po_detail.html:20 templates/inventory/po_list.html:17
+#: templates/inventory/po_list.html:22 templates/inventory/po_pdf.html:6
+msgid "Supplier"
+msgstr "விநியோகஸ்தர்"
+
+#: templates/inventory/doc_detail.html:13
+msgid "Received at"
+msgstr "பெற்ற இடம்"
+
+#: templates/inventory/doc_detail.html:15
+msgid "Supplier invoice / DC"
+msgstr "விநியோகஸ்தர் பில் / DC"
+
+#: templates/inventory/doc_detail.html:16
+#: templates/inventory/doc_detail.html:19
+msgid "Vehicle"
+msgstr "வாகனம்"
+
+#: templates/inventory/doc_detail.html:18
+msgid "From"
+msgstr "இருந்து"
+
+#: templates/inventory/doc_detail.html:21
+#: templates/inventory/doc_detail.html:24
+msgid "Site / store"
+msgstr "தளம் / கிடங்கு"
+
+#: templates/inventory/doc_detail.html:21
+msgid "Used for"
+msgstr "பயன்பாடு"
+
+#: templates/inventory/doc_detail.html:22
+msgid "Issued to"
+msgstr "வழங்கப்பட்டவர்"
+
+#: templates/inventory/doc_detail.html:24
+#: templates/payroll/advance_list.html:8
+#: templates/payroll/advance_list.html:14
+msgid "Reason"
+msgstr "காரணம்"
+
+#: templates/inventory/doc_detail.html:26
+#: templates/inventory/po_detail.html:25
+msgid "Notes"
+msgstr "குறிப்புகள்"
+
+#: templates/inventory/doc_detail.html:29
+#: templates/inventory/doc_detail.html:33 templates/inventory/ledger.html:13
+#: templates/inventory/ledger.html:18 templates/inventory/stock.html:19
+#: templates/inventory/stock.html:24
+msgid "Quantity"
+msgstr "அளவு"
+
+#: templates/inventory/doc_form.html:5
+#, python-format
+msgid ""
+"Receiving against %(n)s from %(s)s. Change quantities to what actually "
+"arrived; set 0 for items not received."
+msgstr ""
+"%(s)s-இடமிருந்து %(n)s-க்கு எதிராகப் பெறுகிறீர்கள். உண்மையில் வந்த அளவை "
+"உள்ளிடவும்; வராதவற்றுக்கு 0."
+
+#: templates/inventory/doc_list.html:5
+msgid "New"
+msgstr "புதியது"
+
+#: templates/inventory/doc_list.html:8
+msgid "Search number"
+msgstr "எண்ணைத் தேடு"
+
+#: templates/inventory/ledger.html:2 templates/inventory/ledger.html:4
+#: templates/inventory/stock.html:16
+msgid "Stock ledger"
+msgstr "சரக்குப் பேரேடு"
+
+#: templates/inventory/ledger.html:6
+msgid "All materials"
+msgstr "அனைத்துப் பொருட்கள்"
+
+#: templates/inventory/ledger.html:8 templates/inventory/stock.html:10
+msgid "All locations"
+msgstr "அனைத்து இடங்கள்"
+
+#: templates/inventory/ledger.html:13 templates/inventory/ledger.html:17
+#: templates/inventory/stock.html:19 templates/inventory/stock.html:23
+msgid "Location"
+msgstr "இடம்"
+
+#: templates/inventory/ledger.html:13 templates/inventory/ledger.html:17
+#: templates/payroll/component_list.html:9
+#: templates/payroll/component_list.html:14
+msgid "Type"
+msgstr "வகை"
+
+#: templates/inventory/ledger.html:20
+msgid "No movements."
+msgstr "நகர்வுகள் இல்லை."
+
+#: templates/inventory/po_detail.html:11
+msgid "Receive goods"
+msgstr "பொருட்களைப் பெறு"
+
+#: templates/inventory/po_detail.html:13
+msgid "Approve"
+msgstr "அங்கீகரி"
+
+#: templates/inventory/po_detail.html:14
+msgid "Cancel this purchase order?"
+msgstr "இந்தக் கொள்முதல் ஆணையை ரத்து செய்யவா?"
+
+#: templates/inventory/po_detail.html:14
+msgid "Cancel PO"
+msgstr "PO ரத்து"
+
+#: templates/inventory/po_detail.html:15 templates/payroll/run_detail.html:16
+msgid "Delete this draft?"
+msgstr "இந்த வரைவை நீக்கவா?"
+
+#: templates/inventory/po_detail.html:21 templates/inventory/po_list.html:17
+#: templates/inventory/po_list.html:23 templates/inventory/po_pdf.html:8
+msgid "Deliver to"
+msgstr "விநியோக இடம்"
+
+#: templates/inventory/po_detail.html:22 templates/inventory/po_pdf.html:9
+msgid "Expected delivery"
+msgstr "எதிர்பார்க்கும் விநியோகம்"
+
+#: templates/inventory/po_detail.html:23
+msgid "Created by"
+msgstr "உருவாக்கியவர்"
+
+#: templates/inventory/po_detail.html:24
+msgid "Approved by"
+msgstr "அங்கீகரித்தவர்"
+
+#: templates/inventory/po_detail.html:28 templates/inventory/po_detail.html:32
+msgid "Ordered"
+msgstr "ஆர்டர் செய்தது"
+
+#: templates/inventory/po_detail.html:28 templates/inventory/po_detail.html:34
+msgid "Pending"
+msgstr "நிலுவை"
+
+#: templates/inventory/po_detail.html:46
+msgid "Goods received against this PO"
+msgstr "இந்த PO-க்கு வந்த பொருட்கள்"
+
+#: templates/inventory/po_detail.html:49
+msgid "Nothing received yet."
+msgstr "இன்னும் எதுவும் வரவில்லை."
+
+#: templates/inventory/po_list.html:5
+msgid "New PO"
+msgstr "புதிய PO"
+
+#: templates/inventory/po_list.html:13
+msgid "PO number or supplier"
+msgstr "PO எண் அல்லது விநியோகஸ்தர்"
+
+#: templates/inventory/po_list.html:26
+msgid "No purchase orders yet."
+msgstr "இன்னும் கொள்முதல் ஆணைகள் இல்லை."
+
+#: templates/inventory/po_pdf.html:3
+msgid "PURCHASE ORDER"
+msgstr "கொள்முதல் ஆணை"
+
+#: templates/inventory/po_pdf.html:22
+msgid "Terms"
+msgstr "நிபந்தனைகள்"
+
+#: templates/inventory/po_pdf.html:23
+msgid "Supplier acceptance"
+msgstr "விநியோகஸ்தர் ஒப்புதல்"
+
+#: templates/inventory/stock.html:5
+msgid "Receive"
+msgstr "பெறு"
+
+#: templates/inventory/stock.html:6
+msgid "Use at site"
+msgstr "தளத்தில் பயன்படுத்து"
+
+#: templates/inventory/stock.html:7
+msgid "Transfer"
+msgstr "இடமாற்று"
+
+#: templates/inventory/stock.html:12
+msgid "All categories"
+msgstr "அனைத்து வகைகள்"
+
+#: templates/inventory/stock.html:26
+msgid "History"
+msgstr "வரலாறு"
+
+#: templates/inventory/stock.html:27
+msgid "No stock yet. Receive goods or enter opening stock with an adjustment."
+msgstr ""
+"இன்னும் சரக்கு இல்லை. பொருட்களைப் பெறவும் அல்லது திருத்தம் மூலம் தொடக்கச் "
+"சரக்கை உள்ளிடவும்."
+
+#: templates/inventory/stock.html:30
+msgid "Total value"
+msgstr "மொத்த மதிப்பு"
+
+#: templates/inventory/stock.html:30
+msgid "Valued at last purchase rate."
+msgstr "கடைசி கொள்முதல் விலையில் மதிப்பிடப்பட்டது."
+
 #: templates/payroll/advance_list.html:5
 msgid "Give advance"
 msgstr "முன்பணம் வழங்கு"
@@ -1305,11 +3420,6 @@ msgstr "முன்பணம் வழங்கு"
 #: templates/payroll/advance_list.html:12
 msgid "Recovered"
 msgstr "பிடித்தது"
-
-#: templates/payroll/advance_list.html:8
-#: templates/payroll/advance_list.html:14
-msgid "Reason"
-msgstr "காரணம்"
 
 #: templates/payroll/advance_list.html:13
 msgid "Cleared"
@@ -1328,19 +3438,9 @@ msgstr ""
 "பாதுகாப்பு, வரி …). உங்கள் நிறுவனத்துக்குப் பொருந்துவதை மட்டும் சேர்க்கவும்."
 
 #: templates/payroll/component_list.html:9
-#: templates/payroll/component_list.html:14
-msgid "Type"
-msgstr "வகை"
-
-#: templates/payroll/component_list.html:9
 #: templates/payroll/component_list.html:15
 msgid "Calculation"
 msgstr "கணக்கீடு"
-
-#: templates/payroll/component_list.html:9
-#: templates/payroll/component_list.html:16
-msgid "Value"
-msgstr "மதிப்பு"
 
 #: templates/payroll/component_list.html:9
 #: templates/payroll/component_list.html:17
@@ -1453,10 +3553,6 @@ msgstr ""
 msgid "Finalize"
 msgstr "இறுதி செய்"
 
-#: templates/payroll/run_detail.html:16
-msgid "Delete this draft?"
-msgstr "இந்த வரைவை நீக்கவா?"
-
 #: templates/payroll/run_detail.html:23 templates/payroll/run_detail.html:29
 #: templates/payroll/run_detail.html:36
 msgid "Gross"
@@ -1485,6 +3581,114 @@ msgstr "இந்தச் சம்பளப் பட்டியலுக்�
 #: templates/payroll/run_list.html:18
 msgid "No payroll yet."
 msgstr "இன்னும் சம்பளப் பட்டியல் இல்லை."
+
+#: templates/pdf/base.html:6
+msgid "Page"
+msgstr "பக்கம்"
+
+#: templates/progress/overview.html:5
+msgid "Hide completed"
+msgstr "முடிந்தவற்றை மறை"
+
+#: templates/progress/overview.html:5
+msgid "Show completed"
+msgstr "முடிந்தவற்றைக் காட்டு"
+
+#: templates/progress/overview.html:7 templates/progress/overview.html:13
+msgid "Delayed stages"
+msgstr "தாமதமான நிலைகள்"
+
+#: templates/progress/overview.html:12
+msgid "No stages yet"
+msgstr "இன்னும் நிலைகள் இல்லை"
+
+#: templates/progress/overview.html:14
+msgid "No projects."
+msgstr "திட்டங்கள் இல்லை."
+
+#: templates/progress/photos.html:6
+msgid "All stages"
+msgstr "அனைத்து நிலைகள்"
+
+#: templates/progress/photos.html:9
+msgid "Back"
+msgstr "பின்செல்"
+
+#: templates/progress/photos.html:15
+msgid "Delete this photo?"
+msgstr "இந்தப் புகைப்படத்தை நீக்கவா?"
+
+#: templates/progress/photos.html:17
+msgid "No photos yet."
+msgstr "இன்னும் புகைப்படங்கள் இல்லை."
+
+#: templates/progress/project.html:5
+msgid "Project dashboard"
+msgstr "திட்ட முகப்பு"
+
+#: templates/progress/project.html:10
+msgid "All photos"
+msgstr "அனைத்துப் புகைப்படங்கள்"
+
+#: templates/progress/project.html:14
+msgid "Add standard stages"
+msgstr "நிலையான நிலைகளைச் சேர்"
+
+#: templates/progress/project.html:20
+msgid "Today's update"
+msgstr "இன்றைய பதிவு"
+
+#: templates/progress/project.html:22
+msgid "Save update"
+msgstr "பதிவைச் சேமி"
+
+#: templates/progress/project.html:26
+msgid "Stages"
+msgstr "நிலைகள்"
+
+#: templates/progress/project.html:36
+msgid ""
+"No stages yet. Press 'Add standard stages' to start from your company's "
+"list."
+msgstr ""
+"இன்னும் நிலைகள் இல்லை. உங்கள் நிறுவனப் பட்டியலிலிருந்து தொடங்க 'நிலையான "
+"நிலைகளைச் சேர்' அழுத்தவும்."
+
+#: templates/progress/project.html:40
+msgid "Recent updates"
+msgstr "சமீபத்திய பதிவுகள்"
+
+#: templates/progress/project.html:48
+msgid "No updates yet."
+msgstr "இன்னும் பதிவுகள் இல்லை."
+
+#: templates/progress/report_pdf.html:2
+msgid "Progress report"
+msgstr "முன்னேற்ற அறிக்கை"
+
+#: templates/progress/report_pdf.html:3
+msgid "PROGRESS REPORT"
+msgstr "முன்னேற்ற அறிக்கை"
+
+#: templates/progress/report_pdf.html:8
+msgid "Overall completion"
+msgstr "மொத்த முன்னேற்றம்"
+
+#: templates/progress/report_pdf.html:14
+msgid "Recent work"
+msgstr "சமீபத்திய வேலை"
+
+#: templates/progress/stage_form.html:3
+msgid "Edit stage"
+msgstr "நிலையைத் திருத்து"
+
+#: templates/progress/stage_form.html:3
+msgid "New stage"
+msgstr "புதிய நிலை"
+
+#: templates/progress/stage_form.html:9
+msgid "Delete this stage?"
+msgstr "இந்த நிலையை நீக்கவா?"
 
 #: templates/pwa/offline.html:3
 msgid "Offline"

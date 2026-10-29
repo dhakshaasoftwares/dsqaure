@@ -1,0 +1,9 @@
+{% extends "pdf/base.html" %}{% load i18n %}
+{% block title %}{{ agreement.number }}{% endblock %}
+{% block style %}h2 { text-align: center; font-size: 13pt; } p { text-align: justify; }{% endblock %}
+{% block doc_title %}<div>{{ agreement.number }}</div><div>{{ agreement.date|date:"d M Y" }}</div>{% endblock %}
+{% block body %}
+{{ body_html }}
+<div class="sign"><div>{% trans "For the Contractor" %}<br>{{ company.name }}<br>{{ company.signatory_name }}</div><div>{% trans "Owner" %}<br>{{ agreement.client.name }}</div></div>
+<div class="sign"><div>{% trans "Witness 1" %}</div><div>{% trans "Witness 2" %}</div></div>
+{% endblock %}

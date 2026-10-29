@@ -1,30 +1,56 @@
-{% load i18n %}{% with path=request.path %}
+{% load i18n %}{% with path=request.path c=company %}
 <a href="{% url 'core:dashboard' %}" class="{% if path == '/' %}active{% endif %}">{% trans "Home" %}</a>
 {% if user.employee %}
-  <a href="{% url 'attendance:me' %}" class="{% if path == '/attendance/me/' %}active{% endif %}">{% trans "My attendance" %}</a>
-  <a href="{% url 'payroll:my_payslips' %}">{% trans "My payslips" %}</a>
+  {% if c.module_attendance %}<a href="{% url 'attendance:me' %}" class="{% if path == '/attendance/me/' %}active{% endif %}">{% trans "My attendance" %}</a>{% endif %}
+  {% if c.module_payroll %}<a href="{% url 'payroll:my_payslips' %}">{% trans "My payslips" %}</a>{% endif %}
 {% endif %}
-{% if perms.attendance.add_attendance or perms.attendance.view_attendance %}
-  <div class="group">{% trans "Attendance" %}</div>
-  {% if perms.attendance.add_attendance %}<a href="{% url 'attendance:mark' %}" class="{% if path == '/attendance/mark/' %}active{% endif %}">{% trans "Mark site attendance" %}</a>{% endif %}
-  {% if perms.attendance.view_attendance %}<a href="{% url 'attendance:register' %}" class="{% if path == '/attendance/register/' %}active{% endif %}">{% trans "Monthly register" %}</a>{% endif %}
-{% endif %}
-{% if perms.employees.view_employee or perms.core.view_project %}
-  <div class="group">{% trans "People & sites" %}</div>
-  {% if perms.employees.view_employee %}<a href="{% url 'employees:list' %}" class="{% if '/employees/' in path %}active{% endif %}">{% trans "Employees" %}</a>{% endif %}
+
+{% if perms.core.view_project or perms.progress.view_projectstage %}
+  <div class="group">{% trans "Projects" %}</div>
   {% if perms.core.view_project %}<a href="{% url 'core:project_list' %}" class="{% if '/projects/' in path %}active{% endif %}">{% trans "Projects / sites" %}</a>{% endif %}
+  {% if c.module_progress and perms.progress.view_projectstage %}<a href="{% url 'progress:overview' %}" class="{% if path == '/progress/' %}active{% endif %}">{% trans "Building progress" %}</a>{% endif %}
 {% endif %}
-{% if perms.payroll.view_payrollrun or perms.payroll.view_salaryadvance or perms.payroll.view_paycomponent %}
+
+{% if c.module_attendance and perms.attendance.add_attendance or c.module_attendance and perms.attendance.view_attendance or perms.employees.view_employee %}
+  <div class="group">{% trans "People" %}</div>
+  {% if perms.employees.view_employee %}<a href="{% url 'employees:list' %}" class="{% if '/employees/' in path %}active{% endif %}">{% trans "Employees" %}</a>{% endif %}
+  {% if c.module_attendance %}
+    {% if perms.attendance.add_attendance %}<a href="{% url 'attendance:mark' %}" class="{% if path == '/attendance/mark/' %}active{% endif %}">{% trans "Mark site attendance" %}</a>{% endif %}
+    {% if perms.attendance.view_attendance %}<a href="{% url 'attendance:register' %}" class="{% if path == '/attendance/register/' %}active{% endif %}">{% trans "Monthly register" %}</a>{% endif %}
+  {% endif %}
+{% endif %}
+
+{% if c.module_payroll %}{% if perms.payroll.view_payrollrun or perms.payroll.view_salaryadvance %}
   <div class="group">{% trans "Salary" %}</div>
-  {% if perms.payroll.view_payrollrun %}<a href="{% url 'payroll:run_list' %}">{% trans "Payroll" %}</a>{% endif %}
-  {% if perms.payroll.view_salaryadvance %}<a href="{% url 'payroll:advance_list' %}">{% trans "Advances" %}</a>{% endif %}
-  {% if perms.payroll.view_paycomponent %}<a href="{% url 'payroll:component_list' %}">{% trans "Pay rules" %}</a>{% endif %}
-{% endif %}
-{% if perms.accounts.view_user or perms.auth.view_group or perms.core.change_companysettings %}
+  {% if perms.payroll.view_payrollrun %}<a href="{% url 'payroll:run_list' %}" class="{% if path == '/payroll/' %}active{% endif %}">{% trans "Payroll" %}</a>{% endif %}
+  {% if perms.payroll.view_salaryadvance %}<a href="{% url 'payroll:advance_list' %}" class="{% if '/payroll/advances/' in path %}active{% endif %}">{% trans "Advances" %}</a>{% endif %}
+{% endif %}{% endif %}
+
+{% if c.module_inventory %}{% if perms.inventory.view_stockmovement or perms.inventory.view_purchaseorder or perms.inventory.view_goodsreceipt %}
+  <div class="group">{% trans "Inventory" %}</div>
+  {% if perms.inventory.view_stockmovement %}<a href="{% url 'inventory:stock' %}" class="{% if path == '/inventory/' %}active{% endif %}">{% trans "Stock" %}</a>{% endif %}
+  {% if perms.inventory.view_purchaseorder %}<a href="{% url 'inventory:po_list' %}" class="{% if '/inventory/po/' in path %}active{% endif %}">{% trans "Purchase orders" %}</a>{% endif %}
+  {% if perms.inventory.view_goodsreceipt %}<a href="{% url 'inventory:doc_list' 'receipt' %}" class="{% if '/inventory/receipt/' in path %}active{% endif %}">{% trans "Goods receipts" %}</a>{% endif %}
+  {% if perms.inventory.view_materialissue %}<a href="{% url 'inventory:doc_list' 'issue' %}" class="{% if '/inventory/issue/' in path %}active{% endif %}">{% trans "Material used at site" %}</a>{% endif %}
+  {% if perms.inventory.view_stocktransfer %}<a href="{% url 'inventory:doc_list' 'transfer' %}" class="{% if '/inventory/transfer/' in path %}active{% endif %}">{% trans "Transfers" %}</a>{% endif %}
+  {% if perms.inventory.view_stockadjustment %}<a href="{% url 'inventory:doc_list' 'adjustment' %}" class="{% if '/inventory/adjustment/' in path %}active{% endif %}">{% trans "Adjustments / opening stock" %}</a>{% endif %}
+  {% if perms.inventory.view_material %}<a href="{% url 'inventory:material_list' %}" class="{% if '/inventory/materials/' in path %}active{% endif %}">{% trans "Materials" %}</a>{% endif %}
+  {% if perms.inventory.view_supplier %}<a href="{% url 'inventory:supplier_list' %}" class="{% if '/inventory/suppliers/' in path %}active{% endif %}">{% trans "Suppliers" %}</a>{% endif %}
+{% endif %}{% endif %}
+
+{% if c.module_documents %}{% if perms.documents.view_quotation or perms.documents.view_agreement %}
+  <div class="group">{% trans "Sales" %}</div>
+  {% if perms.documents.view_client %}<a href="{% url 'documents:client_list' %}" class="{% if '/documents/clients/' in path %}active{% endif %}">{% trans "Clients" %}</a>{% endif %}
+  {% if perms.documents.view_quotation %}<a href="{% url 'documents:quotation_list' %}" class="{% if '/documents/quotations/' in path %}active{% endif %}">{% trans "Quotations" %}</a>{% endif %}
+  {% if perms.documents.view_agreement %}<a href="{% url 'documents:agreement_list' %}" class="{% if '/documents/agreements/' in path %}active{% endif %}">{% trans "Agreements" %}</a>{% endif %}
+{% endif %}{% endif %}
+
+{% if perms.accounts.view_user or perms.auth.view_group or perms.core.view_companysettings or perms.core.view_auditlog %}
   <div class="group">{% trans "Administration" %}</div>
-  {% if perms.accounts.view_user %}<a href="{% url 'accounts:user_list' %}">{% trans "Users" %}</a>{% endif %}
-  {% if perms.auth.view_group %}<a href="{% url 'accounts:role_list' %}">{% trans "Roles & permissions" %}</a>{% endif %}
-  {% if perms.core.change_companysettings %}<a href="{% url 'core:settings' %}">{% trans "Company settings" %}</a>{% endif %}
+  {% if perms.core.view_companysettings %}<a href="{% url 'core:configuration' %}" class="{% if '/configuration/' in path or path == '/settings/' %}active{% endif %}">{% trans "Settings & configuration" %}</a>{% endif %}
+  {% if perms.accounts.view_user %}<a href="{% url 'accounts:user_list' %}" class="{% if '/accounts/users/' in path %}active{% endif %}">{% trans "Users" %}</a>{% endif %}
+  {% if perms.auth.view_group %}<a href="{% url 'accounts:role_list' %}" class="{% if '/accounts/roles/' in path %}active{% endif %}">{% trans "Roles & permissions" %}</a>{% endif %}
+  {% if perms.core.view_auditlog %}<a href="{% url 'core:audit_log' %}" class="{% if '/audit/' in path %}active{% endif %}">{% trans "Audit log" %}</a>{% endif %}
 {% endif %}
 <div class="group">{% trans "Account" %}</div>
 <a href="{% url 'accounts:password_change' %}">{% trans "Change password" %}</a>

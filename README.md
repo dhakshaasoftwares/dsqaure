@@ -1,148 +1,165 @@
 # DSquare – Construction Management
 
-A self-hosted web app for a small construction company. It runs on **one laptop or desktop**
-and is used from **any phone or computer** through a normal web link. It can also be
-installed on a phone like an app (PWA), with no Play Store / App Store needed.
+A complete, self-hosted web app for construction companies: sites, staff, attendance, salary,
+purchase and stock, building progress, quotations and agreements. It is used from **any phone or
+computer** through a web link and can be installed on a phone like an app (PWA).
 
-* **You own everything**: the code (this repo), the server (your laptop), the data (your database).
-  There are no subscriptions and no vendor lock-in.
-* **Configuration-driven**: currency, tax name/rate, PF / ESI / social security, overtime rules,
-  weekly off, salary basis and roles are all set from screens. None of it is hard-coded,
-  so any company in any country can adapt it.
-* **English + தமிழ்**: each user picks their language.
+It is built as a **product**: one codebase, deployed separately for each client company and
+configured from screens, with no code changes per client.
+
+* **Configuration-driven**: company profile, logo, brand colour, time zone, financial year, modules,
+  currency, number format (international or Indian lakh), tax name and rates, PF/ESI/other pay rules,
+  document numbering, units, stages, rate lists, agreement wording, roles and permissions are all
+  set in the app.
+* **One installation per client**: each client gets its own database and photo storage, so data can
+  never mix. One laptop or server can run many clients side by side.
+* **English + தமிழ்**: each user picks their language. Printed PDFs support Tamil text.
+* **Proprietary**: see `LICENSE`. Keep this repository private.
 
 ## Modules
 
-| # | Module | Status |
-|---|--------|--------|
-| 1 | Attendance: phone check-in with GPS + selfie, supervisor bulk marking, monthly register | ✅ Done |
-| 2 | Employee management: daily / monthly staff, wages, bank / UPI, ID proof, site assignment | ✅ Done |
-| 3 | Salary: attendance → wages, overtime, configurable allowances/deductions, advances, payslips, bank sheet | ✅ Done |
-| 7 | Users, roles & permissions screen (tick boxes per module) | ✅ Done |
-| 8 | Mobile-first PWA, usable from anywhere | ✅ Done |
-| 4 | Inventory: suppliers, purchase orders, goods receipt, stock per site, transfers | ⏳ Next |
-| 5 | Building progress: stages, % complete, site photos | ⏳ Planned |
-| 6 | Quotation & agreement generator (PDF) | ⏳ Planned |
+| Module | What it does |
+|--------|--------------|
+| **Projects / sites** | Site list, client, contract value, GPS location, one dashboard per site with progress, material, labour and documents |
+| **Attendance** | Phone check-in with GPS + photo inside the site radius, supervisor marks a whole site at once, monthly register |
+| **Employees** | Daily-wage and monthly staff, wages, bank/UPI, ID proof, assigned site, login account |
+| **Salary** | Pay from attendance, overtime, configurable allowances/deductions (PF, ESI, PT …), advances with instalments, payslips, bank sheet |
+| **Inventory** | Materials, suppliers, godowns + automatic site stores, purchase orders with approval, goods receipt against PO (partial deliveries), transfers between sites, material used at site, opening stock/adjustments, stock ledger, low-stock alerts, PO PDF |
+| **Building progress** | Company standard stages with weights, stage % and planned/actual dates, daily updates with site photos (auto-compressed), delayed-stage alerts, client progress report PDF |
+| **Quotations** | Clients, rate library, quotation with discount and tax, revisions, status, branded PDF |
+| **Agreements** | Your own agreement templates with placeholders, payment milestones, generated from a quotation, editable wording, PDF with signature blocks |
+| **Users & roles** | Tick-box permissions per module (view/add/edit/delete + special ones like "approve purchase orders") |
+| **Security** | Account lock after repeated wrong passwords, uploaded files visible only to permitted roles, audit log of every change |
 
 ## Tech stack (all free & open source)
 
-Python · Django 5.2 LTS · PostgreSQL · plain HTML/CSS (no build step) · Docker · Cloudflare Tunnel.
+Python · Django 5.2 LTS · PostgreSQL · WeasyPrint (PDF) · plain HTML/CSS/JS (no build step) · Docker · Cloudflare Tunnel.
 
 ```
 apps/
-  accounts/    login, users, roles & permissions, language
-  core/        company settings, projects/sites, dashboard
-  employees/   employee records
+  core/        company settings, modules, numbering, audit log, setup wizard, projects, dashboards
+  accounts/    login + lockout, users, roles & permissions, language
+  employees/   staff records
   attendance/  check-in / check-out, supervisor marking, register
   payroll/     pay rules, advances, payroll runs, payslips (services.py = salary engine)
-templates/     all screens
-locale/ta/     Tamil translations (edit django.po, then run compilemessages)
+  inventory/   materials, suppliers, POs, receipts, transfers, issues, stock ledger (services.py = stock rules)
+  progress/    stages, updates, site photos, progress report
+  documents/   clients, rate items, quotations, agreement templates, agreements
+templates/     all screens and PDF layouts
+locale/ta/     Tamil translations
+scripts/       new_client.sh (new client install), backup.sh
 ```
 
 ---
 
-## Install on your laptop / desktop (one time, about 30 minutes)
+## Installing for a client
 
-**What you need:** a Windows 10/11, Mac or Linux computer that stays on during working hours, and internet.
+**Needed:** a Windows 10/11, Mac or Linux computer (or a cloud server) with internet access, and
+[Docker Desktop](https://www.docker.com/products/docker-desktop/) (free for small businesses).
 
-1. **Install Docker Desktop**: https://www.docker.com/products/docker-desktop/ (free for small businesses).
-   On Windows, allow it to enable WSL 2 when asked, then restart.
-2. **Download this project**: install Git (https://git-scm.com), then in a terminal:
-   ```bash
-   git clone https://github.com/dhakshaasoftwares/dsqaure.git
-   cd dsqaure
-   ```
-3. **Create your settings file**: copy `.env.example` to `.env` and change `SECRET_KEY` and
-   `POSTGRES_PASSWORD` to long random values.
-4. **Start the app**:
-   ```bash
-   docker compose up -d --build
-   ```
-5. **Create the owner login** (the owner can always do everything):
-   ```bash
-   docker compose exec web python manage.py createsuperuser
-   ```
-6. Open **http://localhost:8000** and log in. Phones on the **same Wi-Fi** can use
-   `http://<laptop-ip>:8000` (add that IP to `ALLOWED_HOSTS` in `.env`).
+### One client on one machine
 
-Optional: load sample Indian pay rules (PF, ESI, professional tax, food allowance). They are
-added **switched off**, so check the current rates and switch on only what applies to you:
 ```bash
-docker compose exec web python manage.py setup_defaults --preset india
+git clone https://github.com/dhakshaasoftwares/dsqaure.git
+cd dsqaure
+cp .env.example .env          # then set SECRET_KEY and POSTGRES_PASSWORD to long random values
+docker compose up -d --build
 ```
 
-### Make it reachable from anywhere (free): Cloudflare Tunnel
+Open **http://localhost:8000**. On a brand-new install the **setup wizard** asks for the company
+name, country preset (India = INR, GST, Indian number format, sample PF/ESI rules switched off) and
+the owner's login. After that, go to **Settings & configuration** and set the rest.
 
-This gives you a secure `https://` address without a static IP or opening router ports.
+### Several clients on one machine
 
-1. Create a free Cloudflare account and add a domain. A `.in` / `.com` domain costs about ₹800/year;
-   this is the only cost.
-2. In Cloudflare **Zero Trust → Networks → Tunnels → Create tunnel** (type *Cloudflared*), copy the **token**.
-3. Under *Public hostname*, add e.g. `app.yourdomain.com` → service **`http://web:8000`**.
-4. Put the token in `.env` as `CLOUDFLARE_TUNNEL_TOKEN=...`, and set
-   `ALLOWED_HOSTS=app.yourdomain.com,localhost` and `CSRF_TRUSTED_ORIGINS=https://app.yourdomain.com`.
-5. Start with the tunnel:
-   ```bash
-   docker compose --profile tunnel up -d
-   ```
+```bash
+scripts/new_client.sh selvam-builders 8001 selvam.yourdomain.com
+scripts/new_client.sh sri-homes       8002 srihomes.yourdomain.com
+```
+
+Each command creates `clients/<name>/.env` with its own random passwords, its own database and
+photo storage, and starts it on its own port. Open `http://localhost:8001` to run that client's
+setup wizard. Keep the `clients/` folder safe: it holds each client's passwords. It is never committed.
+
+### Demo data (for showing the product)
+
+On an **empty** install: `docker compose exec web python manage.py load_demo --password <pick-one>`
+loads two sites, staff, attendance, stock, a PO, a quotation and an agreement.
+
+### Make it reachable from anywhere: Cloudflare Tunnel (free)
+
+1. Add your domain to a free Cloudflare account. A domain costs about ₹800/year; this is the only cost.
+2. **Zero Trust → Networks → Tunnels → Create tunnel**, and copy the token.
+3. Add a public hostname per client, e.g. `selvam.yourdomain.com` → `http://localhost:8001`
+   (for the single-client compose setup use `http://web:8000` and put the token in `.env` as
+   `CLOUDFLARE_TUNNEL_TOKEN`, then `docker compose --profile tunnel up -d`).
+4. In that client's `.env`, set `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS` to the hostname.
+   When everyone uses the `https://` address, also set `SECURE_COOKIES=True`.
 
 ### Install on phones
 
-Open `https://app.yourdomain.com` in **Chrome (Android)** → menu → **Add to Home screen / Install app**.
-On **iPhone (Safari)** → Share → **Add to Home Screen**. GPS and camera need the `https://` address.
+Open the `https://` address in **Chrome (Android)** → menu → **Install app / Add to Home screen**,
+or in **Safari (iPhone)** → Share → **Add to Home Screen**. GPS check-in and the camera need https.
 
 ### Backups (do not skip)
 
 ```bash
-scripts/backup.sh          # writes backups/db_*.sql.gz and backups/media_*.tar.gz
+scripts/backup.sh                    # single-client install
+scripts/backup.sh selvam-builders    # a client created with new_client.sh
 ```
-Schedule it nightly (Linux/Mac: `crontab -e` → `0 2 * * * /path/to/dsqaure/scripts/backup.sh`;
-Windows: Task Scheduler running it through Git Bash or WSL). Then copy the `backups` folder off
-the laptop for free with [rclone](https://rclone.org) to Google Drive:
-`rclone copy backups gdrive:dsquare-backups`.
+This writes `backups/<client>/db_*.sql.gz` and `media_*.tar.gz` and keeps 30 days. Schedule it
+nightly (Linux/Mac `crontab -e`; Windows Task Scheduler via WSL/Git Bash) and copy `backups/` off the
+machine, e.g. with [rclone](https://rclone.org) to Google Drive: `rclone copy backups gdrive:dsquare-backups`.
 
-**Restore:** `gunzip -c backups/db_XXXX.sql.gz | docker compose exec -T db psql -U dsquare dsquare`
+**Restore:** `gunzip -c backups/<client>/db_XXXX.sql.gz | docker compose -p <client> --env-file clients/<client>/.env exec -T db psql -U dsquare dsquare`
 
-### Updating to a new version
+### Updating every client to a new version
 
 ```bash
 git pull
-docker compose up -d --build     # database changes are applied automatically
+docker compose up -d --build                                                     # single client
+ENV_FILE=clients/<name>/.env docker compose -p <name> --env-file clients/<name>/.env up -d --build   # each client
 ```
-
-### Moving to a cloud server later
-
-The same `docker compose` setup runs unchanged on any Linux server (e.g. Oracle Cloud *Always Free*).
-Restore your latest backup there and point the Cloudflare tunnel at it.
+Database changes and new default settings are applied automatically on start.
 
 ---
 
-## First-day setup inside the app
+## Setting up a new client (inside the app)
 
-1. **Company settings**: name, logo, currency, tax, working hours, overtime multiplier,
-   weekly off, monthly salary basis, check-in rules (GPS radius / photo).
-2. **Projects / sites**: add each site. Stand at the site and tap *Use my current location*
-   so GPS check-in works.
-3. **Pay rules**: add only what applies (PF, ESI, allowances, professional tax, social security…).
-   Each rule is a fixed amount, an amount per day, or a % of wage / gross, with optional ceiling and
-   eligibility limit. Mark it *apply to everyone*, or tick it per employee.
-4. **Roles & permissions**: default roles are Admin, Site Supervisor, Accountant, Storekeeper and Employee.
-   Change the tick boxes or create your own.
-5. **Employees**: add staff with wage type and rate. To let someone check in from their own phone,
-   create a **User** for them and select it as the employee's *login account*.
-6. **Daily**: workers check in from their phones, *or* the supervisor uses **Mark site attendance**
-   for the whole site (for workers without smartphones).
-7. **Payroll**: *New payroll* → choose period → review → **Finalize** → download the bank sheet / print payslips.
+1. **Setup wizard**: company name, country preset, owner login.
+2. **Settings & configuration → Company settings**: logo, brand colour, address, modules in use,
+   tax, number format, document footer/signatory, salary rules, check-in rules, lockout.
+3. **Document numbering**: e.g. `PO/{FY}/{SEQ}` → `PO/2026-27/0001` (restarts each financial year).
+4. **Roles & permissions** and **Users**: default roles are Admin, Site Supervisor, Accountant,
+   Storekeeper, Sales / Estimator and Employee. Change the ticks or add roles.
+5. **Masters**: units, material categories, materials (with reorder levels), suppliers, godowns,
+   standard stages, rate items, agreement template, pay rules.
+6. **Projects**: add sites; each gets a stock location automatically. Tap *Use my current location*
+   on site so GPS check-in works.
+7. **Opening stock**: Inventory → Adjustments → reason "Opening stock", with rates.
+
+### Daily use
+
+* **Workers**: check in/out from their phone.
+* **Supervisors**: mark site attendance, record material used, post progress updates with photos.
+* **Storekeeper**: raise POs → owner approves → receive goods (partial deliveries supported) → transfer to sites.
+* **Office**: payroll, quotations → agreement → PDFs, client progress reports.
 
 ### How salary is calculated
 
-* **Daily wage:** `days worked × daily rate` (half day = 0.5).
-* **Monthly:** `monthly salary ÷ basis days × paid days`. The basis is calendar days, working days or a
-  fixed 30, chosen in settings. Paid leave, holidays and weekly offs are paid according to settings.
-* **Overtime:** `OT hours × (per-day rate ÷ working hours × multiplier)`, or the employee's own OT rate.
-* **Pay rules:** earnings are added first, then deductions and employer contributions are worked out.
-* **Advances:** recovered oldest first, in instalments if set, never taking net pay below zero. They are
-  only marked recovered when the payroll is finalized.
+* **Daily wage:** days worked × daily rate (half day = 0.5).
+* **Monthly:** salary ÷ basis days × paid days (basis is calendar days, working days or 30; paid
+  leave, holidays and weekly offs follow settings).
+* **Overtime:** OT hours × (per-day rate ÷ working hours × multiplier), or the employee's own OT rate.
+* **Pay rules:** earnings are added first, then deductions and employer contributions.
+* **Advances:** recovered oldest first, in instalments if set, and never below zero net pay.
+
+### How stock works
+
+Every receipt, transfer, issue and adjustment writes to a stock ledger. Stock at a location is the
+sum of its ledger. Stock cannot go below zero unless the company setting allows it. Deleting a
+document reverses its ledger entries, but only if that stock has not been used since. Stock value
+uses the last purchase rate.
 
 ---
 
@@ -150,12 +167,12 @@ Restore your latest backup there and point the Cloudflare tunnel at it.
 
 ```bash
 python -m venv .venv && . .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt          # WeasyPrint needs Pango (apt: libpango-1.0-0 libpangoft2-1.0-0)
 python manage.py migrate
-python manage.py setup_defaults
-python manage.py createsuperuser
-python manage.py runserver
-python manage.py test               # 33 tests
+python manage.py runserver               # open /setup/ to create the company and owner
+python manage.py load_demo               # optional sample data
+python manage.py test                    # 81 tests
 ```
-Without `DATABASE_URL` it uses SQLite for quick local trials. Translations: `python manage.py
-makemessages -l ta`, edit `locale/ta/LC_MESSAGES/django.po`, `python manage.py compilemessages`.
+Without `DATABASE_URL` it uses SQLite. Add a configurable list with `apps/core/crud.py` (one line per
+screen). Translations: `python manage.py makemessages -l ta`, edit `locale/ta/LC_MESSAGES/django.po`,
+`python manage.py compilemessages`. If WeasyPrint is not installed, PDF links open a printable page instead.

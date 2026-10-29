@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load i18n money %}
+{% block title %}{% trans "Agreements" %}{% endblock %}
+{% block content %}
+<div class="toolbar"><h1 style="margin:0">{% trans "Agreements" %}</h1><span class="spacer"></span>
+  {% if perms.documents.add_agreement %}<a class="btn btn-primary" href="{% url 'documents:agreement_create' %}">+ {% trans "New agreement" %}</a>{% endif %}
+  {% if perms.documents.view_documenttemplate %}<a class="btn" href="{% url 'documents:template_list' %}">{% trans "Templates" %}</a>{% endif %}</div>
+<form method="get" class="toolbar">
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Number, client or title' %}" style="flex:1;min-width:160px">
+  <button class="btn" type="submit">{% trans "Search" %}</button>
+</form>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Number" %}</th><th>{% trans "Date" %}</th><th>{% trans "Client" %}</th><th>{% trans "Title" %}</th><th>{% trans "Status" %}</th><th class="num">{% trans "Value" %}</th></tr></thead>
+  <tbody>
+  {% for a in page_obj %}
+    <tr><td data-label="{% trans 'Number' %}"><a href="{% url 'documents:agreement_detail' a.pk %}">{{ a.number }}</a></td>
+      <td data-label="{% trans 'Date' %}">{{ a.date|date:"d M Y" }}</td><td data-label="{% trans 'Client' %}">{{ a.client }}</td>
+      <td data-label="{% trans 'Title' %}">{{ a.title }}</td>
+      <td data-label="{% trans 'Status' %}"><span class="badge {% if a.status == 'signed' %}ok{% elif a.status == 'cancelled' %}bad{% endif %}">{{ a.get_status_display }}</span></td>
+      <td data-label="{% trans 'Value' %}" class="num">{{ company.currency_symbol }}{{ a.contract_value|money }}</td></tr>
+  {% empty %}<tr><td colspan="6" class="muted">{% trans "No agreements yet." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% include "_pagination.html" %}
+{% endblock %}

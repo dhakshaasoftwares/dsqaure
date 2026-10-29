@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Edit wording" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Edit wording" %} · {{ agreement.number }}</h1>
+<div class="form-grid">
+<form method="post" class="card">{% csrf_token %}
+  {{ form.body.errors }}{{ form.body }}
+  <div class="form-actions" style="margin-top:.75rem"><button class="btn btn-primary" type="submit">{% trans "Save" %}</button>
+    <a class="btn" href="{% url 'documents:agreement_detail' agreement.pk %}">{% trans "Cancel" %}</a></div>
+</form>
+<div class="card">{% include "documents/_placeholder_help.html" %}</div>
+</div>
+{% endblock %}

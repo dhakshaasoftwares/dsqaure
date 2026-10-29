@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n humanize %}
+{% extends "base.html" %}{% load i18n money %}
 {% block title %}{% trans "Employees" %}{% endblock %}
 {% block content %}
 <div class="toolbar"><h1 style="margin:0">{% trans "Employees" %}</h1><span class="spacer"></span>
@@ -18,7 +18,7 @@
       <td data-label="{% trans 'Name' %}"><a href="{% url 'employees:detail' e.pk %}">{{ e.name }}</a>{% if not e.is_active %} <span class="badge bad">{% trans "Inactive" %}</span>{% endif %}</td>
       <td data-label="{% trans 'Trade' %}">{{ e.designation|default:"—" }}</td>
       <td data-label="{% trans 'Site' %}">{{ e.default_project.name|default:"—" }}</td>
-      <td data-label="{% trans 'Wage' %}">{{ company.currency_symbol }}{{ e.wage_rate|intcomma }} / {% if e.wage_type == 'daily' %}{% trans "day" %}{% else %}{% trans "month" %}{% endif %}</td>
+      <td data-label="{% trans 'Wage' %}">{{ company.currency_symbol }}{{ e.wage_rate|money }} / {% if e.wage_type == 'daily' %}{% trans "day" %}{% else %}{% trans "month" %}{% endif %}</td>
       <td data-label="{% trans 'Phone' %}">{% if e.phone %}<a href="tel:{{ e.phone }}">{{ e.phone }}</a>{% else %}—{% endif %}</td>
     </tr>
   {% empty %}

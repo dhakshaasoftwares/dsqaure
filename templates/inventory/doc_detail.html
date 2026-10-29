@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% load i18n money %}
+{% block title %}{{ doc.number }}{% endblock %}
+{% block content %}
+<div class="toolbar"><div><h1 style="margin:0">{{ cfg.title }} {{ doc.number }}</h1><span class="muted">{{ doc.date|date:"d M Y" }} · {% trans "by" %} {{ doc.created_by|default:"—" }}</span></div>
+  <span class="spacer"></span>
+  <button class="btn no-print" onclick="window.print()">{% trans "Print" %}</button>
+  {% if can_delete %}<form method="post" action="{% url 'inventory:doc_delete' kind doc.pk %}" class="no-print">{% csrf_token %}
+    <button class="btn btn-danger" onclick="return confirm('{% trans "Delete this document and reverse its stock entries?" %}')">{% trans "Delete" %}</button></form>{% endif %}
+</div>
+<div class="card"><dl class="kv">
+  {% if kind == "receipt" %}
+    <dt>{% trans "Supplier" %}</dt><dd>{{ doc.supplier }}</dd>
+    <dt>{% trans "Received at" %}</dt><dd>{{ doc.location }}</dd>
+    {% if doc.purchase_order %}<dt>{% trans "Purchase order" %}</dt><dd><a href="{% url 'inventory:po_detail' doc.purchase_order.pk %}">{{ doc.purchase_order }}</a></dd>{% endif %}
+    <dt>{% trans "Supplier invoice / DC" %}</dt><dd>{{ doc.supplier_invoice_no|default:"—" }}</dd>
+    <dt>{% trans "Vehicle" %}</dt><dd>{{ doc.vehicle_no|default:"—" }}</dd>
+  {% elif kind == "transfer" %}
+    <dt>{% trans "From" %}</dt><dd>{{ doc.from_location }}</dd><dt>{% trans "To" %}</dt><dd>{{ doc.to_location }}</dd>
+    <dt>{% trans "Vehicle" %}</dt><dd>{{ doc.vehicle_no|default:"—" }}</dd>
+  {% elif kind == "issue" %}
+    <dt>{% trans "Site / store" %}</dt><dd>{{ doc.location }}</dd><dt>{% trans "Used for" %}</dt><dd>{{ doc.purpose|default:"—" }}</dd>
+    <dt>{% trans "Issued to" %}</dt><dd>{{ doc.issued_to|default:"—" }}</dd>
+  {% else %}
+    <dt>{% trans "Site / store" %}</dt><dd>{{ doc.location }}</dd><dt>{% trans "Reason" %}</dt><dd>{{ doc.get_reason_display }}</dd>
+  {% endif %}
+  {% if doc.notes %}<dt>{% trans "Notes" %}</dt><dd>{{ doc.notes|linebreaksbr }}</dd>{% endif %}
+</dl></div>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Material" %}</th><th class="num">{% trans "Quantity" %}</th>{% if kind == "receipt" or kind == "adjustment" %}<th class="num">{% trans "Rate" %}</th>{% endif %}{% if kind == "receipt" %}<th class="num">{% trans "Amount" %}</th>{% endif %}</tr></thead>
+  <tbody>
+  {% for l in lines %}
+    <tr><td data-label="{% trans 'Material' %}">{{ l.material.name }}</td>
+      <td data-label="{% trans 'Quantity' %}" class="num">{{ l.quantity|floatformat:"-3" }} {{ l.material.unit.symbol }}</td>
+      {% if kind == "receipt" or kind == "adjustment" %}<td data-label="{% trans 'Rate' %}" class="num">{{ l.rate|money }}</td>{% endif %}
+      {% if kind == "receipt" %}<td data-label="{% trans 'Amount' %}" class="num">{{ l.amount|money }}</td>{% endif %}</tr>
+  {% endfor %}
+  {% if kind == "receipt" %}<tr><td colspan="3" class="right"><b>{% trans "Total" %}</b></td><td class="num"><b>{{ company.currency_symbol }}{{ doc.total|money }}</b></td></tr>{% endif %}
+  </tbody>
+</table></div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% load i18n %}<tr>
+  {% for field in line.visible_fields %}{% if field.name != "DELETE" %}
+  <td data-label="{{ field.label|capfirst }}" class="{% if field.name == 'material' or field.name == 'item' %}material-cell{% elif field.name == 'description' %}desc-cell{% endif %}">
+    {{ field }}{% if field.name == "material" %} <small class="muted" data-unit></small>{% endif %}{{ field.errors }}
+  </td>{% endif %}{% endfor %}
+  {% if show_amount %}<td class="amount" data-label="{% trans 'Amount' %}"><span data-amount></span></td>{% endif %}
+  <td>{% for h in line.hidden_fields %}{{ h }}{% endfor %}<label title="{% trans 'Remove' %}" class="muted" style="font-weight:400">{{ line.DELETE }} ✕</label></td>
+</tr>

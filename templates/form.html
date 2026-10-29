@@ -7,6 +7,7 @@
   <div class="form-actions">
     <button class="btn btn-primary" type="submit">{% trans "Save" %}</button>
     <a class="btn" href="javascript:history.back()">{% trans "Cancel" %}</a>
+    {% if delete_url %}<span class="spacer" style="flex:1"></span><a class="btn btn-danger" href="{{ delete_url }}">{% trans "Delete" %}</a>{% endif %}
   </div>
 </form>
 {% endblock %}

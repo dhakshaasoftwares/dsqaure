@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n humanize %}
+{% extends "base.html" %}{% load i18n money %}
 {% block title %}{% trans "Payroll" %}{% endblock %}
 {% block content %}
 <div class="toolbar">
@@ -20,9 +20,9 @@
 </div>
 <div class="stats">
   <div class="stat"><div class="num">{{ slips|length }}</div><div class="label">{% trans "Employees" %}</div></div>
-  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.gross|default:0|intcomma }}</div><div class="label">{% trans "Gross" %}</div></div>
-  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.net|default:0|intcomma }}</div><div class="label">{% trans "Net to pay" %}</div></div>
-  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.employer|default:0|intcomma }}</div><div class="label">{% trans "Employer contributions" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.gross|default:0|money }}</div><div class="label">{% trans "Gross" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.net|default:0|money }}</div><div class="label">{% trans "Net to pay" %}</div></div>
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ totals.employer|default:0|money }}</div><div class="label">{% trans "Employer contributions" %}</div></div>
 </div>
 <div class="table-wrap"><table class="stack">
   <thead><tr><th>{% trans "Employee" %}</th><th class="num">{% trans "Paid days" %}</th><th class="num">{% trans "OT hrs" %}</th>
@@ -33,10 +33,10 @@
       <td data-label="{% trans 'Employee' %}"><a href="{% url 'payroll:payslip' s.pk %}">{{ s.employee.name }}</a></td>
       <td data-label="{% trans 'Paid days' %}" class="num">{{ s.paid_days|floatformat:"-1" }}</td>
       <td data-label="{% trans 'OT hrs' %}" class="num">{{ s.overtime_hours|floatformat:"-2" }}</td>
-      <td data-label="{% trans 'Gross' %}" class="num">{{ s.gross_pay|intcomma }}</td>
-      <td data-label="{% trans 'Deductions' %}" class="num">{{ s.total_deductions|intcomma }}</td>
-      <td data-label="{% trans 'Advance' %}" class="num">{{ s.advance_recovery|intcomma }}</td>
-      <td data-label="{% trans 'Net' %}" class="num"><b>{{ s.net_pay|intcomma }}</b></td>
+      <td data-label="{% trans 'Gross' %}" class="num">{{ s.gross_pay|money }}</td>
+      <td data-label="{% trans 'Deductions' %}" class="num">{{ s.total_deductions|money }}</td>
+      <td data-label="{% trans 'Advance' %}" class="num">{{ s.advance_recovery|money }}</td>
+      <td data-label="{% trans 'Net' %}" class="num"><b>{{ s.net_pay|money }}</b></td>
     </tr>
   {% empty %}<tr><td colspan="7" class="muted">{% trans "No employees matched this payroll." %}</td></tr>{% endfor %}
   </tbody>

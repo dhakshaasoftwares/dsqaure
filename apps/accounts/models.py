@@ -22,3 +22,14 @@ class User(AbstractUser):
         if self.is_superuser:
             return [_("Owner")]
         return [g.name for g in self.groups.all()]
+
+
+class FailedLogin(models.Model):
+    """Wrong-password attempts, used to lock an account for a while after too many."""
+
+    username = models.CharField(max_length=150, db_index=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ["-at"]

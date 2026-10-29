@@ -1,7 +1,10 @@
 FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
-RUN apt-get update && apt-get install -y --no-install-recommends gettext && rm -rf /var/lib/apt/lists/*
+# gettext: translations · pango/harfbuzz: PDF engine · Noto fonts: Tamil and other scripts in PDFs
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        gettext libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libharfbuzz-subset0 fonts-noto-core \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY requirements.txt .

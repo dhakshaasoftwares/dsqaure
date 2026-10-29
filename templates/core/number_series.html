@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Document numbering" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Document numbering" %}</h1>
+<p class="muted">{% trans "Tokens: {FY} financial year, {YYYY} year, {YY} short year, {MM} month, {SEQ} running number." %}</p>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Document" %}</th><th>{% trans "Format" %}</th><th>{% trans "Next number" %}</th><th></th></tr></thead>
+  <tbody>
+  {% for s in object_list %}
+    <tr><td data-label="{% trans 'Document' %}">{% trans s.label %}</td><td data-label="{% trans 'Format' %}"><code>{{ s.pattern }}</code></td>
+        <td data-label="{% trans 'Next number' %}"><b>{{ s.preview }}</b></td>
+        <td class="right">{% if perms.core.change_numbersequence %}<a href="{% url 'core:number_series_update' s.pk %}">{% trans "Edit" %}</a>{% endif %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

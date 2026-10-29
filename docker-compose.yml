@@ -1,5 +1,8 @@
-# Start everything:            docker compose up -d
-# Start with public access:    docker compose --profile tunnel up -d
+# One client company = one copy of this stack (own database, own photos).
+#
+# Single client:               docker compose up -d
+# With public https access:    docker compose --profile tunnel up -d
+# Many clients on one server:  scripts/new_client.sh <client-name> <port>   (see README)
 services:
   db:
     image: postgres:16-alpine
@@ -18,14 +21,14 @@ services:
   web:
     build: .
     restart: unless-stopped
-    env_file: .env
+    env_file: ${ENV_FILE:-.env}
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       MEDIA_ROOT: /app/media
     volumes:
       - media:/app/media
     ports:
-      - "8000:8000"
+      - "${WEB_PORT:-8000}:8000"
     depends_on:
       db:
         condition: service_healthy

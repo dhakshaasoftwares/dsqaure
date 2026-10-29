@@ -6,3 +6,4 @@ media/
 staticfiles/
 backups/
 .env
+clients/

@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Site photos" %}{% endblock %}
+{% block content %}
+<div class="toolbar"><h1 style="margin:0">{% trans "Site photos" %} · {{ project.name }}</h1></div>
+<form method="get" class="toolbar">
+  <select name="stage" style="max-width:260px"><option value="">{% trans "All stages" %}</option>
+    {% for s in stages %}<option value="{{ s.pk }}" {% if s.pk|stringformat:'s' == stage %}selected{% endif %}>{{ s.name }}</option>{% endfor %}</select>
+  <button class="btn" type="submit">{% trans "Show" %}</button>
+  <a class="btn" href="{% url 'progress:project' project.pk %}">{% trans "Back" %}</a>
+</form>
+<div class="photos">
+{% for ph in page_obj %}
+  <figure><a href="{{ ph.image.url }}" target="_blank"><img src="{{ ph.image.url }}" alt="" loading="lazy"></a>
+    <figcaption>{{ ph.taken_on|date:"d M Y" }}{% if ph.stage %} · {{ ph.stage.name }}{% endif %}<br>{{ ph.caption|truncatechars:60 }}
+    {% if perms.progress.delete_progressphoto %}<form method="post" action="{% url 'progress:photo_delete' ph.pk %}">{% csrf_token %}<button class="btn btn-danger" style="min-height:30px;padding:.1rem .5rem;font-size:.8rem" onclick="return confirm('{% trans "Delete this photo?" %}')">{% trans "Delete" %}</button></form>{% endif %}
+    </figcaption></figure>
+{% empty %}<p class="muted">{% trans "No photos yet." %}</p>{% endfor %}
+</div>
+{% include "_pagination.html" %}
+{% endblock %}

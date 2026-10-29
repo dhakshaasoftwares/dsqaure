@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Building progress" %}{% endblock %}
+{% block content %}
+<div class="toolbar"><h1 style="margin:0">{% trans "Building progress" %}</h1><span class="spacer"></span>
+  <a class="btn" href="?{% if not show_all %}show=all{% endif %}">{% if show_all %}{% trans "Hide completed" %}{% else %}{% trans "Show completed" %}{% endif %}</a></div>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Project" %}</th><th>{% trans "Status" %}</th><th style="width:40%">{% trans "Progress" %}</th><th>{% trans "Delayed stages" %}</th></tr></thead>
+  <tbody>
+  {% for p in projects %}
+    <tr><td data-label="{% trans 'Project' %}"><a href="{% url 'progress:project' p.pk %}">{{ p.name }}</a></td>
+      <td data-label="{% trans 'Status' %}">{{ p.get_status_display }}</td>
+      <td data-label="{% trans 'Progress' %}">{% if p.progress is not None %}<div class="bar-row"><div class="bar {% if p.progress >= 100 %}done{% endif %}"><span style="width:{{ p.progress|stringformat:'s' }}%"></span></div><b>{{ p.progress }}%</b></div>{% else %}<span class="muted">{% trans "No stages yet" %}</span>{% endif %}</td>
+      <td data-label="{% trans 'Delayed stages' %}">{% if p.delayed %}<span class="badge bad">{{ p.delayed }}</span>{% else %}—{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="4" class="muted">{% trans "No projects." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

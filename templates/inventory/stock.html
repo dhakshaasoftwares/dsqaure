@@ -1,0 +1,31 @@
+{% extends "base.html" %}{% load i18n money %}
+{% block title %}{% trans "Stock" %}{% endblock %}
+{% block content %}
+<div class="toolbar"><h1 style="margin:0">{% trans "Stock" %}</h1><span class="spacer"></span>
+  {% if perms.inventory.add_goodsreceipt %}<a class="btn" href="{% url 'inventory:doc_create' 'receipt' %}">+ {% trans "Receive" %}</a>{% endif %}
+  {% if perms.inventory.add_materialissue %}<a class="btn" href="{% url 'inventory:doc_create' 'issue' %}">− {% trans "Use at site" %}</a>{% endif %}
+  {% if perms.inventory.add_stocktransfer %}<a class="btn" href="{% url 'inventory:doc_create' 'transfer' %}">⇄ {% trans "Transfer" %}</a>{% endif %}
+</div>
+<form method="get" class="toolbar">
+  <select name="location" style="max-width:220px"><option value="">{% trans "All locations" %}</option>
+    {% for l in locations %}<option value="{{ l.pk }}" {% if l == location %}selected{% endif %}>{{ l.name }}</option>{% endfor %}</select>
+  <select name="category" style="max-width:200px"><option value="">{% trans "All categories" %}</option>
+    {% for c in categories %}<option value="{{ c.pk }}" {% if c == category %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select>
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Material' %}" style="max-width:200px">
+  <button class="btn" type="submit">{% trans "Show" %}</button>
+  <a class="btn" href="{% url 'inventory:ledger' %}{% if location %}?location={{ location.pk }}{% endif %}">{% trans "Stock ledger" %}</a>
+</form>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>{% trans "Material" %}</th>{% if not location %}<th>{% trans "Location" %}</th>{% endif %}<th class="num">{% trans "Quantity" %}</th><th class="num">{% trans "Value" %}</th><th></th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr><td data-label="{% trans 'Material' %}">{{ r.material__name }} <small class="muted">{{ r.material__code }}</small></td>
+      {% if not location %}<td data-label="{% trans 'Location' %}">{{ r.location__name }}</td>{% endif %}
+      <td data-label="{% trans 'Quantity' %}" class="num">{% if r.qty < 0 %}<span class="badge bad">{% endif %}{{ r.qty|floatformat:"-3" }} {{ r.material__unit__symbol }}{% if r.qty < 0 %}</span>{% endif %}</td>
+      <td data-label="{% trans 'Value' %}" class="num">{{ r.value|money:0 }}</td>
+      <td class="right"><a href="{% url 'inventory:ledger' %}?material={{ r.material }}{% if location %}&location={{ location.pk }}{% elif r.location %}&location={{ r.location }}{% endif %}">{% trans "History" %}</a></td></tr>
+  {% empty %}<tr><td colspan="5" class="muted">{% trans "No stock yet. Receive goods or enter opening stock with an adjustment." %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+<p class="right"><b>{% trans "Total value" %}: {{ company.currency_symbol }}{{ total_value|money:0 }}</b><br><small class="muted">{% trans "Valued at last purchase rate." %}</small></p>
+{% endblock %}

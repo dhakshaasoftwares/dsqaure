@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% load i18n money %}
+{% block title %}{{ quote.number }}{% endblock %}
+{% block content %}
+<div class="toolbar"><div><h1 style="margin:0">{% trans "Quotation" %} {{ quote.number }}</h1>
+  <span class="badge {% if quote.status == 'accepted' %}ok{% elif quote.status == 'rejected' %}bad{% elif quote.status == 'sent' %}warn{% endif %}">{{ quote.get_status_display }}</span></div></div>
+<div class="toolbar">
+  <a class="btn btn-primary" href="{% url 'documents:quotation_pdf' quote.pk %}" target="_blank">{% trans "PDF" %}</a>
+  {% if perms.documents.change_quotation %}<a class="btn" href="{% url 'documents:quotation_update' quote.pk %}">{% trans "Edit" %}</a>{% endif %}
+  {% if perms.documents.add_quotation %}<a class="btn" href="{% url 'documents:quotation_create' %}?copy={{ quote.pk }}">{% trans "Copy as new revision" %}</a>{% endif %}
+  {% if perms.documents.add_agreement %}<a class="btn" href="{% url 'documents:agreement_create' %}?quotation={{ quote.pk }}">{% trans "Make agreement" %}</a>{% endif %}
+  {% if perms.documents.change_quotation %}
+  <form method="post" action="{% url 'documents:quotation_status' quote.pk %}" class="toolbar" style="margin:0">{% csrf_token %}
+    <select name="status" style="max-width:180px">{% for val, label in statuses %}<option value="{{ val }}" {% if quote.status == val %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+    <button class="btn">{% trans "Update status" %}</button></form>
+  {% endif %}
+</div>
+<div class="card"><dl class="kv">
+  <dt>{% trans "Client" %}</dt><dd>{{ quote.client }}</dd>
+  {% if quote.project %}<dt>{% trans "Project" %}</dt><dd><a href="{% url 'core:project_detail' quote.project.pk %}">{{ quote.project.name }}</a></dd>{% endif %}
+  <dt>{% trans "Date" %}</dt><dd>{{ quote.date|date:"d M Y" }}{% if quote.valid_until %} · {% trans "valid until" %} {{ quote.valid_until|date:"d M Y" }}{% endif %}</dd>
+  <dt>{% trans "Subject" %}</dt><dd>{{ quote.subject }}</dd>
+  {% if quote.notes %}<dt>{% trans "Internal notes" %}</dt><dd>{{ quote.notes|linebreaksbr }}</dd>{% endif %}
+</dl></div>
+<div class="table-wrap"><table class="stack">
+  <thead><tr><th>#</th><th>{% trans "Description" %}</th><th class="num">{% trans "Qty" %}</th><th>{% trans "Unit" %}</th><th class="num">{% trans "Rate" %}</th>{% if company.tax_enabled %}<th class="num">{{ company.tax_label }} %</th>{% endif %}<th class="num">{% trans "Amount" %}</th></tr></thead>
+  <tbody>{% for l in lines %}<tr><td>{{ forloop.counter }}</td><td data-label="{% trans 'Description' %}">{{ l.description|linebreaksbr }}</td>
+    <td data-label="{% trans 'Qty' %}" class="num">{{ l.quantity|floatformat:"-3" }}</td><td data-label="{% trans 'Unit' %}">{{ l.unit }}</td>
+    <td data-label="{% trans 'Rate' %}" class="num">{{ l.rate|money }}</td>{% if company.tax_enabled %}<td class="num">{{ l.tax_rate|floatformat:"-2" }}</td>{% endif %}
+    <td data-label="{% trans 'Amount' %}" class="num">{{ l.amount|money }}</td></tr>{% endfor %}</tbody>
+</table></div>
+<table class="totals card" style="margin-top:1rem">
+  <tr><td>{% trans "Subtotal" %}</td><td class="num">{{ totals.subtotal|money }}</td></tr>
+  {% if totals.discount %}<tr><td>{% trans "Discount" %} ({{ quote.discount_percent|floatformat:"-2" }}%)</td><td class="num">−{{ totals.discount|money }}</td></tr>{% endif %}
+  {% if company.tax_enabled %}<tr><td>{{ company.tax_label }}</td><td class="num">{{ totals.tax|money }}</td></tr>{% endif %}
+  <tr class="grand"><td>{% trans "Total" %}</td><td class="num">{{ company.currency_symbol }}{{ totals.total|money }}</td></tr>
+</table>
+{% endblock %}

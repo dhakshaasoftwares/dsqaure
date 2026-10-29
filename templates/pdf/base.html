@@ -1,0 +1,48 @@
+{% load i18n humanize %}<!doctype html>
+<html><head><meta charset="utf-8"><title>{% block title %}{% endblock %}</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm 18mm;
+    @bottom-left { content: "{{ company.document_footer|default:company.name|escapejs }}"; font-size: 8pt; color: #78716c; font-family: "Noto Sans", "DejaVu Sans", sans-serif; }
+    @bottom-right { content: "{% trans 'Page' %} " counter(page) " / " counter(pages); font-size: 8pt; color: #78716c; font-family: "Noto Sans", "DejaVu Sans", sans-serif; } }
+  body { font-family: "Noto Sans", "Noto Sans Tamil", "Noto Serif Tamil", "DejaVu Sans", sans-serif; font-size: 10pt; color: #1c1917; line-height: 1.4; }
+  .letterhead { display: flex; align-items: center; gap: 12px; border-bottom: 3px solid {{ company.brand_color }}; padding-bottom: 8px; margin-bottom: 14px; }
+  .letterhead img { height: 54px; }
+  .letterhead .co { flex: 1; }
+  .letterhead .co b { font-size: 15pt; display: block; }
+  .letterhead .co span { color: #57534e; font-size: 8.5pt; }
+  .doc-title { text-align: right; }
+  .doc-title h1 { margin: 0; font-size: 15pt; color: {{ company.brand_color }}; letter-spacing: .03em; }
+  .two { display: flex; gap: 16px; margin-bottom: 12px; }
+  .two > div { flex: 1; border: 1px solid #e7e5e4; border-radius: 4px; padding: 8px; }
+  .label { color: #78716c; font-size: 8pt; text-transform: uppercase; letter-spacing: .04em; }
+  table { width: 100%; border-collapse: collapse; }
+  table.items th { background: {{ company.brand_color }}; color: #fff; font-weight: 600; text-align: left; padding: 5px; font-size: 9pt; }
+  table.items td { border-bottom: 1px solid #e7e5e4; padding: 5px; vertical-align: top; }
+  .num { text-align: right; white-space: nowrap; }
+  .totals { width: 45%; margin-left: auto; margin-top: 8px; }
+  .totals td { padding: 3px 5px; }
+  .totals tr.grand td { font-weight: 700; font-size: 11pt; border-top: 2px solid #1c1917; }
+  .terms { margin-top: 14px; font-size: 9pt; white-space: pre-line; }
+  .sign { display: flex; justify-content: space-between; margin-top: 50px; }
+  .sign div { width: 40%; border-top: 1px solid #1c1917; padding-top: 4px; text-align: center; font-size: 9pt; }
+  h2 { font-size: 12pt; } h3 { font-size: 10.5pt; margin: 12px 0 4px; }
+  table.schedule th, table.schedule td { border: 1px solid #d6d3d1; padding: 4px 6px; }
+  .photos { display: flex; flex-wrap: wrap; gap: 6px; }
+  .photos figure { width: 31%; margin: 0; }
+  .photos img { width: 100%; height: 110px; object-fit: cover; }
+  .photos figcaption { font-size: 7.5pt; color: #78716c; }
+  .bar { background: #e7e5e4; height: 8px; border-radius: 4px; }
+  .bar span { display: block; height: 8px; border-radius: 4px; background: {{ company.brand_color }}; }
+  .muted { color: #78716c; }
+  {% block style %}{% endblock %}
+</style></head>
+<body>
+<div class="letterhead">
+  {% if company.logo %}<img src="{% if pdf %}file://{{ company.logo.path }}{% else %}{{ company.logo.url }}{% endif %}" alt="">{% endif %}
+  <div class="co"><b>{{ company.name }}</b>
+    <span>{{ company.address|linebreaksbr }}{% if company.phone %}<br>{{ company.phone }}{% endif %}{% if company.email %} · {{ company.email }}{% endif %}{% if company.tax_enabled and company.tax_registration_number %}<br>{{ company.tax_label }}: {{ company.tax_registration_number }}{% endif %}</span></div>
+  <div class="doc-title">{% block doc_title %}{% endblock %}</div>
+</div>
+{% block body %}{% endblock %}
+{% if not pdf %}<script>window.print()</script>{% endif %}
+</body></html>

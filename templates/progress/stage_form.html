@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block content %}
+<h1>{% if stage %}{% trans "Edit stage" %}{% else %}{% trans "New stage" %}{% endif %} · {{ project.name }}</h1>
+<form method="post" class="card">{% csrf_token %}
+  {% include "_form_fields.html" %}
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{% trans "Save" %}</button>
+    <a class="btn" href="{% url 'progress:project' project.pk %}">{% trans "Cancel" %}</a>
+    {% if stage and perms.progress.delete_projectstage %}<span style="flex:1"></span><button class="btn btn-danger" name="delete" value="1" formnovalidate onclick="return confirm('{% trans "Delete this stage?" %}')">{% trans "Delete" %}</button>{% endif %}
+  </div>
+</form>
+{% endblock %}

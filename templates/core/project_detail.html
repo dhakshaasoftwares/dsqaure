@@ -1,0 +1,70 @@
+{% extends "base.html" %}{% load i18n money %}
+{% block title %}{{ project.name }}{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <div><h1 style="margin:0">{{ project.name }}</h1>
+    <span class="muted">{{ project.code }} · {{ project.client_display|default:"" }} · {{ project.get_status_display }}</span></div>
+  <span class="spacer"></span>
+  {% if perms.core.change_project %}<a class="btn" href="{% url 'core:project_update' project.pk %}">{% trans "Edit" %}</a>{% endif %}
+</div>
+
+<div class="stats">
+  {% if overall is not None %}<div class="stat"><div class="num">{{ overall }}%</div><div class="label">{% trans "Work complete" %}</div></div>{% endif %}
+  <div class="stat"><div class="num">{{ company.currency_symbol }}{{ project.contract_value|money:0 }}</div><div class="label">{% trans "Contract value" %}</div></div>
+  {% if on_site_today is not None %}<div class="stat"><div class="num">{{ on_site_today }}</div><div class="label">{% trans "On site today" %}</div></div>
+  <div class="stat"><div class="num">{{ mandays_month|floatformat:"-1" }}</div><div class="label">{% trans "Man-days this month" %}</div></div>{% endif %}
+  {% if material_cost is not None %}<div class="stat"><div class="num">{{ company.currency_symbol }}{{ material_cost|money:0 }}</div><div class="label">{% trans "Material used (value)" %}</div></div>{% endif %}
+</div>
+
+{% if stages is not None %}
+<div class="toolbar"><h2 style="margin:0">{% trans "Building progress" %}</h2><span class="spacer"></span>
+  <a class="btn" href="{% url 'progress:project' project.pk %}">{% trans "Update progress" %}</a>
+  <a class="btn" href="{% url 'progress:report' project.pk %}" target="_blank">{% trans "Client report (PDF)" %}</a></div>
+<div class="card">
+  {% for s in stages %}
+    <div class="bar-row" style="margin:.35rem 0"><span style="flex:0 0 45%">{{ s.name }}</span>
+      <div class="bar {% if s.state == 'done' %}done{% elif s.state == 'delayed' %}late{% endif %}"><span style="width:{{ s.percent|stringformat:'s' }}%"></span></div>
+      <span style="width:3.5rem;text-align:right">{{ s.percent|floatformat:"-1" }}%</span></div>
+  {% empty %}<p class="muted">{% trans "No stages yet." %} <a href="{% url 'progress:project' project.pk %}">{% trans "Add stages" %}</a></p>{% endfor %}
+</div>
+{% if photos %}
+<div class="photos" style="margin-bottom:1rem">{% for ph in photos %}<figure><a href="{{ ph.image.url }}" target="_blank"><img src="{{ ph.image.url }}" alt="" loading="lazy"></a><figcaption>{{ ph.taken_on|date:"d M" }} {{ ph.caption|truncatechars:40 }}</figcaption></figure>{% endfor %}</div>
+{% endif %}
+{% endif %}
+
+{% if site_stock is not None %}
+<div class="toolbar"><h2 style="margin:0">{% trans "Material at this site" %}</h2><span class="spacer"></span>
+  <a class="btn" href="{% url 'inventory:stock' %}?location={{ project.stock_location.pk }}">{% trans "Full stock" %}</a></div>
+<div class="form-grid">
+  <div class="table-wrap"><table>
+    <thead><tr><th>{% trans "In stock now" %}</th><th class="num">{% trans "Qty" %}</th></tr></thead>
+    <tbody>{% for r in site_stock %}<tr><td>{{ r.material__name }}</td><td class="num">{{ r.qty|floatformat:"-3" }} {{ r.material__unit__symbol }}</td></tr>
+    {% empty %}<tr><td colspan="2" class="muted">{% trans "No stock at this site." %}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>{% trans "Used so far" %}</th><th class="num">{% trans "Qty" %}</th><th class="num">{% trans "Value" %}</th></tr></thead>
+    <tbody>{% for r in consumed %}<tr><td>{{ r.material__name }}</td><td class="num">{{ r.qty|floatformat:"-3" }} {{ r.material__unit__symbol }}</td><td class="num">{{ r.value|money:0 }}</td></tr>
+    {% empty %}<tr><td colspan="3" class="muted">{% trans "Nothing used yet." %}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</div>
+{% endif %}
+
+{% if quotations is not None %}
+<h2>{% trans "Quotations & agreements" %}</h2>
+<div class="table-wrap"><table class="stack">
+  <tbody>
+  {% for q in quotations %}<tr><td><a href="{% url 'documents:quotation_detail' q.pk %}">{{ q.number }}</a></td><td>{{ q.subject }}</td><td>{{ q.get_status_display }}</td></tr>{% endfor %}
+  {% for a in agreements %}<tr><td><a href="{% url 'documents:agreement_detail' a.pk %}">{{ a.number }}</a></td><td>{{ a.title }}</td><td>{{ a.get_status_display }}</td></tr>{% endfor %}
+  {% if not quotations and not agreements %}<tr><td class="muted">{% trans "None yet." %}</td></tr>{% endif %}
+  </tbody>
+</table></div>
+{% endif %}
+
+<h2>{% trans "Site details" %}</h2>
+<div class="card"><dl class="kv">
+  <dt>{% trans "Address" %}</dt><dd>{{ project.address|linebreaksbr|default:"—" }}</dd>
+  <dt>{% trans "Start" %}</dt><dd>{{ project.start_date|default:"—" }}</dd>
+  <dt>{% trans "Expected finish" %}</dt><dd>{{ project.expected_end_date|default:"—" }}</dd>
+  <dt>{% trans "Client phone" %}</dt><dd>{{ project.client.phone|default:project.client_phone|default:"—" }}</dd>
+</dl></div>
+{% endblock %}

@@ -22,8 +22,13 @@ def env_list(name, default=""):
     return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-insecure-key-change-me")
+DEV_SECRET_KEY = "dev-only-insecure-key-change-me"
+SECRET_KEY = os.environ.get("SECRET_KEY", DEV_SECRET_KEY)
 DEBUG = env_bool("DEBUG", True)
+if not DEBUG and SECRET_KEY in (DEV_SECRET_KEY, "change-me-to-a-long-random-string"):
+    from django.core.exceptions import ImproperlyConfigured
+
+    raise ImproperlyConfigured("Set a long random SECRET_KEY in .env before running with DEBUG=False.")
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
 
@@ -41,6 +46,9 @@ INSTALLED_APPS = [
     "apps.employees",
     "apps.attendance",
     "apps.payroll",
+    "apps.inventory",
+    "apps.progress",
+    "apps.documents",
 ]
 
 MIDDLEWARE = [
@@ -52,6 +60,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "apps.accounts.middleware.UserLanguageMiddleware",
+    "apps.core.middleware.CompanyMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -124,8 +133,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Behind Cloudflare Tunnel the app sees plain HTTP; trust the forwarded scheme.
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+# Turn on once everyone uses the https:// address. While staff still log in over
+# plain http (http://localhost:8000 or the laptop's Wi-Fi IP) it must stay off,
+# otherwise browsers drop the login cookie.
+SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = env_bool("SECURE_COOKIES", False)
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000  # big attendance sheets and BOQs
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
 # Keep people logged in on their phones for 30 days.
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30

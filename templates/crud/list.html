@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ verbose_name_plural|capfirst }}{% endblock %}
+{% block content %}
+<div class="toolbar"><h1 style="margin:0">{{ verbose_name_plural|capfirst }}</h1><span class="spacer"></span>
+  {% if can_add %}<a class="btn btn-primary" href="{{ create_url }}">+ {% trans "Add" %}</a>{% endif %}
+</div>
+{% if crud.intro %}<p class="muted">{{ crud.intro }}</p>{% endif %}
+{% if crud.search %}
+<form method="get" class="toolbar">
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search' %}" style="flex:1;min-width:180px">
+  <button class="btn" type="submit">{% trans "Search" %}</button>
+</form>
+{% endif %}
+<div class="table-wrap"><table class="stack">
+  <thead><tr>{% for h in headers %}<th>{{ h|capfirst }}</th>{% endfor %}<th></th></tr></thead>
+  <tbody>
+  {% for obj, cells in rows %}
+    <tr>
+      {% for h, c in cells %}<td data-label="{{ h|capfirst }}">{% if forloop.first and can_change %}<a href="{% url ns|add:':'|add:crud.name|add:'_update' obj.pk %}">{{ c }}</a>{% else %}{{ c }}{% endif %}</td>{% endfor %}
+      <td class="right">{% if can_change %}<a href="{% url ns|add:':'|add:crud.name|add:'_update' obj.pk %}">{% trans "Edit" %}</a>{% endif %}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="{{ headers|length|add:1 }}" class="muted">{% trans "Nothing here yet." %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% include "_pagination.html" %}
+{% endblock %}

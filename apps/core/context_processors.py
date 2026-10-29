@@ -2,4 +2,4 @@ from .models import CompanySettings
 
 
 def company(request):
-    return {"company": CompanySettings.load()}
+    return {"company": getattr(request, "company", None) or CompanySettings.load()}

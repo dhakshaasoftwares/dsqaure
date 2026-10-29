@@ -1,0 +1,24 @@
+{% extends "pdf/base.html" %}{% load i18n money %}
+{% block title %}{{ po.number }}{% endblock %}
+{% block doc_title %}<h1>{% trans "PURCHASE ORDER" %}</h1><div>{{ po.number }}</div><div>{{ po.date|date:"d M Y" }}</div>{% endblock %}
+{% block body %}
+<div class="two">
+  <div><div class="label">{% trans "Supplier" %}</div><b>{{ po.supplier.name }}</b><br>{{ po.supplier.address|linebreaksbr }}
+    {% if po.supplier.phone %}<br>{{ po.supplier.phone }}{% endif %}{% if po.supplier.tax_number %}<br>{{ company.tax_label }}: {{ po.supplier.tax_number }}{% endif %}</div>
+  <div><div class="label">{% trans "Deliver to" %}</div><b>{{ po.location.name }}</b><br>{{ po.location.project.address|default:po.location.address|linebreaksbr }}
+    {% if po.expected_date %}<br><span class="label">{% trans "Expected delivery" %}</span> {{ po.expected_date|date:"d M Y" }}{% endif %}</div>
+</div>
+<table class="items">
+  <thead><tr><th>#</th><th>{% trans "Material" %}</th><th class="num">{% trans "Qty" %}</th><th>{% trans "Unit" %}</th><th class="num">{% trans "Rate" %}</th>{% if company.tax_enabled %}<th class="num">{{ company.tax_label }} %</th>{% endif %}<th class="num">{% trans "Amount" %}</th></tr></thead>
+  <tbody>{% for l in lines %}<tr><td>{{ forloop.counter }}</td><td>{{ l.material.name }}{% if l.material.tax_code and company.tax_enabled %} <span class="muted">({{ company.tax_code_label }} {{ l.material.tax_code }})</span>{% endif %}{% if l.description %}<br><span class="muted">{{ l.description }}</span>{% endif %}</td>
+    <td class="num">{{ l.quantity|floatformat:"-3" }}</td><td>{{ l.material.unit.symbol }}</td><td class="num">{{ l.rate|money }}</td>
+    {% if company.tax_enabled %}<td class="num">{{ l.tax_rate|floatformat:"-2" }}</td>{% endif %}<td class="num">{{ l.amount|money }}</td></tr>{% endfor %}</tbody>
+</table>
+<table class="totals">
+  <tr><td>{% trans "Subtotal" %}</td><td class="num">{{ po.subtotal|money }}</td></tr>
+  {% if company.tax_enabled %}<tr><td>{{ company.tax_label }}</td><td class="num">{{ po.tax_total|money }}</td></tr>{% endif %}
+  <tr class="grand"><td>{% trans "Total" %}</td><td class="num">{{ company.currency_symbol }}{{ po.total|money }}</td></tr>
+</table>
+{% if po.terms %}<div class="terms"><b>{% trans "Terms" %}</b><br>{{ po.terms }}</div>{% endif %}
+<div class="sign"><div>{% trans "Supplier acceptance" %}</div><div>{% trans "For" %} {{ company.name }}<br>{{ company.signatory_name }} {{ company.signatory_designation }}</div></div>
+{% endblock %}

@@ -3,11 +3,13 @@ from django.urls import path, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from . import views
+from .security import LockoutAuthenticationForm
 
 app_name = "accounts"
 
 urlpatterns = [
-    path("login/", auth_views.LoginView.as_view(template_name="accounts/login.html"), name="login"),
+    path("login/", auth_views.LoginView.as_view(
+        template_name="accounts/login.html", authentication_form=LockoutAuthenticationForm), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("password/", auth_views.PasswordChangeView.as_view(
         template_name="form.html", success_url=reverse_lazy("core:dashboard"), extra_context={"title": _("Change password")}),

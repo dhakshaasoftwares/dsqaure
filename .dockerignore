@@ -6,3 +6,4 @@ staticfiles
 backups
 .env
 __pycache__
+clients/

@@ -127,3 +127,51 @@ form ul li label { font-weight: 400; display: flex; gap: .5rem; align-items: cen
   body { background: #fff; }
   .card { border: 0; }
 }
+
+/* Progress bars */
+.bar { background: var(--line); border-radius: 999px; height: 10px; overflow: hidden; min-width: 80px; }
+.bar > span { display: block; height: 100%; background: var(--brand); border-radius: 999px; }
+.bar.done > span { background: var(--ok); }
+.bar.late > span { background: var(--bad); }
+.bar-row { display: flex; align-items: center; gap: .6rem; }
+.bar-row .bar { flex: 1; }
+.big-pct { font-size: 2.2rem; font-weight: 700; }
+
+/* Photo grid */
+.photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .6rem; }
+.photos figure { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.photos figcaption { padding: .35rem .5rem; font-size: .8rem; color: var(--muted); }
+
+/* Line item entry */
+table.lines td { vertical-align: top; padding: .35rem; }
+table.lines input, table.lines select, table.lines textarea { min-width: 70px; }
+table.lines td.material-cell { min-width: 180px; }
+table.lines td.desc-cell { min-width: 220px; }
+table.lines .amount { white-space: nowrap; text-align: right; padding-top: .9rem; }
+.totals { margin-left: auto; max-width: 340px; }
+.totals td { padding: .3rem .6rem; }
+.totals tr.grand td { font-weight: 700; font-size: 1.1rem; border-top: 2px solid var(--text); }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: .3rem 1rem; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+.tabs { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.tabs a { padding: .4rem .8rem; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: .9rem; }
+.tabs a.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.config-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: .75rem; }
+.config-grid a { display: block; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; color: var(--text); }
+.config-grid a:hover { border-color: var(--brand); }
+.config-grid b { display: block; margin-bottom: .2rem; }
+.agreement-text h2 { font-size: 1.15rem; text-align: center; }
+.agreement-text h3 { font-size: 1rem; margin: 1.2rem 0 .4rem; }
+.agreement-text table { width: 100%; border-collapse: collapse; }
+.agreement-text th, .agreement-text td { border: 1px solid var(--line); padding: .4rem; }
+details.section { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: .75rem; }
+details.section > summary { cursor: pointer; padding: .9rem 1rem; font-weight: 600; }
+details.section > div { padding: 0 1rem 1rem; }
+@media (max-width: 640px) {
+  table.lines thead { display: none; }
+  table.lines tr { display: block; border-bottom: 2px solid var(--line); padding: .4rem 0; }
+  table.lines td { display: block; border: 0; }
+  table.lines td[data-label]::before { content: attr(data-label); display: block; color: var(--muted); font-size: .8rem; }
+}

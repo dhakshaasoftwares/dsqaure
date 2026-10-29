@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% load i18n %}
+{% block content %}
+<h1>{% trans "Delete" %} {{ verbose_name }}</h1>
+<form method="post" class="card">{% csrf_token %}
+  <p>{% blocktrans with obj=object %}Delete "{{ obj }}"? This cannot be undone.{% endblocktrans %}</p>
+  <div class="form-actions">
+    <button class="btn btn-danger" type="submit">{% trans "Delete" %}</button>
+    <a class="btn" href="{{ list_url }}">{% trans "Cancel" %}</a>
+  </div>
+</form>
+{% endblock %}

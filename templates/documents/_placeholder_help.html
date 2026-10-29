@@ -1,0 +1,5 @@
+{% load i18n %}<h2 style="margin-top:0">{% trans "How to write" %}</h2>
+<ul><li>{% trans "Leave an empty line between paragraphs." %}</li>
+<li>{% trans "Start a line with # for a title, ## for a heading." %}</li>
+<li>{% trans "Placeholders are replaced with real details:" %}</li></ul>
+<table><tbody>{% for key, label in placeholders %}<tr><td><code>{{ "{" }}{{ key }}{{ "}" }}</code></td><td>{{ label }}</td></tr>{% endfor %}</tbody></table>

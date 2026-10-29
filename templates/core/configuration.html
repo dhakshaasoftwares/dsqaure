@@ -1,0 +1,43 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Settings & configuration" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Settings & configuration" %}</h1>
+<p class="muted">{% trans "Everything that is different for each company is set here – no programming needed." %}</p>
+<h2>{% trans "Company" %}</h2>
+<div class="config-grid">
+  <a href="{% url 'core:settings' %}"><b>{% trans "Company settings" %}</b><span class="muted">{% trans "Profile, logo, colour, modules, tax, salary rules, security" %}</span></a>
+  <a href="{% url 'core:number_series' %}"><b>{% trans "Document numbering" %}</b><span class="muted">{% trans "PO, GRN, quotation, agreement number formats" %}</span></a>
+  <a href="{% url 'accounts:role_list' %}"><b>{% trans "Roles & permissions" %}</b><span class="muted">{% trans "Who can see and do what" %}</span></a>
+  <a href="{% url 'accounts:user_list' %}"><b>{% trans "Users" %}</b><span class="muted">{% trans "Logins for your staff" %}</span></a>
+  <a href="{% url 'core:unit_list' %}"><b>{% trans "Units of measure" %}</b><span class="muted">{% trans "Bag, Kg, Cft, Sqft …" %}</span></a>
+</div>
+{% if company.module_payroll %}
+<h2>{% trans "Salary" %}</h2>
+<div class="config-grid">
+  <a href="{% url 'payroll:component_list' %}"><b>{% trans "Pay rules" %}</b><span class="muted">{% trans "Allowances, PF, ESI, tax, other deductions" %}</span></a>
+</div>
+{% endif %}
+{% if company.module_inventory %}
+<h2>{% trans "Inventory" %}</h2>
+<div class="config-grid">
+  <a href="{% url 'inventory:material_list' %}"><b>{% trans "Materials" %}</b><span class="muted">{% trans "Item list with unit, tax and reorder level" %}</span></a>
+  <a href="{% url 'inventory:category_list' %}"><b>{% trans "Material categories" %}</b><span class="muted">{% trans "Cement, steel, sand, electrical …" %}</span></a>
+  <a href="{% url 'inventory:supplier_list' %}"><b>{% trans "Suppliers" %}</b><span class="muted">{% trans "Vendors you buy from" %}</span></a>
+  <a href="{% url 'inventory:location_list' %}"><b>{% trans "Stock locations" %}</b><span class="muted">{% trans "Godowns / central stores" %}</span></a>
+</div>
+{% endif %}
+{% if company.module_progress %}
+<h2>{% trans "Building progress" %}</h2>
+<div class="config-grid">
+  <a href="{% url 'progress:stage_template_list' %}"><b>{% trans "Standard stages" %}</b><span class="muted">{% trans "Foundation, slab, brickwork … with weights" %}</span></a>
+</div>
+{% endif %}
+{% if company.module_documents %}
+<h2>{% trans "Quotations & agreements" %}</h2>
+<div class="config-grid">
+  <a href="{% url 'documents:work_item_list' %}"><b>{% trans "Rate items" %}</b><span class="muted">{% trans "Your standard work items and rates" %}</span></a>
+  <a href="{% url 'documents:template_list' %}"><b>{% trans "Agreement templates" %}</b><span class="muted">{% trans "Your agreement wording with placeholders" %}</span></a>
+  <a href="{% url 'documents:client_list' %}"><b>{% trans "Clients" %}</b><span class="muted">{% trans "Customers you quote for" %}</span></a>
+</div>
+{% endif %}
+{% endblock %}

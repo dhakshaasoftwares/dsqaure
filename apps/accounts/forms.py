@@ -61,33 +61,45 @@ class RoleForm(forms.ModelForm):
                 f"{p.content_type.app_label}.{p.codename}"
                 for p in self.instance.permissions.select_related("content_type")
             }
-        self.grid = []
-        for index, (label, models) in enumerate(MODULES):
-            row = {"label": label, "cells": []}
+        self.grid, self.extras = [], []
+        for module in MODULES:
+            row = {"label": module["label"], "cells": []}
             for action, action_label in ACTIONS:
-                name = f"perm_{index}_{action}"
-                codes = [f"{app}.{action}_{model}" for app, model in models]
+                name = f"perm_{module['key']}_{action}"
+                codes = [f"{app}.{action}_{model}" for app, model in module["models"]]
                 self.fields[name] = forms.BooleanField(
                     required=False, label=action_label, initial=all(c in current for c in codes)
                 )
                 row["cells"].append(name)
             self.grid.append(row)
+            for app, codename, label in module.get("extra", []):
+                name = f"extra_{app}_{codename}"
+                self.fields[name] = forms.BooleanField(
+                    required=False, label=label, initial=f"{app}.{codename}" in current)
+                self.extras.append(name)
 
     def grid_rows(self):
         for row in self.grid:
             yield row["label"], [self[name] for name in row["cells"]]
 
+    def extra_fields(self):
+        return [self[name] for name in self.extras]
+
     def save(self, commit=True):
         group = super().save(commit=True)
-        wanted = []
-        for index, (_label, models) in enumerate(MODULES):
+        wanted = set()
+        for module in MODULES:
             for action, _action_label in ACTIONS:
-                if self.cleaned_data.get(f"perm_{index}_{action}"):
-                    for app, model in models:
-                        wanted.append((app, f"{action}_{model}"))
+                if self.cleaned_data.get(f"perm_{module['key']}_{action}"):
+                    for app, model in module["models"]:
+                        wanted.add((app, f"{action}_{model}"))
+            for app, codename, _label in module.get("extra", []):
+                if self.cleaned_data.get(f"extra_{app}_{codename}"):
+                    wanted.add((app, codename))
         perms = [
             p for p in Permission.objects.select_related("content_type")
-            if (p.content_type.app_label, p.codename) in set(wanted)
+            .filter(codename__in=[c for _a, c in wanted])
+            if (p.content_type.app_label, p.codename) in wanted
         ]
         group.permissions.set(perms)
         return group

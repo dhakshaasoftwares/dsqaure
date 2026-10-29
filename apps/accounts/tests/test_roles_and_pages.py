@@ -12,18 +12,18 @@ from apps.payroll.models import PayComponent, PayrollRun, SalaryAdvance
 
 class RoleFormTests(TestCase):
     def test_grid_saves_permissions(self):
-        form = RoleForm(data={"name": "Store", "perm_0_view": "on", "perm_1_view": "on", "perm_1_add": "on"})
+        form = RoleForm(data={"name": "Store", "perm_projects_view": "on", "perm_employees_view": "on", "perm_employees_add": "on"})
         self.assertTrue(form.is_valid(), form.errors)
         group = form.save()
         codes = set(group.permissions.values_list("codename", flat=True))
         self.assertEqual(codes, {"view_project", "view_employee", "add_employee"})
 
     def test_grid_reflects_existing_permissions(self):
-        form = RoleForm(data={"name": "R", "perm_1_view": "on"})
+        form = RoleForm(data={"name": "R", "perm_employees_view": "on"})
         group = form.save() if form.is_valid() else None
         edit = RoleForm(instance=group)
-        self.assertTrue(edit.fields["perm_1_view"].initial)
-        self.assertFalse(edit.fields["perm_1_add"].initial)
+        self.assertTrue(edit.fields["perm_employees_view"].initial)
+        self.assertFalse(edit.fields["perm_employees_add"].initial)
 
 
 class SmokeTests(TestCase):
